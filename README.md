@@ -13,6 +13,7 @@ Specifications:
 
 - [XRechnung 3.0.1 (DE)](https://xeinkauf.de/app/uploads/2023/09/301-XRechnung-2023-09-22.pdf)
 - [XRechnung 2.3.1 (DE)](https://xeinkauf.de/app/uploads/2023/02/231-XRechnung-2023-02-03.pdf)
+- [English Summary of XRechnung 3.0.1](https://xeinkauf.de/app/uploads/2023/09/XRechnung-EnglishSummary-v301.pdf)
 
 Authentication:
 
