@@ -20,3 +20,23 @@ Authentication:
 
 - [Federal Central Invoice Submission Portal (ZRE)](https://xrechnung.bund.de/prod/authenticate.do)
 - [Online Access Act-compliant Invoice Submission Portal](https://xrechnung-bdr.de/edi/auth/login)
+
+---
+
+## Requirements
+
+Required libraries in your system:
+
+- `libxml-2.0`
+
+### Linux
+
+```console
+sudo apt-get install libxml2-dev
+```
+
+### Mac OS
+
+```console
+brew install libxml2
+```
