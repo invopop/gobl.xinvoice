@@ -3,8 +3,10 @@ package xinvoice
 
 import (
 	"encoding/xml"
+	"fmt"
 
 	"github.com/invopop/gobl"
+	"github.com/invopop/gobl/bill"
 )
 
 // CFDI schema constants
@@ -51,7 +53,12 @@ type Note struct {
 }
 
 // NewDocument converts a GOBL envelope into a XRechnung and Factur-X document
-func NewDocument(_ *gobl.Envelope) (*Document, error) {
+func NewDocument(env *gobl.Envelope) (*Document, error) {
+	inv, ok := env.Extract().(*bill.Invoice)
+	if !ok {
+		return nil, fmt.Errorf("invalid type %T", env.Document)
+	}
+
 	doc := Document{
 		RSMNamespace:           RSM,
 		RAMNamespace:           RAM,
@@ -59,13 +66,13 @@ func NewDocument(_ *gobl.Envelope) (*Document, error) {
 		UDTNamespace:           UDT,
 		BusinessProcessContext: BusinessProcess,
 		GuidelineContext:       GuidelineContext,
-		ExchangedDocument:      newHeader(),
+		ExchangedDocument:      newHeader(inv),
 		Transaction:            NewTransaction(),
 	}
 	return &doc, nil
 }
 
-func newHeader() *ExchangedDocument {
+func newHeader(inv *bill.Invoice) *ExchangedDocument {
 	return &ExchangedDocument{
 		ID:       "123456XX",
 		TypeCode: "380",
