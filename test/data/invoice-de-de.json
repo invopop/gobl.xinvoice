@@ -66,13 +66,6 @@
 					"unit": "h"
 				},
 				"sum": "1800.00",
-				"discounts": [
-					{
-						"percent": "10%",
-						"amount": "180.00",
-						"reason": "Special discount"
-					}
-				],
 				"taxes": [
 					{
 						"cat": "VAT",
@@ -80,12 +73,12 @@
 						"percent": "19%"
 					}
 				],
-				"total": "1620.00"
+				"total": "1800.00"
 			}
 		],
 		"totals": {
-			"sum": "1620.00",
-			"total": "1620.00",
+			"sum": "1800.00",
+			"total": "1800.00",
 			"taxes": {
 				"categories": [
 					{
@@ -93,19 +86,19 @@
 						"rates": [
 							{
 								"key": "standard",
-								"base": "1620.00",
+								"base": "1800.00",
 								"percent": "19%",
-								"amount": "307.80"
+								"amount": "342.00"
 							}
 						],
-						"amount": "307.80"
+						"amount": "342.00"
 					}
 				],
-				"sum": "307.80"
+				"sum": "342.00"
 			},
-			"tax": "307.80",
-			"total_with_tax": "1927.80",
-			"payable": "1927.80"
+			"tax": "342.00",
+			"total_with_tax": "2142.00",
+			"payable": "2142.00"
 		}
 	}
 }
