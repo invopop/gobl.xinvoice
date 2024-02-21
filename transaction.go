@@ -1,34 +1,13 @@
 package xinvoice
 
+import "github.com/invopop/gobl/bill"
+
 // Transaction defines the structure of the transaction in the CII standard
 type Transaction struct {
 	Lines      []*Line     `xml:"ram:IncludedSupplyChainTradeLineItem"`
 	Agreement  *Agreement  `xml:"ram:ApplicableHeaderTradeAgreement"`
 	Delivery   *Delivery   `xml:"ram:ApplicableHeaderTradeDelivery"`
 	Settlement *Settlement `xml:"ram:ApplicableHeaderTradeSettlement"`
-}
-
-// Line defines the structure of the IncludedSupplyChainTradeLineItem in the CII standard
-type Line struct {
-	ID              string           `xml:"ram:AssociatedDocumentLineDocument>ram:LineID"`
-	Name            string           `xml:"ram:SpecifiedTradeProduct>ram:Name"`
-	NetPrice        string           `xml:"ram:SpecifiedLineTradeAgreement>ram:NetPriceProductTradePrice>ram:ChargeAmount"`
-	TradeDelivery   *Quantity        `xml:"ram:SpecifiedLineTradeDelivery>ram:BilledQuantity"`
-	TradeSettlement *TradeSettlement `xml:"ram:SpecifiedLineTradeSettlement"`
-}
-
-// Quantity defines the structure of the quantity with its attributes for the CII standard
-type Quantity struct {
-	Amount   string `xml:",chardata"`
-	UnitCode string `xml:"unitCode,attr"`
-}
-
-// TradeSettlement defines the structure of the SpecifiedLineTradeSettlement of the CII standard
-type TradeSettlement struct {
-	TaxType        string `xml:"ram:ApplicableTradeTax>ram:TypeCode"`
-	TaxCode        string `xml:"ram:ApplicableTradeTax>ram:CategoryCode"`
-	TaxRatePercent string `xml:"ram:ApplicableTradeTax>ram:RateApplicablePercent"`
-	Sum            string `xml:"ram:SpecifiedTradeSettlementLineMonetarySummation>ram:LineTotalAmount"`
 }
 
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
@@ -129,39 +108,7 @@ type TaxTotalAmount struct {
 }
 
 // NewTransaction creates the transaction part of a EN 16931 compliant invoice
-func NewTransaction() *Transaction {
-	lines := []*Line{
-		{
-			ID:       "Zeitschrift [...]",
-			Name:     "Zeitschrift [...]",
-			NetPrice: "288.79",
-			TradeDelivery: &Quantity{
-				Amount:   "1",
-				UnitCode: "XPP",
-			},
-			TradeSettlement: &TradeSettlement{
-				TaxType:        "VAT",
-				TaxCode:        "S",
-				TaxRatePercent: "7",
-				Sum:            "288.79",
-			},
-		},
-		{
-			ID:       "Porto + Versandkosten",
-			Name:     "Porto + Versandkosten",
-			NetPrice: "26.07",
-			TradeDelivery: &Quantity{
-				Amount:   "1",
-				UnitCode: "XPP",
-			},
-			TradeSettlement: &TradeSettlement{
-				TaxType:        "VAT",
-				TaxCode:        "S",
-				TaxRatePercent: "7",
-				Sum:            "26.07",
-			},
-		},
-	}
+func NewTransaction(inv *bill.Invoice) *Transaction {
 	agreement := &Agreement{
 		BuyerReference: "04011000-12345-03",
 		Seller: &Seller{
@@ -206,7 +153,7 @@ func NewTransaction() *Transaction {
 		},
 	}
 	return &Transaction{
-		Lines:     lines,
+		Lines:     NewLines(inv.Lines),
 		Agreement: agreement,
 		Delivery: &Delivery{
 			Event: &Date{

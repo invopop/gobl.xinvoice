@@ -70,7 +70,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		BusinessProcessContext: BusinessProcess,
 		GuidelineContext:       GuidelineContext,
 		ExchangedDocument:      newHeader(inv),
-		Transaction:            NewTransaction(),
+		Transaction:            NewTransaction(inv),
 	}
 	return &doc, nil
 }
