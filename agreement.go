@@ -4,7 +4,7 @@ import "github.com/invopop/gobl/bill"
 
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
 type Agreement struct {
-	BuyerReference string  `xml:"ram:BuyerReference"`
+	BuyerReference string  `xml:"ram:BuyerReference,omitempty"`
 	Seller         *Seller `xml:"ram:SellerTradeParty"`
 	Buyer          *Buyer  `xml:"ram:BuyerTradeParty"`
 }
@@ -12,7 +12,7 @@ type Agreement struct {
 // Seller defines the structure of the SellerTradeParty of the CII standard
 type Seller struct {
 	Name                      string                     `xml:"ram:Name"`
-	LegalOrganization         *LegalOrganization         `xml:"ram:SpecifiedLegalOrganization"`
+	LegalOrganization         *LegalOrganization         `xml:"ram:SpecifiedLegalOrganization,omitempty"`
 	Contact                   *Contact                   `xml:"ram:DefinedTradeContact"`
 	PostalTradeAddress        *PostalTradeAddress        `xml:"ram:PostalTradeAddress"`
 	URIUniversalCommunication *URIUniversalCommunication `xml:"ram:URIUniversalCommunication>ram:URIID"`
@@ -62,44 +62,40 @@ type URIUniversalCommunication struct {
 
 func NewAgreement(inv *bill.Invoice) *Agreement {
 	return &Agreement{
-		BuyerReference: "04011000-12345-03",
+		BuyerReference: inv.Customer.TaxID.String(),
 		Seller: &Seller{
-			Name: "[Seller name]",
-			LegalOrganization: &LegalOrganization{
-				ID:   "[HRA-Eintrag]",
-				Name: "[Seller trading name]",
-			},
+			Name: inv.Supplier.Name,
 			Contact: &Contact{
-				Name:  "nicht vorhanden",
-				Phone: "+49 1234-5678",
-				Email: "seller@email.de",
+				Name:  inv.Supplier.People[0].Name.Given,
+				Phone: inv.Supplier.Telephones[0].Number,
+				Email: inv.Supplier.Emails[0].Address,
 			},
 			PostalTradeAddress: &PostalTradeAddress{
-				Postcode:  "12345",
-				LineOne:   "[Seller address line 1]",
-				City:      "[Seller city]",
-				CountryID: "DE",
+				Postcode:  inv.Supplier.Addresses[0].Code,
+				LineOne:   inv.Supplier.Addresses[0].Street,
+				City:      inv.Supplier.Addresses[0].Locality,
+				CountryID: string(inv.Supplier.Addresses[0].Country),
 			},
 			URIUniversalCommunication: &URIUniversalCommunication{
-				URIID:    "seller@email.de",
+				URIID:    inv.Supplier.Emails[0].Address,
 				SchemeID: "EM",
 			},
 			SpecifiedTaxRegistration: &SpecifiedTaxRegistration{
-				ID:       "DE 123456789",
+				ID:       inv.Supplier.TaxID.String(),
 				SchemeID: "VA",
 			},
 		},
 		Buyer: &Buyer{
-			ID:   "[Buyer identifier]",
-			Name: "[Buyer name]",
+			ID:   inv.Customer.TaxID.String(),
+			Name: inv.Customer.Name,
 			PostalTradeAddress: &PostalTradeAddress{
-				Postcode:  "12345",
-				LineOne:   "[Buyer address line 1]",
-				City:      "[Buyer city]",
-				CountryID: "DE",
+				Postcode:  inv.Customer.Addresses[0].Code,
+				LineOne:   inv.Customer.Addresses[0].Street,
+				City:      inv.Customer.Addresses[0].Locality,
+				CountryID: string(inv.Supplier.Addresses[0].Country),
 			},
 			URIUniversalCommunication: &URIUniversalCommunication{
-				URIID:    "buyer@info.de",
+				URIID:    inv.Customer.Emails[0].Address,
 				SchemeID: "EM",
 			},
 		},

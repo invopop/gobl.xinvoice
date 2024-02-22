@@ -21,6 +21,14 @@
 				"country": "DE",
 				"code": "111111125"
 			},
+			"people": [
+				{
+					"name": {
+						"given": "John",
+						"surname": "Doe"
+					}
+				}
+			],
 			"addresses": [
 				{
 					"num": "16",
@@ -33,6 +41,11 @@
 			"emails": [
 				{
 					"addr": "billing@example.com"
+				}
+			],
+			"telephones": [
+				{
+					"num": "+48100200300"
 				}
 			]
 		},
