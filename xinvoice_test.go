@@ -11,13 +11,13 @@ import (
 
 func TestNewDocument(t *testing.T) {
 	t.Run("should return bytes of the xml document", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-de-de.json")
 		require.NoError(t, err)
 
 		data, err := doc.Bytes()
 		require.NoError(t, err)
 
-		output, err := test.LoadOutputFile("invoice-hardcoded.xml")
+		output, err := test.LoadOutputFile("invoice-de-de.xml")
 		require.NoError(t, err)
 
 		assert.Equal(t, output, data)
