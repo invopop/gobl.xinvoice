@@ -4,9 +4,11 @@ package xinvoice
 import (
 	"encoding/xml"
 	"fmt"
+	"time"
 
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cal"
 )
 
 // CFDI schema constants
@@ -73,11 +75,13 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 }
 
 func newHeader(inv *bill.Invoice) *ExchangedDocument {
+	date := formatIssueDate(inv.IssueDate)
+
 	return &ExchangedDocument{
 		ID:       "123456XX",
 		TypeCode: "380",
 		IssueDate: &Date{
-			Date:   "20160404",
+			Date:   date,
 			Format: "102",
 		},
 		IncludedNote: &Note{
@@ -85,6 +89,11 @@ func newHeader(inv *bill.Invoice) *ExchangedDocument {
 			SubjectCode: "ADU",
 		},
 	}
+}
+
+func formatIssueDate(date cal.Date) string {
+	t := time.Date(date.Year, date.Month, date.Day, 0, 0, 0, 0, time.UTC)
+	return t.Format("20060102")
 }
 
 // Bytes returns the XML representation of the document in bytes
