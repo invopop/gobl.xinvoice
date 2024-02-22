@@ -76,11 +76,12 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 }
 
 func newHeader(inv *bill.Invoice) *ExchangedDocument {
+	id := inv.Series + "-" + inv.Code
 	typeCode := invoiceTypeCode(inv.Type)
 	date := formatIssueDate(inv.IssueDate)
 
 	return &ExchangedDocument{
-		ID:       "123456XX",
+		ID:       id,
 		TypeCode: typeCode,
 		IssueDate: &Date{
 			Date:   date,
