@@ -9,6 +9,7 @@ import (
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
+	"github.com/invopop/gobl/cbc"
 )
 
 // CFDI schema constants
@@ -75,11 +76,12 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 }
 
 func newHeader(inv *bill.Invoice) *ExchangedDocument {
+	typeCode := invoiceTypeCode(inv.Type)
 	date := formatIssueDate(inv.IssueDate)
 
 	return &ExchangedDocument{
 		ID:       "123456XX",
-		TypeCode: "380",
+		TypeCode: typeCode,
 		IssueDate: &Date{
 			Date:   date,
 			Format: "102",
@@ -94,6 +96,22 @@ func newHeader(inv *bill.Invoice) *ExchangedDocument {
 func formatIssueDate(date cal.Date) string {
 	t := time.Date(date.Year, date.Month, date.Day, 0, 0, 0, 0, time.UTC)
 	return t.Format("20060102")
+}
+
+// For German suppliers, the element "Invoice type code" (BT-3) should only contain the
+// following values from code list UNTDID 1001:
+// - 326 (Partial invoice)
+// - 380 (Commercial invoice)
+// - 384 (Corrected invoice)
+// - 389 (Self-billed invoice)
+// - 381 (Credit note)
+func invoiceTypeCode(t cbc.Key) string {
+	hash := map[string]string{
+		"standard":    "380",
+		"corrective":  "384",
+		"credit-note": "381",
+	}
+	return hash[t.String()]
 }
 
 // Bytes returns the XML representation of the document in bytes
