@@ -4,12 +4,9 @@ package xinvoice
 import (
 	"encoding/xml"
 	"fmt"
-	"time"
 
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
-	"github.com/invopop/gobl/cal"
-	"github.com/invopop/gobl/cbc"
 )
 
 // CFDI schema constants
@@ -24,35 +21,21 @@ const (
 
 // Document is a pseudo-model for containing the XML document being created
 type Document struct {
-	XMLName                xml.Name           `xml:"rsm:CrossIndustryInvoice"`
-	RSMNamespace           string             `xml:"xmlns:rsm,attr"`
-	RAMNamespace           string             `xml:"xmlns:ram,attr"`
-	QDTNamespace           string             `xml:"xmlns:qdt,attr"`
-	UDTNamespace           string             `xml:"xmlns:udt,attr"`
-	BusinessProcessContext string             `xml:"rsm:ExchangedDocumentContext>ram:BusinessProcessSpecifiedDocumentContextParameter>ram:ID"`
-	GuidelineContext       string             `xml:"rsm:ExchangedDocumentContext>ram:GuidelineSpecifiedDocumentContextParameter>ram:ID"`
-	ExchangedDocument      *ExchangedDocument `xml:"rsm:ExchangedDocument"`
-	Transaction            *Transaction       `xml:"rsm:SupplyChainTradeTransaction"`
-}
-
-// ExchangedDocument a collection of data for a Cross Industry Invoice Header that is exchanged between two or more parties in written, printed or electronic form.
-type ExchangedDocument struct {
-	ID           string `xml:"ram:ID"`
-	TypeCode     string `xml:"ram:TypeCode"`
-	IssueDate    *Date  `xml:"ram:IssueDateTime>udt:DateTimeString"`
-	IncludedNote *Note  `xml:"ram:IncludedNote,omitempty"`
+	XMLName                xml.Name     `xml:"rsm:CrossIndustryInvoice"`
+	RSMNamespace           string       `xml:"xmlns:rsm,attr"`
+	RAMNamespace           string       `xml:"xmlns:ram,attr"`
+	QDTNamespace           string       `xml:"xmlns:qdt,attr"`
+	UDTNamespace           string       `xml:"xmlns:udt,attr"`
+	BusinessProcessContext string       `xml:"rsm:ExchangedDocumentContext>ram:BusinessProcessSpecifiedDocumentContextParameter>ram:ID"`
+	GuidelineContext       string       `xml:"rsm:ExchangedDocumentContext>ram:GuidelineSpecifiedDocumentContextParameter>ram:ID"`
+	ExchangedDocument      *Header      `xml:"rsm:ExchangedDocument"`
+	Transaction            *Transaction `xml:"rsm:SupplyChainTradeTransaction"`
 }
 
 // Date defines date in the UDT structure
 type Date struct {
 	Date   string `xml:",chardata"`
 	Format string `xml:"format,attr,omitempty"`
-}
-
-// Note defines note in the RAM structure
-type Note struct {
-	Content     string `xml:"ram:Content"`
-	SubjectCode string `xml:"ram:SubjectCode"`
 }
 
 // NewDocument converts a GOBL envelope into a XRechnung and Factur-X document
@@ -69,46 +52,10 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		UDTNamespace:           UDT,
 		BusinessProcessContext: BusinessProcess,
 		GuidelineContext:       GuidelineContext,
-		ExchangedDocument:      newHeader(inv),
+		ExchangedDocument:      NewHeader(inv),
 		Transaction:            NewTransaction(inv),
 	}
 	return &doc, nil
-}
-
-func newHeader(inv *bill.Invoice) *ExchangedDocument {
-	id := inv.Series + "-" + inv.Code
-	typeCode := invoiceTypeCode(inv.Type)
-	date := formatIssueDate(inv.IssueDate)
-
-	return &ExchangedDocument{
-		ID:       id,
-		TypeCode: typeCode,
-		IssueDate: &Date{
-			Date:   date,
-			Format: "102",
-		},
-	}
-}
-
-func formatIssueDate(date cal.Date) string {
-	t := time.Date(date.Year, date.Month, date.Day, 0, 0, 0, 0, time.UTC)
-	return t.Format("20060102")
-}
-
-// For German suppliers, the element "Invoice type code" (BT-3) should only contain the
-// following values from code list UNTDID 1001:
-// - 326 (Partial invoice)
-// - 380 (Commercial invoice)
-// - 384 (Corrected invoice)
-// - 389 (Self-billed invoice)
-// - 381 (Credit note)
-func invoiceTypeCode(t cbc.Key) string {
-	hash := map[string]string{
-		"standard":    "380",
-		"corrective":  "384",
-		"credit-note": "381",
-	}
-	return hash[t.String()]
 }
 
 // Bytes returns the XML representation of the document in bytes
