@@ -1,6 +1,8 @@
 package xinvoice
 
-import "github.com/invopop/gobl/bill"
+import (
+	"github.com/invopop/gobl/bill"
+)
 
 // Transaction defines the structure of the transaction in the CII standard
 type Transaction struct {
@@ -18,14 +20,9 @@ type Delivery struct {
 // NewTransaction creates the transaction part of a EN 16931 compliant invoice
 func NewTransaction(inv *bill.Invoice) *Transaction {
 	return &Transaction{
-		Lines:     NewLines(inv.Lines),
-		Agreement: NewAgreement(inv),
-		Delivery: &Delivery{
-			Event: &Date{
-				Date:   "20160621",
-				Format: "102",
-			},
-		},
+		Lines:      NewLines(inv.Lines),
+		Agreement:  NewAgreement(inv),
+		Delivery:   &Delivery{},
 		Settlement: NewSettlement(inv),
 	}
 }
