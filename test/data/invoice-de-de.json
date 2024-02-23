@@ -89,6 +89,11 @@
 				"total": "1800.00"
 			}
 		],
+		"payment": {
+				"terms": {
+						"detail": "lorem ipsum"
+				}
+		},
 		"totals": {
 			"sum": "1800.00",
 			"total": "1800.00",
