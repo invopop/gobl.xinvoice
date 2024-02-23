@@ -40,7 +40,7 @@ type ExchangedDocument struct {
 	ID           string `xml:"ram:ID"`
 	TypeCode     string `xml:"ram:TypeCode"`
 	IssueDate    *Date  `xml:"ram:IssueDateTime>udt:DateTimeString"`
-	IncludedNote *Note  `xml:"ram:IncludedNote"`
+	IncludedNote *Note  `xml:"ram:IncludedNote,omitempty"`
 }
 
 // Date defines date in the UDT structure
@@ -86,10 +86,6 @@ func newHeader(inv *bill.Invoice) *ExchangedDocument {
 		IssueDate: &Date{
 			Date:   date,
 			Format: "102",
-		},
-		IncludedNote: &Note{
-			Content:     "Es gelten unsere Allgem. Geschäftsbedingungen, die Sie unter […] finden.",
-			SubjectCode: "ADU",
 		},
 	}
 }
