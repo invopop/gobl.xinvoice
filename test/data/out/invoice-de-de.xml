@@ -14,10 +14,6 @@
     <ram:IssueDateTime>
       <udt:DateTimeString format="102">20240213</udt:DateTimeString>
     </ram:IssueDateTime>
-    <ram:IncludedNote>
-      <ram:Content>Es gelten unsere Allgem. Geschäftsbedingungen, die Sie unter […] finden.</ram:Content>
-      <ram:SubjectCode>ADU</ram:SubjectCode>
-    </ram:IncludedNote>
   </rsm:ExchangedDocument>
   <rsm:SupplyChainTradeTransaction>
     <ram:IncludedSupplyChainTradeLineItem>
