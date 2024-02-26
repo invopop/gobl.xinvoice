@@ -45,6 +45,11 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, fmt.Errorf("invalid type %T", env.Document)
 	}
 
+	transaction, err := NewTransaction(inv)
+	if err != nil {
+		return nil, err
+	}
+
 	doc := Document{
 		RSMNamespace:           RSM,
 		RAMNamespace:           RAM,
@@ -53,7 +58,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		BusinessProcessContext: BusinessProcess,
 		GuidelineContext:       GuidelineContext,
 		ExchangedDocument:      NewHeader(inv),
-		Transaction:            NewTransaction(inv),
+		Transaction:            transaction,
 	}
 	return &doc, nil
 }

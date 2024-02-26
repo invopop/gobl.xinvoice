@@ -1,6 +1,10 @@
 package xinvoice
 
-import "github.com/invopop/gobl/bill"
+import (
+	"fmt"
+
+	"github.com/invopop/gobl/bill"
+)
 
 // Line defines the structure of the IncludedSupplyChainTradeLineItem in the CII standard
 type Line struct {
@@ -25,14 +29,28 @@ type TradeSettlement struct {
 	Sum            string `xml:"ram:SpecifiedTradeSettlementLineMonetarySummation>ram:LineTotalAmount"`
 }
 
-func newLine(line *bill.Line) *Line {
-	return &Line{
-		ID:       line.Item.Name,
-		Name:     line.Item.Name,
-		NetPrice: line.Item.Price.String(),
+func newLine(line *bill.Line) (*Line, error) {
+	if len(line.Taxes) == 0 {
+		return nil, fmt.Errorf("No Taxes provided for item")
+	}
+
+	if line.Taxes[0].Percent == nil {
+		return nil, fmt.Errorf("No Tax percent provided for item")
+	}
+	percent := line.Taxes[0].Percent.StringWithoutSymbol()
+
+	if line.Item == nil {
+		return nil, fmt.Errorf("No item provided in line")
+	}
+	item := line.Item
+
+	lineItem := &Line{
+		ID:       item.Name,
+		Name:     item.Name,
+		NetPrice: item.Price.String(),
 		TradeDelivery: &Quantity{
 			Amount:   line.Quantity.String(),
-			UnitCode: string(line.Item.Unit.UNECE()),
+			UnitCode: string(item.Unit.UNECE()),
 		},
 		TradeSettlement: &TradeSettlement{
 			TaxType: "VAT",
@@ -47,19 +65,26 @@ func newLine(line *bill.Line) *Line {
 			// - L = IGIC (Canary Islands)
 			// - M = IPSI (Ceuta/Melilla)
 			TaxCode:        "S",
-			TaxRatePercent: line.Taxes[0].Percent.StringWithoutSymbol(),
+			TaxRatePercent: percent,
 			Sum:            line.Total.String(),
 		},
 	}
+
+	return lineItem, nil
 }
 
-// NewLines generates lines for the KSeF invoice
-func NewLines(lines []*bill.Line) []*Line {
+// NewLines generates lines for XInvoice
+func NewLines(lines []*bill.Line) ([]*Line, error) {
 	var Lines []*Line
 
 	for _, line := range lines {
-		Lines = append(Lines, newLine(line))
+		lineItem, err := newLine(line)
+		if err != nil {
+			return nil, err
+		}
+
+		Lines = append(Lines, lineItem)
 	}
 
-	return Lines
+	return Lines, nil
 }

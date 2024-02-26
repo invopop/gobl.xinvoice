@@ -1,6 +1,8 @@
 package xinvoice
 
 import (
+	"fmt"
+
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/tax"
@@ -39,12 +41,22 @@ type TaxTotalAmount struct {
 	Currency string `xml:"currencyID,attr"`
 }
 
-func NewSettlement(inv *bill.Invoice) *Settlement {
-	return &Settlement{
+// NewSettlement creates the ApplicableHeaderTradeSettlement part of a EN 16931 compliant invoice
+func NewSettlement(inv *bill.Invoice) (*Settlement, error) {
+	if inv.Totals == nil {
+		return nil, fmt.Errorf("Totals not provided")
+	}
+
+	taxes, err := newTaxes(inv.Totals.Taxes)
+	if err != nil {
+		return nil, err
+	}
+
+	settlement := &Settlement{
 		Currency:    string(inv.Currency),
 		TypeCode:    "1",
 		Description: inv.Payment.Terms.Detail,
-		Tax:         newTaxes(inv.Totals.Taxes),
+		Tax:         taxes,
 		Summary: &Summary{
 			TotalAmount:         inv.Totals.Total.String(),
 			TaxBasisTotalAmount: inv.Totals.Total.String(),
@@ -56,28 +68,46 @@ func NewSettlement(inv *bill.Invoice) *Settlement {
 			},
 		},
 	}
+
+	return settlement, nil
 }
 
-func newTaxes(total *tax.Total) []*Tax {
+func newTaxes(total *tax.Total) ([]*Tax, error) {
 	var Taxes []*Tax
+
+	if total == nil {
+		return nil, fmt.Errorf("Total taxes not provided")
+	}
 
 	for _, category := range total.Categories {
 		for _, rate := range category.Rates {
-			Taxes = append(Taxes, newTax(rate))
+			tax, err := newTax(rate)
+			if err != nil {
+				return nil, err
+			}
+
+			Taxes = append(Taxes, tax)
 		}
 	}
 
-	return Taxes
+	return Taxes, nil
 }
 
-func newTax(rate *tax.RateTotal) *Tax {
-	return &Tax{
+func newTax(rate *tax.RateTotal) (*Tax, error) {
+	if rate.Percent == nil {
+		return nil, fmt.Errorf("No tax rate percent provided")
+	}
+	percent := rate.Percent.StringWithoutSymbol()
+
+	tax := &Tax{
 		CalculatedAmount:      rate.Amount.String(),
 		TypeCode:              "VAT",
 		BasisAmount:           rate.Base.String(),
 		CategoryCode:          taxCategoryCode(rate.Key),
-		RateApplicablePercent: rate.Percent.StringWithoutSymbol(),
+		RateApplicablePercent: percent,
 	}
+
+	return tax, nil
 }
 
 // AE - VAT Reverse Charge
