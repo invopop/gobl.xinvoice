@@ -1,6 +1,11 @@
 package xinvoice
 
-import "github.com/invopop/gobl/bill"
+import (
+	"fmt"
+
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/org"
+)
 
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
 type Agreement struct {
@@ -60,44 +65,153 @@ type URIUniversalCommunication struct {
 	SchemeID string `xml:"schemeID,attr"`
 }
 
-func NewAgreement(inv *bill.Invoice) *Agreement {
-	return &Agreement{
-		BuyerReference: inv.Customer.TaxID.String(),
-		Seller: &Seller{
-			Name: inv.Supplier.Name,
-			Contact: &Contact{
-				Name:  inv.Supplier.People[0].Name.Given,
-				Phone: inv.Supplier.Telephones[0].Number,
-				Email: inv.Supplier.Emails[0].Address,
-			},
-			PostalTradeAddress: &PostalTradeAddress{
-				Postcode:  inv.Supplier.Addresses[0].Code,
-				LineOne:   inv.Supplier.Addresses[0].Street,
-				City:      inv.Supplier.Addresses[0].Locality,
-				CountryID: string(inv.Supplier.Addresses[0].Country),
-			},
-			URIUniversalCommunication: &URIUniversalCommunication{
-				URIID:    inv.Supplier.Emails[0].Address,
-				SchemeID: "EM",
-			},
-			SpecifiedTaxRegistration: &SpecifiedTaxRegistration{
-				ID:       inv.Supplier.TaxID.String(),
-				SchemeID: "VA",
-			},
-		},
-		Buyer: &Buyer{
-			ID:   inv.Customer.TaxID.String(),
-			Name: inv.Customer.Name,
-			PostalTradeAddress: &PostalTradeAddress{
-				Postcode:  inv.Customer.Addresses[0].Code,
-				LineOne:   inv.Customer.Addresses[0].Street,
-				City:      inv.Customer.Addresses[0].Locality,
-				CountryID: string(inv.Supplier.Addresses[0].Country),
-			},
-			URIUniversalCommunication: &URIUniversalCommunication{
-				URIID:    inv.Customer.Emails[0].Address,
-				SchemeID: "EM",
-			},
+// NewAgreement creates the ApplicableHeaderTradeAgreement part of a EN 16931 compliant invoice
+func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
+	if inv.Customer == nil {
+		return nil, fmt.Errorf("Customer not found")
+	}
+	customer := inv.Customer
+
+	if inv.Supplier == nil {
+		return nil, fmt.Errorf("Supplier not found")
+	}
+	supplier := inv.Supplier
+
+	if customer.TaxID == nil {
+		return nil, fmt.Errorf("Customer TaxID not found")
+	}
+	ref := customer.TaxID.String()
+
+	buyer, err := newBuyer(customer)
+	if err != nil {
+		return nil, err
+	}
+
+	seller, err := newSeller(supplier)
+	if err != nil {
+		return nil, err
+	}
+
+	agreement := &Agreement{
+		BuyerReference: ref,
+		Seller:         seller,
+		Buyer:          buyer,
+	}
+
+	return agreement, nil
+}
+
+func newBuyer(customer *org.Party) (*Buyer, error) {
+	if customer.TaxID == nil {
+		return nil, fmt.Errorf("Customer TaxID not found")
+	}
+	ref := customer.TaxID.String()
+
+	address, err := newPostalTradeAddress(customer.Addresses)
+	if err != nil {
+		return nil, err
+	}
+
+	email, err := newEmail(customer.Emails)
+	if err != nil {
+		return nil, err
+	}
+
+	buyer := &Buyer{
+		ID:                        ref,
+		Name:                      customer.Name,
+		PostalTradeAddress:        address,
+		URIUniversalCommunication: email,
+	}
+
+	return buyer, nil
+}
+
+func newSeller(supplier *org.Party) (*Seller, error) {
+	if supplier.TaxID == nil {
+		return nil, fmt.Errorf("Supplier TaxID not found")
+	}
+	taxID := supplier.TaxID.String()
+
+	contact, err := newContact(supplier)
+	if err != nil {
+		return nil, err
+	}
+
+	address, err := newPostalTradeAddress(supplier.Addresses)
+	if err != nil {
+		return nil, err
+	}
+
+	email, err := newEmail(supplier.Emails)
+	if err != nil {
+		return nil, err
+	}
+
+	seller := &Seller{
+		Name:                      supplier.Name,
+		Contact:                   contact,
+		PostalTradeAddress:        address,
+		URIUniversalCommunication: email,
+		SpecifiedTaxRegistration: &SpecifiedTaxRegistration{
+			ID:       taxID,
+			SchemeID: "VA",
 		},
 	}
+
+	return seller, nil
+}
+
+func newContact(supplier *org.Party) (*Contact, error) {
+	if len(supplier.People) == 0 {
+		return nil, fmt.Errorf("Supplier People not found")
+	}
+	name := supplier.People[0].Name.Given
+
+	if len(supplier.Telephones) == 0 {
+		return nil, fmt.Errorf("Supplier Telephones not found")
+	}
+	phone := supplier.Telephones[0].Number
+
+	if len(supplier.Emails) == 0 {
+		return nil, fmt.Errorf("Supplier Emails not found")
+	}
+	email := supplier.Emails[0].Address
+
+	contact := &Contact{
+		Name:  name,
+		Phone: phone,
+		Email: email,
+	}
+
+	return contact, nil
+}
+
+func newPostalTradeAddress(addresses []*org.Address) (*PostalTradeAddress, error) {
+	if len(addresses) == 0 {
+		return nil, fmt.Errorf("No addresses found")
+	}
+	address := addresses[0]
+
+	postalTradeAddress := &PostalTradeAddress{
+		Postcode:  address.Code,
+		LineOne:   address.Street,
+		City:      address.Locality,
+		CountryID: string(address.Country),
+	}
+
+	return postalTradeAddress, nil
+}
+
+func newEmail(emails []*org.Email) (*URIUniversalCommunication, error) {
+	if len(emails) == 0 {
+		return nil, fmt.Errorf("No emails found")
+	}
+
+	email := &URIUniversalCommunication{
+		URIID:    emails[0].Address,
+		SchemeID: "EM",
+	}
+
+	return email, nil
 }

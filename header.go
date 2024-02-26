@@ -22,6 +22,7 @@ type Note struct {
 	SubjectCode string `xml:"ram:SubjectCode"`
 }
 
+// NewHeader creates the ExchangedDocument part of a EN 16931 compliant invoice
 func NewHeader(inv *bill.Invoice) *Header {
 	id := inv.Series + "-" + inv.Code
 	typeCode := invoiceTypeCode(inv.Type)
@@ -50,10 +51,10 @@ func formatIssueDate(date cal.Date) string {
 // - 389 (Self-billed invoice)
 // - 381 (Credit note)
 func invoiceTypeCode(t cbc.Key) string {
-	hash := map[string]string{
-		"standard":    "380",
-		"corrective":  "384",
-		"credit-note": "381",
+	hash := map[cbc.Key]string{
+		bill.InvoiceTypeStandard:   "380",
+		bill.InvoiceTypeCorrective: "384",
+		bill.InvoiceTypeCreditNote: "381",
 	}
-	return hash[t.String()]
+	return hash[t]
 }

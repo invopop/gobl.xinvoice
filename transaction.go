@@ -18,11 +18,28 @@ type Delivery struct {
 }
 
 // NewTransaction creates the transaction part of a EN 16931 compliant invoice
-func NewTransaction(inv *bill.Invoice) *Transaction {
-	return &Transaction{
-		Lines:      NewLines(inv.Lines),
-		Agreement:  NewAgreement(inv),
-		Delivery:   &Delivery{},
-		Settlement: NewSettlement(inv),
+func NewTransaction(inv *bill.Invoice) (*Transaction, error) {
+	agreement, err := NewAgreement(inv)
+	if err != nil {
+		return nil, err
 	}
+
+	settlement, err := NewSettlement(inv)
+	if err != nil {
+		return nil, err
+	}
+
+	lines, err := NewLines(inv.Lines)
+	if err != nil {
+		return nil, err
+	}
+
+	transaction := &Transaction{
+		Lines:      lines,
+		Agreement:  agreement,
+		Delivery:   &Delivery{},
+		Settlement: settlement,
+	}
+
+	return transaction, nil
 }
