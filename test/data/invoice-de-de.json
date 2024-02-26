@@ -60,7 +60,8 @@
 					"num": "25",
 					"street": "Werner-Heisenberg-Allee",
 					"locality": "München",
-					"code": "80939"
+					"code": "80939",
+					"country": "DE"
 				}
 			],
 			"emails": [
