@@ -47,7 +47,7 @@
       <ram:SellerTradeParty>
         <ram:Name>Provide One GmbH</ram:Name>
         <ram:DefinedTradeContact>
-          <ram:PersonName>John</ram:PersonName>
+          <ram:PersonName>John Doe</ram:PersonName>
           <ram:TelephoneUniversalCommunication>
             <ram:CompleteNumber>+48100200300</ram:CompleteNumber>
           </ram:TelephoneUniversalCommunication>

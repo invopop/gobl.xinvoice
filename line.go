@@ -23,26 +23,27 @@ type Quantity struct {
 
 // TradeSettlement defines the structure of the SpecifiedLineTradeSettlement of the CII standard
 type TradeSettlement struct {
-	TaxType        string `xml:"ram:ApplicableTradeTax>ram:TypeCode"`
-	TaxCode        string `xml:"ram:ApplicableTradeTax>ram:CategoryCode"`
-	TaxRatePercent string `xml:"ram:ApplicableTradeTax>ram:RateApplicablePercent"`
-	Sum            string `xml:"ram:SpecifiedTradeSettlementLineMonetarySummation>ram:LineTotalAmount"`
+	ApplicableTradeTax []*ApplicableTradeTax `xml:"ram:ApplicableTradeTax"`
+	Sum                string                `xml:"ram:SpecifiedTradeSettlementLineMonetarySummation>ram:LineTotalAmount"`
+}
+
+// ApplicableTradeTax defines the structure of ApplicableTradeTax of the CII standard
+type ApplicableTradeTax struct {
+	TaxType        string `xml:"ram:TypeCode"`
+	TaxCode        string `xml:"ram:CategoryCode"`
+	TaxRatePercent string `xml:"ram:RateApplicablePercent"`
 }
 
 func newLine(line *bill.Line) (*Line, error) {
-	if len(line.Taxes) == 0 {
-		return nil, fmt.Errorf("No Taxes provided for item")
-	}
-
-	if line.Taxes[0].Percent == nil {
-		return nil, fmt.Errorf("No Tax percent provided for item")
-	}
-	percent := line.Taxes[0].Percent.StringWithoutSymbol()
-
 	if line.Item == nil {
 		return nil, fmt.Errorf("No item provided in line")
 	}
 	item := line.Item
+
+	settlement, err := newTradeSettlement(line)
+	if err != nil {
+		return nil, err
+	}
 
 	lineItem := &Line{
 		ID:       item.Name,
@@ -52,8 +53,21 @@ func newLine(line *bill.Line) (*Line, error) {
 			Amount:   line.Quantity.String(),
 			UnitCode: string(item.Unit.UNECE()),
 		},
-		TradeSettlement: &TradeSettlement{
-			TaxType: "VAT",
+		TradeSettlement: settlement,
+	}
+
+	return lineItem, nil
+}
+
+func newTradeSettlement(line *bill.Line) (*TradeSettlement, error) {
+	var applicableTradeTax []*ApplicableTradeTax
+	for _, tax := range line.Taxes {
+		if tax.Percent == nil {
+			return nil, fmt.Errorf("No Tax percent provided for item")
+		}
+
+		tradeTax := &ApplicableTradeTax{
+			TaxType: tax.Category.String(),
 			// The sales tax category codes are as follows:
 			// - S = Sales tax applies at the standard rate
 			// - Z = goods taxable at the zero rate
@@ -65,12 +79,18 @@ func newLine(line *bill.Line) (*Line, error) {
 			// - L = IGIC (Canary Islands)
 			// - M = IPSI (Ceuta/Melilla)
 			TaxCode:        "S",
-			TaxRatePercent: percent,
-			Sum:            line.Total.String(),
-		},
+			TaxRatePercent: tax.Percent.StringWithoutSymbol(),
+		}
+
+		applicableTradeTax = append(applicableTradeTax, tradeTax)
 	}
 
-	return lineItem, nil
+	settlement := &TradeSettlement{
+		ApplicableTradeTax: applicableTradeTax,
+		Sum:                line.Total.String(),
+	}
+
+	return settlement, nil
 }
 
 // NewLines generates lines for XInvoice
