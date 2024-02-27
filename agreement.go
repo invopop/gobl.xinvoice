@@ -14,49 +14,12 @@ type Agreement struct {
 	Buyer          *Buyer  `xml:"ram:BuyerTradeParty"`
 }
 
-// Seller defines the structure of the SellerTradeParty of the CII standard
-type Seller struct {
-	Name                      string                     `xml:"ram:Name"`
-	LegalOrganization         *LegalOrganization         `xml:"ram:SpecifiedLegalOrganization,omitempty"`
-	Contact                   *Contact                   `xml:"ram:DefinedTradeContact"`
-	PostalTradeAddress        *PostalTradeAddress        `xml:"ram:PostalTradeAddress"`
-	URIUniversalCommunication *URIUniversalCommunication `xml:"ram:URIUniversalCommunication>ram:URIID"`
-	SpecifiedTaxRegistration  *SpecifiedTaxRegistration  `xml:"ram:SpecifiedTaxRegistration>ram:ID"`
-}
-
-// Contact defines the structure of the DefinedTradeContact of the CII standard
-type Contact struct {
-	Name  string `xml:"ram:PersonName"`
-	Phone string `xml:"ram:TelephoneUniversalCommunication>ram:CompleteNumber"`
-	Email string `xml:"ram:EmailURIUniversalCommunication>ram:URIID"`
-}
-
-// SpecifiedTaxRegistration defines the structure of the SpecifiedTaxRegistration of the CII standard
-type SpecifiedTaxRegistration struct {
-	ID       string `xml:",chardata"`
-	SchemeID string `xml:"schemeID,attr"`
-}
-
-// LegalOrganization defines the structure of the SpecifiedLegalOrganization of the CII standard
-type LegalOrganization struct {
-	ID   string `xml:"ram:ID"`
-	Name string `xml:"ram:TradingBusinessName"`
-}
-
 // PostalTradeAddress defines the structure of the PostalTradeAddress of the CII standard
 type PostalTradeAddress struct {
 	Postcode  string `xml:"ram:PostcodeCode"`
 	LineOne   string `xml:"ram:LineOne"`
 	City      string `xml:"ram:CityName"`
 	CountryID string `xml:"ram:CountryID"`
-}
-
-// Buyer defines the structure of the BuyerTradeParty of the CII standard
-type Buyer struct {
-	ID                        string                     `xml:"ram:ID"`
-	Name                      string                     `xml:"ram:Name"`
-	PostalTradeAddress        *PostalTradeAddress        `xml:"ram:PostalTradeAddress"`
-	URIUniversalCommunication *URIUniversalCommunication `xml:"ram:URIUniversalCommunication>ram:URIID"`
 }
 
 // URIUniversalCommunication defines the structure of URIUniversalCommunication of the CII standard
@@ -82,12 +45,12 @@ func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 	}
 	ref := customer.TaxID.String()
 
-	buyer, err := newBuyer(customer)
+	buyer, err := NewBuyer(customer)
 	if err != nil {
 		return nil, err
 	}
 
-	seller, err := newSeller(supplier)
+	seller, err := NewSeller(supplier)
 	if err != nil {
 		return nil, err
 	}
@@ -101,93 +64,8 @@ func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 	return agreement, nil
 }
 
-func newBuyer(customer *org.Party) (*Buyer, error) {
-	if customer.TaxID == nil {
-		return nil, fmt.Errorf("Customer TaxID not found")
-	}
-	ref := customer.TaxID.String()
-
-	address, err := newPostalTradeAddress(customer.Addresses)
-	if err != nil {
-		return nil, err
-	}
-
-	email, err := newEmail(customer.Emails)
-	if err != nil {
-		return nil, err
-	}
-
-	buyer := &Buyer{
-		ID:                        ref,
-		Name:                      customer.Name,
-		PostalTradeAddress:        address,
-		URIUniversalCommunication: email,
-	}
-
-	return buyer, nil
-}
-
-func newSeller(supplier *org.Party) (*Seller, error) {
-	if supplier.TaxID == nil {
-		return nil, fmt.Errorf("Supplier TaxID not found")
-	}
-	taxID := supplier.TaxID.String()
-
-	contact, err := newContact(supplier)
-	if err != nil {
-		return nil, err
-	}
-
-	address, err := newPostalTradeAddress(supplier.Addresses)
-	if err != nil {
-		return nil, err
-	}
-
-	email, err := newEmail(supplier.Emails)
-	if err != nil {
-		return nil, err
-	}
-
-	seller := &Seller{
-		Name:                      supplier.Name,
-		Contact:                   contact,
-		PostalTradeAddress:        address,
-		URIUniversalCommunication: email,
-		SpecifiedTaxRegistration: &SpecifiedTaxRegistration{
-			ID:       taxID,
-			SchemeID: "VA",
-		},
-	}
-
-	return seller, nil
-}
-
-func newContact(supplier *org.Party) (*Contact, error) {
-	if len(supplier.People) == 0 {
-		return nil, fmt.Errorf("Supplier People not found")
-	}
-	name := supplier.People[0].Name.Given
-
-	if len(supplier.Telephones) == 0 {
-		return nil, fmt.Errorf("Supplier Telephones not found")
-	}
-	phone := supplier.Telephones[0].Number
-
-	if len(supplier.Emails) == 0 {
-		return nil, fmt.Errorf("Supplier Emails not found")
-	}
-	email := supplier.Emails[0].Address
-
-	contact := &Contact{
-		Name:  name,
-		Phone: phone,
-		Email: email,
-	}
-
-	return contact, nil
-}
-
-func newPostalTradeAddress(addresses []*org.Address) (*PostalTradeAddress, error) {
+// NewPostalTradeAddress creates the PostalTradeAddress part of a EN 16931 compliant invoice
+func NewPostalTradeAddress(addresses []*org.Address) (*PostalTradeAddress, error) {
 	if len(addresses) == 0 {
 		return nil, fmt.Errorf("No addresses found")
 	}
@@ -203,7 +81,8 @@ func newPostalTradeAddress(addresses []*org.Address) (*PostalTradeAddress, error
 	return postalTradeAddress, nil
 }
 
-func newEmail(emails []*org.Email) (*URIUniversalCommunication, error) {
+// NewEmail creates the URIUniversalCommunication part of a EN 16931 compliant invoice
+func NewEmail(emails []*org.Email) (*URIUniversalCommunication, error) {
 	if len(emails) == 0 {
 		return nil, fmt.Errorf("No emails found")
 	}
