@@ -9,7 +9,7 @@ import (
 
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
 type Agreement struct {
-	BuyerReference string  `xml:"ram:BuyerReference,omitempty"`
+	BuyerReference string  `xml:"ram:BuyerReference"`
 	Seller         *Seller `xml:"ram:SellerTradeParty"`
 	Buyer          *Buyer  `xml:"ram:BuyerTradeParty"`
 }
@@ -33,17 +33,23 @@ func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 	if inv.Customer == nil {
 		return nil, fmt.Errorf("Customer not found")
 	}
+
+	ordering := inv.Ordering
+
+	if ordering == nil {
+		return nil, fmt.Errorf("ordering missing")
+	}
+
+	if ordering.Code == "" {
+		return nil, fmt.Errorf("ordering: code: missing")
+	}
+
 	customer := inv.Customer
 
 	if inv.Supplier == nil {
 		return nil, fmt.Errorf("Supplier not found")
 	}
 	supplier := inv.Supplier
-
-	if customer.TaxID == nil {
-		return nil, fmt.Errorf("Customer TaxID not found")
-	}
-	ref := customer.TaxID.String()
 
 	buyer, err := NewBuyer(customer)
 	if err != nil {
@@ -56,7 +62,7 @@ func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 	}
 
 	agreement := &Agreement{
-		BuyerReference: ref,
+		BuyerReference: ordering.Code,
 		Seller:         seller,
 		Buyer:          buyer,
 	}
