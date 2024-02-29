@@ -90,6 +90,9 @@
 				"total": "1800.00"
 			}
 		],
+		"ordering": {
+			"code": "XR-2024-4"
+		},
 		"payment": {
 				"terms": {
 						"detail": "lorem ipsum"
