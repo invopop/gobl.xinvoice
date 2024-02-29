@@ -1,14 +1,12 @@
 package xinvoice
 
 import (
-	"fmt"
-
 	"github.com/invopop/gobl/org"
 )
 
 // Buyer defines the structure of the BuyerTradeParty of the CII standard
 type Buyer struct {
-	ID                        string                     `xml:"ram:ID"`
+	ID                        string                     `xml:"ram:ID,omitempty"`
 	Name                      string                     `xml:"ram:Name"`
 	PostalTradeAddress        *PostalTradeAddress        `xml:"ram:PostalTradeAddress"`
 	URIUniversalCommunication *URIUniversalCommunication `xml:"ram:URIUniversalCommunication>ram:URIID"`
@@ -16,11 +14,6 @@ type Buyer struct {
 
 // NewBuyer creates the BuyerTradeParty part of a EN 16931 compliant invoice
 func NewBuyer(customer *org.Party) (*Buyer, error) {
-	if customer.TaxID == nil {
-		return nil, fmt.Errorf("Customer TaxID not found")
-	}
-	ref := customer.TaxID.String()
-
 	address, err := NewPostalTradeAddress(customer.Addresses)
 	if err != nil {
 		return nil, err
@@ -32,10 +25,13 @@ func NewBuyer(customer *org.Party) (*Buyer, error) {
 	}
 
 	buyer := &Buyer{
-		ID:                        ref,
 		Name:                      customer.Name,
 		PostalTradeAddress:        address,
 		URIUniversalCommunication: email,
+	}
+
+	if customer.TaxID != nil {
+		buyer.ID = customer.TaxID.String()
 	}
 
 	return buyer, nil
