@@ -82,6 +82,7 @@ Select a branch on which the file you want to test is on. Provide it with a file
 Useful links:
 
 - [XStandard Einkauf - XRechnung](https://xeinkauf.de/xrechnung/)
+- [eInvoicing in Germany](https://ec.europa.eu/digital-building-blocks/sites/display/DIGITAL/eInvoicing+in+Germany)
 
 Specifications:
 
