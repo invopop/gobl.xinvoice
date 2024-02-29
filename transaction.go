@@ -24,21 +24,11 @@ func NewTransaction(inv *bill.Invoice) (*Transaction, error) {
 		return nil, err
 	}
 
-	settlement, err := NewSettlement(inv)
-	if err != nil {
-		return nil, err
-	}
-
-	lines, err := NewLines(inv.Lines)
-	if err != nil {
-		return nil, err
-	}
-
 	transaction := &Transaction{
-		Lines:      lines,
+		Lines:      NewLines(inv.Lines),
 		Agreement:  agreement,
 		Delivery:   &Delivery{},
-		Settlement: settlement,
+		Settlement: NewSettlement(inv),
 	}
 
 	return transaction, nil

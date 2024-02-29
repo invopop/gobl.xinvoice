@@ -13,26 +13,16 @@ type Buyer struct {
 }
 
 // NewBuyer creates the BuyerTradeParty part of a EN 16931 compliant invoice
-func NewBuyer(customer *org.Party) (*Buyer, error) {
-	address, err := NewPostalTradeAddress(customer.Addresses)
-	if err != nil {
-		return nil, err
-	}
-
-	email, err := NewEmail(customer.Emails)
-	if err != nil {
-		return nil, err
-	}
-
+func NewBuyer(customer *org.Party) *Buyer {
 	buyer := &Buyer{
 		Name:                      customer.Name,
-		PostalTradeAddress:        address,
-		URIUniversalCommunication: email,
+		PostalTradeAddress:        NewPostalTradeAddress(customer.Addresses),
+		URIUniversalCommunication: NewEmail(customer.Emails),
 	}
 
 	if customer.TaxID != nil {
 		buyer.ID = customer.TaxID.String()
 	}
 
-	return buyer, nil
+	return buyer
 }

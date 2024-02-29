@@ -30,10 +30,6 @@ type URIUniversalCommunication struct {
 
 // NewAgreement creates the ApplicableHeaderTradeAgreement part of a EN 16931 compliant invoice
 func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
-	if inv.Customer == nil {
-		return nil, fmt.Errorf("Customer not found")
-	}
-
 	ordering := inv.Ordering
 
 	if ordering == nil {
@@ -44,36 +40,25 @@ func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 		return nil, fmt.Errorf("ordering: code: missing")
 	}
 
-	customer := inv.Customer
-
-	if inv.Supplier == nil {
-		return nil, fmt.Errorf("Supplier not found")
-	}
-	supplier := inv.Supplier
-
-	buyer, err := NewBuyer(customer)
-	if err != nil {
-		return nil, err
-	}
-
-	seller, err := NewSeller(supplier)
-	if err != nil {
-		return nil, err
-	}
-
 	agreement := &Agreement{
 		BuyerReference: ordering.Code,
-		Seller:         seller,
-		Buyer:          buyer,
+	}
+
+	if supplier := inv.Supplier; supplier != nil {
+		agreement.Seller = NewSeller(supplier)
+	}
+
+	if customer := inv.Customer; customer != nil {
+		agreement.Buyer = NewBuyer(customer)
 	}
 
 	return agreement, nil
 }
 
 // NewPostalTradeAddress creates the PostalTradeAddress part of a EN 16931 compliant invoice
-func NewPostalTradeAddress(addresses []*org.Address) (*PostalTradeAddress, error) {
+func NewPostalTradeAddress(addresses []*org.Address) *PostalTradeAddress {
 	if len(addresses) == 0 {
-		return nil, fmt.Errorf("No addresses found")
+		return nil
 	}
 	address := addresses[0]
 
@@ -84,13 +69,13 @@ func NewPostalTradeAddress(addresses []*org.Address) (*PostalTradeAddress, error
 		CountryID: string(address.Country),
 	}
 
-	return postalTradeAddress, nil
+	return postalTradeAddress
 }
 
 // NewEmail creates the URIUniversalCommunication part of a EN 16931 compliant invoice
-func NewEmail(emails []*org.Email) (*URIUniversalCommunication, error) {
+func NewEmail(emails []*org.Email) *URIUniversalCommunication {
 	if len(emails) == 0 {
-		return nil, fmt.Errorf("No emails found")
+		return nil
 	}
 
 	email := &URIUniversalCommunication{
@@ -98,5 +83,5 @@ func NewEmail(emails []*org.Email) (*URIUniversalCommunication, error) {
 		SchemeID: "EM",
 	}
 
-	return email, nil
+	return email
 }

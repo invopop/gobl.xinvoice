@@ -1,8 +1,6 @@
 package xinvoice
 
 import (
-	"fmt"
-
 	"github.com/invopop/gobl/bill"
 )
 
@@ -34,16 +32,11 @@ type ApplicableTradeTax struct {
 	TaxRatePercent string `xml:"ram:RateApplicablePercent"`
 }
 
-func newLine(line *bill.Line) (*Line, error) {
+func newLine(line *bill.Line) *Line {
 	if line.Item == nil {
-		return nil, fmt.Errorf("No item provided in line")
+		return nil
 	}
 	item := line.Item
-
-	settlement, err := newTradeSettlement(line)
-	if err != nil {
-		return nil, err
-	}
 
 	lineItem := &Line{
 		ID:       item.Name,
@@ -53,19 +46,15 @@ func newLine(line *bill.Line) (*Line, error) {
 			Amount:   line.Quantity.String(),
 			UnitCode: string(item.Unit.UNECE()),
 		},
-		TradeSettlement: settlement,
+		TradeSettlement: newTradeSettlement(line),
 	}
 
-	return lineItem, nil
+	return lineItem
 }
 
-func newTradeSettlement(line *bill.Line) (*TradeSettlement, error) {
+func newTradeSettlement(line *bill.Line) *TradeSettlement {
 	var applicableTradeTax []*ApplicableTradeTax
 	for _, tax := range line.Taxes {
-		if tax.Percent == nil {
-			return nil, fmt.Errorf("No Tax percent provided for item")
-		}
-
 		tradeTax := &ApplicableTradeTax{
 			TaxType: tax.Category.String(),
 			// The sales tax category codes are as follows:
@@ -78,8 +67,11 @@ func newTradeSettlement(line *bill.Line) (*TradeSettlement, error) {
 			// - O = Outside the tax scope
 			// - L = IGIC (Canary Islands)
 			// - M = IPSI (Ceuta/Melilla)
-			TaxCode:        "S",
-			TaxRatePercent: tax.Percent.StringWithoutSymbol(),
+			TaxCode: "S",
+		}
+
+		if tax.Percent != nil {
+			tradeTax.TaxRatePercent = tax.Percent.StringWithoutSymbol()
 		}
 
 		applicableTradeTax = append(applicableTradeTax, tradeTax)
@@ -90,21 +82,16 @@ func newTradeSettlement(line *bill.Line) (*TradeSettlement, error) {
 		Sum:                line.Total.String(),
 	}
 
-	return settlement, nil
+	return settlement
 }
 
 // NewLines generates lines for XInvoice
-func NewLines(lines []*bill.Line) ([]*Line, error) {
+func NewLines(lines []*bill.Line) []*Line {
 	var Lines []*Line
 
 	for _, line := range lines {
-		lineItem, err := newLine(line)
-		if err != nil {
-			return nil, err
-		}
-
-		Lines = append(Lines, lineItem)
+		Lines = append(Lines, newLine(line))
 	}
 
-	return Lines, nil
+	return Lines
 }

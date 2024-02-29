@@ -1,8 +1,6 @@
 package xinvoice
 
 import (
-	"fmt"
-
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/tax"
@@ -42,72 +40,66 @@ type TaxTotalAmount struct {
 }
 
 // NewSettlement creates the ApplicableHeaderTradeSettlement part of a EN 16931 compliant invoice
-func NewSettlement(inv *bill.Invoice) (*Settlement, error) {
-	if inv.Totals == nil {
-		return nil, fmt.Errorf("Totals not provided")
-	}
-
-	taxes, err := newTaxes(inv.Totals.Taxes)
-	if err != nil {
-		return nil, err
-	}
-
+func NewSettlement(inv *bill.Invoice) *Settlement {
 	settlement := &Settlement{
 		Currency:    string(inv.Currency),
 		TypeCode:    "1",
 		Description: inv.Payment.Terms.Detail,
-		Tax:         taxes,
-		Summary: &Summary{
-			TotalAmount:         inv.Totals.Total.String(),
-			TaxBasisTotalAmount: inv.Totals.Total.String(),
-			GrandTotalAmount:    inv.Totals.TotalWithTax.String(),
-			DuePayableAmount:    inv.Totals.Payable.String(),
-			TaxTotalAmount: &TaxTotalAmount{
-				Amount:   inv.Totals.Tax.String(),
-				Currency: string(inv.Currency),
-			},
-		},
 	}
 
-	return settlement, nil
+	if inv.Totals != nil {
+		settlement.Tax = newTaxes(inv.Totals.Taxes)
+		settlement.Summary = newSummary(inv.Totals, string(inv.Currency))
+	}
+
+	return settlement
 }
 
-func newTaxes(total *tax.Total) ([]*Tax, error) {
+func newSummary(totals *bill.Totals, currency string) *Summary {
+	return &Summary{
+		TotalAmount:         totals.Total.String(),
+		TaxBasisTotalAmount: totals.Total.String(),
+		GrandTotalAmount:    totals.TotalWithTax.String(),
+		DuePayableAmount:    totals.Payable.String(),
+		TaxTotalAmount: &TaxTotalAmount{
+			Amount:   totals.Tax.String(),
+			Currency: currency,
+		},
+	}
+}
+
+func newTaxes(total *tax.Total) []*Tax {
 	var Taxes []*Tax
 
 	if total == nil {
-		return nil, fmt.Errorf("Total taxes not provided")
+		return nil
 	}
 
 	for _, category := range total.Categories {
 		for _, rate := range category.Rates {
-			tax, err := newTax(rate)
-			if err != nil {
-				return nil, err
-			}
+			tax := newTax(rate, category)
 
 			Taxes = append(Taxes, tax)
 		}
 	}
 
-	return Taxes, nil
+	return Taxes
 }
 
-func newTax(rate *tax.RateTotal) (*Tax, error) {
+func newTax(rate *tax.RateTotal, category *tax.CategoryTotal) *Tax {
 	if rate.Percent == nil {
-		return nil, fmt.Errorf("No tax rate percent provided")
+		return nil
 	}
-	percent := rate.Percent.StringWithoutSymbol()
 
 	tax := &Tax{
 		CalculatedAmount:      rate.Amount.String(),
-		TypeCode:              "VAT",
+		TypeCode:              category.Code.String(),
 		BasisAmount:           rate.Base.String(),
 		CategoryCode:          taxCategoryCode(rate.Key),
-		RateApplicablePercent: percent,
+		RateApplicablePercent: rate.Percent.StringWithoutSymbol(),
 	}
 
-	return tax, nil
+	return tax
 }
 
 // AE - VAT Reverse Charge
