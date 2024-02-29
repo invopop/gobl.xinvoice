@@ -36,64 +36,36 @@ type Contact struct {
 }
 
 // NewSeller creates the SellerTradeParty part of a EN 16931 compliant invoice
-func NewSeller(supplier *org.Party) (*Seller, error) {
-	if supplier.TaxID == nil {
-		return nil, fmt.Errorf("Supplier TaxID not found")
-	}
-	taxID := supplier.TaxID.String()
-
-	contact, err := newContact(supplier)
-	if err != nil {
-		return nil, err
-	}
-
-	address, err := NewPostalTradeAddress(supplier.Addresses)
-	if err != nil {
-		return nil, err
-	}
-
-	email, err := NewEmail(supplier.Emails)
-	if err != nil {
-		return nil, err
-	}
-
+func NewSeller(supplier *org.Party) *Seller {
 	seller := &Seller{
 		Name:                      supplier.Name,
-		Contact:                   contact,
-		PostalTradeAddress:        address,
-		URIUniversalCommunication: email,
-		SpecifiedTaxRegistration: &SpecifiedTaxRegistration{
-			ID:       taxID,
-			SchemeID: "VA",
-		},
+		Contact:                   newContact(supplier),
+		PostalTradeAddress:        NewPostalTradeAddress(supplier.Addresses),
+		URIUniversalCommunication: NewEmail(supplier.Emails),
 	}
 
-	return seller, nil
+	if supplier.TaxID != nil {
+		seller.SpecifiedTaxRegistration = &SpecifiedTaxRegistration{
+			ID:       supplier.TaxID.String(),
+			SchemeID: "VA",
+		}
+	}
+
+	return seller
 }
 
-func newContact(supplier *org.Party) (*Contact, error) {
-	if len(supplier.People) == 0 {
-		return nil, fmt.Errorf("Supplier People not found")
+func newContact(supplier *org.Party) *Contact {
+	if len(supplier.People) == 0 || len(supplier.Telephones) == 0 || len(supplier.Emails) == 0 {
+		return nil
 	}
-	name := contactName(&supplier.People[0].Name)
-
-	if len(supplier.Telephones) == 0 {
-		return nil, fmt.Errorf("Supplier Telephones not found")
-	}
-	phone := supplier.Telephones[0].Number
-
-	if len(supplier.Emails) == 0 {
-		return nil, fmt.Errorf("Supplier Emails not found")
-	}
-	email := supplier.Emails[0].Address
 
 	contact := &Contact{
-		PersonName: name,
-		Phone:      phone,
-		Email:      email,
+		PersonName: contactName(&supplier.People[0].Name),
+		Phone:      supplier.Telephones[0].Number,
+		Email:      supplier.Emails[0].Address,
 	}
 
-	return contact, nil
+	return contact
 }
 
 func contactName(personName *org.Name) string {

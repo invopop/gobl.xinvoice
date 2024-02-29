@@ -24,21 +24,20 @@ type Note struct {
 
 // NewHeader creates the ExchangedDocument part of a EN 16931 compliant invoice
 func NewHeader(inv *bill.Invoice) *Header {
-	id := inv.Series + "-" + inv.Code
-	typeCode := invoiceTypeCode(inv.Type)
-	date := formatIssueDate(inv.IssueDate)
-
 	return &Header{
-		ID:       id,
-		TypeCode: typeCode,
+		ID:       inv.Series + "-" + inv.Code,
+		TypeCode: invoiceTypeCode(inv.Type),
 		IssueDate: &Date{
-			Date:   date,
+			Date:   formatIssueDate(inv.IssueDate),
 			Format: "102",
 		},
 	}
 }
 
 func formatIssueDate(date cal.Date) string {
+	if date.IsZero() {
+		return ""
+	}
 	t := time.Date(date.Year, date.Month, date.Day, 0, 0, 0, 0, time.UTC)
 	return t.Format("20060102")
 }
