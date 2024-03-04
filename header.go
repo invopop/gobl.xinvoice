@@ -1,8 +1,6 @@
 package xinvoice
 
 import (
-	"time"
-
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -38,7 +36,7 @@ func formatIssueDate(date cal.Date) string {
 	if date.IsZero() {
 		return ""
 	}
-	t := time.Date(date.Year, date.Month, date.Day, 0, 0, 0, 0, time.UTC)
+	t := date.Time()
 	return t.Format("20060102")
 }
 
