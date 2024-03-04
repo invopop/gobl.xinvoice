@@ -31,12 +31,7 @@ type URIUniversalCommunication struct {
 // NewAgreement creates the ApplicableHeaderTradeAgreement part of a EN 16931 compliant invoice
 func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 	ordering := inv.Ordering
-
-	if ordering == nil {
-		return nil, fmt.Errorf("ordering missing")
-	}
-
-	if ordering.Code == "" {
+	if ordering == nil || ordering.Code == "" {
 		return nil, fmt.Errorf("ordering: code: missing")
 	}
 
