@@ -69,5 +69,20 @@ func newContact(supplier *org.Party) *Contact {
 }
 
 func contactName(personName *org.Name) string {
-	return fmt.Sprintf("%s %s", personName.Given, personName.Surname)
+	given := personName.Given
+	surname := personName.Surname
+
+	if given == "" && surname == "" {
+		return ""
+	}
+
+	if given == "" {
+		return surname
+	}
+
+	if surname == "" {
+		return given
+	}
+
+	return fmt.Sprintf("%s %s", given, surname)
 }
