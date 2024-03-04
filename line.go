@@ -1,6 +1,8 @@
 package xinvoice
 
 import (
+	"strconv"
+
 	"github.com/invopop/gobl/bill"
 )
 
@@ -39,7 +41,7 @@ func newLine(line *bill.Line) *Line {
 	item := line.Item
 
 	lineItem := &Line{
-		ID:       item.Name,
+		ID:       strconv.Itoa(line.Index),
 		Name:     item.Name,
 		NetPrice: item.Price.String(),
 		TradeDelivery: &Quantity{

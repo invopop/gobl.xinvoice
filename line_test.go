@@ -14,7 +14,7 @@ func TestNewLines(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "Development services", doc.Transaction.Lines[0].ID)
+		assert.Equal(t, "1", doc.Transaction.Lines[0].ID)
 		assert.Equal(t, "Development services", doc.Transaction.Lines[0].Name)
 		assert.Equal(t, "90.00", doc.Transaction.Lines[0].NetPrice)
 		assert.Equal(t, "20", doc.Transaction.Lines[0].TradeDelivery.Amount)
