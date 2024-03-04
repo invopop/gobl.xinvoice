@@ -25,7 +25,7 @@ type Note struct {
 // NewHeader creates the ExchangedDocument part of a EN 16931 compliant invoice
 func NewHeader(inv *bill.Invoice) *Header {
 	return &Header{
-		ID:       inv.Series + "-" + inv.Code,
+		ID:       invoiceNumber(inv),
 		TypeCode: invoiceTypeCode(inv.Type),
 		IssueDate: &Date{
 			Date:   formatIssueDate(inv.IssueDate),
@@ -40,6 +40,13 @@ func formatIssueDate(date cal.Date) string {
 	}
 	t := time.Date(date.Year, date.Month, date.Day, 0, 0, 0, 0, time.UTC)
 	return t.Format("20060102")
+}
+
+func invoiceNumber(inv *bill.Invoice) string {
+	if inv.Series == "" {
+		return inv.Code
+	}
+	return inv.Series + "-" + inv.Code
 }
 
 // For German suppliers, the element "Invoice type code" (BT-3) should only contain the
