@@ -49,7 +49,7 @@
         <ram:DefinedTradeContact>
           <ram:PersonName>John Doe</ram:PersonName>
           <ram:TelephoneUniversalCommunication>
-            <ram:CompleteNumber>+48100200300</ram:CompleteNumber>
+            <ram:CompleteNumber>+49100200300</ram:CompleteNumber>
           </ram:TelephoneUniversalCommunication>
           <ram:EmailURIUniversalCommunication>
             <ram:URIID>billing@example.com</ram:URIID>
