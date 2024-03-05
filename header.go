@@ -4,6 +4,7 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/tax"
 )
 
 // Header a collection of data for a Cross Industry Invoice Header that is exchanged between two or more parties in written, printed or electronic form.
@@ -24,7 +25,7 @@ type Note struct {
 func NewHeader(inv *bill.Invoice) *Header {
 	return &Header{
 		ID:       invoiceNumber(inv),
-		TypeCode: invoiceTypeCode(inv.Type),
+		TypeCode: invoiceTypeCode(inv),
 		IssueDate: &Date{
 			Date:   formatIssueDate(inv.IssueDate),
 			Format: "102",
@@ -54,11 +55,18 @@ func invoiceNumber(inv *bill.Invoice) string {
 // - 384 (Corrected invoice)
 // - 389 (Self-billed invoice)
 // - 381 (Credit note)
-func invoiceTypeCode(t cbc.Key) string {
+func invoiceTypeCode(inv *bill.Invoice) string {
+	if isSelfBilledInvoice(inv) {
+		return "389"
+	}
 	hash := map[cbc.Key]string{
 		bill.InvoiceTypeStandard:   "380",
 		bill.InvoiceTypeCorrective: "384",
 		bill.InvoiceTypeCreditNote: "381",
 	}
-	return hash[t]
+	return hash[inv.Type]
+}
+
+func isSelfBilledInvoice(inv *bill.Invoice) bool {
+	return inv.Tax != nil && inv.Type == bill.InvoiceTypeStandard && tax.TagSelfBilled.In(inv.Tax.Tags...)
 }
