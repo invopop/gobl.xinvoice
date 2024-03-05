@@ -8,11 +8,12 @@ import (
 
 // Settlement defines the structure of ApplicableHeaderTradeSettlement of the CII standard
 type Settlement struct {
-	Currency    string   `xml:"ram:InvoiceCurrencyCode"`
-	TypeCode    string   `xml:"ram:SpecifiedTradeSettlementPaymentMeans>ram:TypeCode"`
-	Tax         []*Tax   `xml:"ram:ApplicableTradeTax"`
-	Description string   `xml:"ram:SpecifiedTradePaymentTerms>ram:Description,omitempty"`
-	Summary     *Summary `xml:"ram:SpecifiedTradeSettlementHeaderMonetarySummation"`
+	Currency           string              `xml:"ram:InvoiceCurrencyCode"`
+	TypeCode           string              `xml:"ram:SpecifiedTradeSettlementPaymentMeans>ram:TypeCode"`
+	Tax                []*Tax              `xml:"ram:ApplicableTradeTax"`
+	Description        string              `xml:"ram:SpecifiedTradePaymentTerms>ram:Description,omitempty"`
+	Summary            *Summary            `xml:"ram:SpecifiedTradeSettlementHeaderMonetarySummation"`
+	ReferencedDocument *ReferencedDocument `xml:"ram:InvoiceReferencedDocument,omitempty"`
 }
 
 // Tax defines the structure of ApplicableTradeTax of the CII standard
@@ -33,6 +34,12 @@ type Summary struct {
 	DuePayableAmount    string          `xml:"ram:DuePayableAmount"`
 }
 
+// ReferencedDocument defines the structure of InvoiceReferencedDocument of the CII standard
+type ReferencedDocument struct {
+	IssuerAssignedID string `xml:"ram:IssuerAssignedID,omitempty"`
+	IssueDate        *Date  `xml:"ram:FormattedIssueDateTime>qdt:DateTimeString,omitempty"`
+}
+
 // TaxTotalAmount defines the structure of the TaxTotalAmount of the CII standard
 type TaxTotalAmount struct {
 	Amount   string `xml:",chardata"`
@@ -50,6 +57,17 @@ func NewSettlement(inv *bill.Invoice) *Settlement {
 	if inv.Totals != nil {
 		settlement.Tax = newTaxes(inv.Totals.Taxes)
 		settlement.Summary = newSummary(inv.Totals, string(inv.Currency))
+	}
+
+	if inv.Preceding != nil && len(inv.Preceding) > 0 {
+		cor := inv.Preceding[0]
+		settlement.ReferencedDocument = &ReferencedDocument{
+			IssuerAssignedID: cor.Series + "-" + cor.Code,
+			IssueDate: &Date{
+				Date:   formatIssueDate(*cor.IssueDate),
+				Format: "102",
+			},
+		}
 	}
 
 	return settlement
