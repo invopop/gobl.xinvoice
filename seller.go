@@ -37,6 +37,9 @@ type Contact struct {
 
 // NewSeller creates the SellerTradeParty part of a EN 16931 compliant invoice
 func NewSeller(supplier *org.Party) *Seller {
+	if supplier == nil {
+		return nil
+	}
 	seller := &Seller{
 		Name:                      supplier.Name,
 		Contact:                   newContact(supplier),
