@@ -22,4 +22,17 @@ func TestNewDocument(t *testing.T) {
 
 		assert.Equal(t, output, data)
 	})
+
+	t.Run("should return a valid correction invoice xml", func(t *testing.T) {
+		doc, err := test.NewDocumentFrom("correction-invoice.json")
+		require.NoError(t, err)
+
+		data, err := doc.Bytes()
+		require.NoError(t, err)
+
+		output, err := test.LoadOutputFile("correction-invoice.xml")
+		require.NoError(t, err)
+
+		assert.Equal(t, output, data)
+	})
 }
