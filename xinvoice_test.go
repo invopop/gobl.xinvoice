@@ -35,4 +35,17 @@ func TestNewDocument(t *testing.T) {
 
 		assert.Equal(t, output, data)
 	})
+
+	t.Run("should return a valid self billed invoice xml", func(t *testing.T) {
+		doc, err := test.NewDocumentFrom("self-billed-invoice.json")
+		require.NoError(t, err)
+
+		data, err := doc.Bytes()
+		require.NoError(t, err)
+
+		output, err := test.LoadOutputFile("self-billed-invoice.xml")
+		require.NoError(t, err)
+
+		assert.Equal(t, output, data)
+	})
 }
