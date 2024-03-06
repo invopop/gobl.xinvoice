@@ -7,6 +7,9 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
+// IssueDateFormat is the issue date format in the form YYYYMMDD
+const IssueDateFormat = "102"
+
 // Header a collection of data for a Cross Industry Invoice Header that is exchanged between two or more parties in written, printed or electronic form.
 type Header struct {
 	ID           string `xml:"ram:ID"`
@@ -28,7 +31,7 @@ func NewHeader(inv *bill.Invoice) *Header {
 		TypeCode: invoiceTypeCode(inv),
 		IssueDate: &Date{
 			Date:   formatIssueDate(inv.IssueDate),
-			Format: "102",
+			Format: IssueDateFormat,
 		},
 	}
 }
