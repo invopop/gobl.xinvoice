@@ -7,6 +7,9 @@ import (
 	"github.com/invopop/gobl/org"
 )
 
+// SchemeIDEmail represents the Scheme ID for email addresses
+const SchemeIDEmail = "EM"
+
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
 type Agreement struct {
 	BuyerReference string  `xml:"ram:BuyerReference"`
@@ -75,7 +78,7 @@ func NewEmail(emails []*org.Email) *URIUniversalCommunication {
 
 	email := &URIUniversalCommunication{
 		URIID:    emails[0].Address,
-		SchemeID: "EM",
+		SchemeID: SchemeIDEmail,
 	}
 
 	return email

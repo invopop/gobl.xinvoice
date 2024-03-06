@@ -3,6 +3,7 @@ package xinvoice_test
 import (
 	"testing"
 
+	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/invopop/gobl.xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -21,7 +22,7 @@ func TestNewBuyer(t *testing.T) {
 		assert.Equal(t, "München", doc.Transaction.Agreement.Buyer.PostalTradeAddress.City)
 		assert.Equal(t, "DE", doc.Transaction.Agreement.Buyer.PostalTradeAddress.CountryID)
 		assert.Equal(t, "email@sample.com", doc.Transaction.Agreement.Buyer.URIUniversalCommunication.URIID)
-		assert.Equal(t, "EM", doc.Transaction.Agreement.Buyer.URIUniversalCommunication.SchemeID)
+		assert.Equal(t, xinvoice.SchemeIDEmail, doc.Transaction.Agreement.Buyer.URIUniversalCommunication.SchemeID)
 	})
 
 	t.Run("should contain the buyer info from simplified invoice", func(t *testing.T) {
@@ -36,6 +37,6 @@ func TestNewBuyer(t *testing.T) {
 		assert.Equal(t, "München", doc.Transaction.Agreement.Buyer.PostalTradeAddress.City)
 		assert.Equal(t, "DE", doc.Transaction.Agreement.Buyer.PostalTradeAddress.CountryID)
 		assert.Equal(t, "email@sample.com", doc.Transaction.Agreement.Buyer.URIUniversalCommunication.URIID)
-		assert.Equal(t, "EM", doc.Transaction.Agreement.Buyer.URIUniversalCommunication.SchemeID)
+		assert.Equal(t, xinvoice.SchemeIDEmail, doc.Transaction.Agreement.Buyer.URIUniversalCommunication.SchemeID)
 	})
 }
