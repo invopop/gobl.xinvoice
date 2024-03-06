@@ -57,6 +57,7 @@ func newLine(line *bill.Line) *Line {
 func newTradeSettlement(line *bill.Line) *TradeSettlement {
 	var applicableTradeTax []*ApplicableTradeTax
 	for _, tax := range line.Taxes {
+		taxCode := FindTaxCode(line)
 		tradeTax := &ApplicableTradeTax{
 			TaxType: tax.Category.String(),
 			// The sales tax category codes are as follows:
@@ -69,7 +70,7 @@ func newTradeSettlement(line *bill.Line) *TradeSettlement {
 			// - O = Outside the tax scope
 			// - L = IGIC (Canary Islands)
 			// - M = IPSI (Ceuta/Melilla)
-			TaxCode: "S",
+			TaxCode: taxCode,
 		}
 
 		if tax.Percent != nil {
