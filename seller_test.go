@@ -3,6 +3,7 @@ package xinvoice_test
 import (
 	"testing"
 
+	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/invopop/gobl.xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -23,6 +24,6 @@ func TestNewSeller(t *testing.T) {
 		assert.Equal(t, "Walldorf", doc.Transaction.Agreement.Seller.PostalTradeAddress.City)
 		assert.Equal(t, "DE", doc.Transaction.Agreement.Seller.PostalTradeAddress.CountryID)
 		assert.Equal(t, "billing@example.com", doc.Transaction.Agreement.Seller.URIUniversalCommunication.URIID)
-		assert.Equal(t, "EM", doc.Transaction.Agreement.Seller.URIUniversalCommunication.SchemeID)
+		assert.Equal(t, xinvoice.SchemeIDEmail, doc.Transaction.Agreement.Seller.URIUniversalCommunication.SchemeID)
 	})
 }
