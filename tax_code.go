@@ -1,6 +1,9 @@
 package xinvoice
 
-import "github.com/invopop/gobl/bill"
+import (
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/tax"
+)
 
 const (
 	// StandardSalesTax is the tax type for sales tax applying at the standard rate
@@ -48,16 +51,18 @@ func FindTaxCode(line *bill.Line) string {
 	if len(line.Taxes) == 0 {
 		return StandardSalesTax
 	}
-	tax := line.Taxes[0]
+	t := line.Taxes[0]
 
-	switch tax.Rate {
-	case "standard":
+	switch t.Rate {
+	case tax.RateStandard:
 		return StandardSalesTax
-	case "zero":
+	case tax.RateZero:
 		return ZeroRatedGoodsTax
+	case tax.RateExempt:
+		return TaxExempt
 	}
 
-	switch tax.Category {
+	switch t.Category {
 	case "IGIC":
 		return IGIC
 	case "IPSI":
