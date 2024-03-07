@@ -48,13 +48,9 @@ type TaxTotalAmount struct {
 
 // NewSettlement creates the ApplicableHeaderTradeSettlement part of a EN 16931 compliant invoice
 func NewSettlement(inv *bill.Invoice) *Settlement {
-	typeCode := TypeCodeInstrumentNotDefined
-	if !isValidTypeCode(typeCode) {
-		return nil
-	}
 	settlement := &Settlement{
 		Currency:    string(inv.Currency),
-		TypeCode:    typeCode,
+		TypeCode:    FindTypeCode(inv),
 		Description: inv.Payment.Terms.Detail,
 	}
 
