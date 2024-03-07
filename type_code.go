@@ -2,6 +2,8 @@ package xinvoice
 
 import (
 	"strconv"
+
+	"github.com/invopop/gobl/bill"
 )
 
 // TypeCodeInstrumentNotDefined is the Type Code for an undefined Payment Instrument
@@ -104,4 +106,17 @@ func isValidTypeCode(code string) bool {
 		return false
 	}
 	return ((num >= 1 && num <= 70) || (num >= 74 && num <= 78) || (num >= 91 && num <= 97))
+}
+
+// FindTypeCode finds the type code for invoice.
+// The default return value is TypeCodeInstrumentNotDefined
+func FindTypeCode(inv *bill.Invoice) string {
+	code := TypeCodeInstrumentNotDefined
+	if inv.Payment == nil || inv.Payment.Instructions == nil {
+		return TypeCodeInstrumentNotDefined
+	}
+	if !isValidTypeCode(code) {
+		return TypeCodeInstrumentNotDefined
+	}
+	return TypeCodeInstrumentNotDefined
 }
