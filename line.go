@@ -60,16 +60,6 @@ func newTradeSettlement(line *bill.Line) *TradeSettlement {
 		taxCode := FindTaxCode(line)
 		tradeTax := &ApplicableTradeTax{
 			TaxType: tax.Category.String(),
-			// The sales tax category codes are as follows:
-			// - S = Sales tax applies at the standard rate
-			// - Z = goods taxable at the zero rate
-			// - E = Tax exempt
-			// - AE = Reversal of tax liability
-			// - K = No sales tax is shown for intra-community deliveries
-			// - G = Tax not charged due to export outside the EU
-			// - O = Outside the tax scope
-			// - L = IGIC (Canary Islands)
-			// - M = IPSI (Ceuta/Melilla)
 			TaxCode: taxCode,
 		}
 
