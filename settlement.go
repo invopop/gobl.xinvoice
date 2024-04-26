@@ -2,7 +2,6 @@ package xinvoice
 
 import (
 	"github.com/invopop/gobl/bill"
-	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/tax"
 )
 
@@ -113,28 +112,9 @@ func newTax(rate *tax.RateTotal, category *tax.CategoryTotal) *Tax {
 		CalculatedAmount:      rate.Amount.String(),
 		TypeCode:              category.Code.String(),
 		BasisAmount:           rate.Base.String(),
-		CategoryCode:          taxCategoryCode(rate.Key),
+		CategoryCode:          FindTaxCode(rate.Key, category.Code),
 		RateApplicablePercent: rate.Percent.StringWithoutSymbol(),
 	}
 
 	return tax
-}
-
-// AE - VAT Reverse Charge
-// E  - Exempt from tax
-// G  - Free export item, tax not charged
-// K  - VAT exempt for EEA intra-community supply of goods and services
-// L  - Canary Islands general indirect tax
-// M  - Tax for production, services and importation in Ceuta and Melilla
-// O  - Services outside scope of tax
-// S  - Standard rate
-// Z  - Zero rated goods
-func taxCategoryCode(key cbc.Key) string {
-	hash := map[cbc.Key]string{
-		tax.RateStandard: "S",
-		tax.RateReduced:  "S",
-		tax.RateZero:     "Z",
-	}
-
-	return hash[key]
 }

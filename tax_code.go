@@ -1,7 +1,7 @@
 package xinvoice
 
 import (
-	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/tax"
 )
 
@@ -47,13 +47,8 @@ const (
 // - O = Outside the tax scope
 // - L = IGIC (Canary Islands)
 // - M = IPSI (Ceuta/Melilla)
-func FindTaxCode(line *bill.Line) string {
-	if len(line.Taxes) == 0 {
-		return StandardSalesTax
-	}
-	t := line.Taxes[0]
-
-	switch t.Rate {
+func FindTaxCode(taxRate cbc.Key, taxCategory cbc.Code) string {
+	switch taxRate {
 	case tax.RateStandard:
 		return StandardSalesTax
 	case tax.RateZero:
@@ -62,7 +57,7 @@ func FindTaxCode(line *bill.Line) string {
 		return TaxExempt
 	}
 
-	switch t.Category {
+	switch taxCategory {
 	case "IGIC":
 		return IGIC
 	case "IPSI":
