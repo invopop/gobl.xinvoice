@@ -47,7 +47,7 @@ const (
 // - O = Outside the tax scope
 // - L = IGIC (Canary Islands)
 // - M = IPSI (Ceuta/Melilla)
-func FindTaxCode(taxRate cbc.Key, taxCategory cbc.Code) string {
+func FindTaxCode(taxRate cbc.Key) string {
 	switch taxRate {
 	case tax.RateStandard:
 		return StandardSalesTax
@@ -55,13 +55,6 @@ func FindTaxCode(taxRate cbc.Key, taxCategory cbc.Code) string {
 		return ZeroRatedGoodsTax
 	case tax.RateExempt:
 		return TaxExempt
-	}
-
-	switch taxCategory {
-	case "IGIC":
-		return IGIC
-	case "IPSI":
-		return IPSI
 	}
 
 	return StandardSalesTax
