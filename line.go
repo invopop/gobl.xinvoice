@@ -57,10 +57,9 @@ func newLine(line *bill.Line) *Line {
 func newTradeSettlement(line *bill.Line) *TradeSettlement {
 	var applicableTradeTax []*ApplicableTradeTax
 	for _, tax := range line.Taxes {
-		taxCode := FindTaxCode(line)
 		tradeTax := &ApplicableTradeTax{
 			TaxType: tax.Category.String(),
-			TaxCode: taxCode,
+			TaxCode: FindTaxCode(tax.Rate, tax.Category),
 		}
 
 		if tax.Percent != nil {
