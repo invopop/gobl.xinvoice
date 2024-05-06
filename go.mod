@@ -1,6 +1,6 @@
 module github.com/invopop/gobl.xinvoice
 
-go 1.21.7
+go 1.21
 
 require (
 	github.com/invopop/gobl v0.67.7
