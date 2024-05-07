@@ -2,6 +2,9 @@
 package xinvoice_test
 
 import (
+	"flag"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/invopop/gobl.xinvoice/test"
@@ -9,43 +12,38 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var updateOut = flag.Bool("update", false, "Update the XML files in the test/data/out directory")
+
 func TestNewDocument(t *testing.T) {
-	t.Run("should return bytes of the xml document", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("invoice-de-de.json")
-		require.NoError(t, err)
+	schema, err := test.LoadSchema("schema.xsd")
+	require.NoError(t, err)
 
-		data, err := doc.Bytes()
-		require.NoError(t, err)
+	examples, err := test.GetDataGlob("*.json")
+	require.NoError(t, err)
 
-		output, err := test.LoadOutputFile("invoice-de-de.xml")
-		require.NoError(t, err)
+	for _, example := range examples {
+		inName := filepath.Base(example)
+		outName := strings.Replace(inName, ".json", ".xml", 1)
 
-		assert.Equal(t, output, data)
-	})
+		t.Run(inName, func(t *testing.T) {
+			doc, err := test.NewDocumentFrom(inName)
+			require.NoError(t, err)
 
-	t.Run("should return a valid correction invoice xml", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("correction-invoice.json")
-		require.NoError(t, err)
+			data, err := doc.Bytes()
+			require.NoError(t, err)
 
-		data, err := doc.Bytes()
-		require.NoError(t, err)
+			err = test.ValidateXML(schema, data)
+			require.NoError(t, err)
 
-		output, err := test.LoadOutputFile("correction-invoice.xml")
-		require.NoError(t, err)
+			output, err := test.LoadOutputFile(outName)
+			require.NoError(t, err)
 
-		assert.Equal(t, output, data)
-	})
-
-	t.Run("should return a valid self billed invoice xml", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("self-billed-invoice.json")
-		require.NoError(t, err)
-
-		data, err := doc.Bytes()
-		require.NoError(t, err)
-
-		output, err := test.LoadOutputFile("self-billed-invoice.xml")
-		require.NoError(t, err)
-
-		assert.Equal(t, output, data)
-	})
+			if *updateOut {
+				err = test.SaveOutputFile(outName, data)
+				require.NoError(t, err)
+			} else {
+				assert.Equal(t, output, data, "Output should match the expected XML. Update with --update flag.")
+			}
+		})
+	}
 }

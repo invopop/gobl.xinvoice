@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- Add here the schemas of any namespace used in the XML files to be tested -->
+  <xs:import namespace="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" schemaLocation="./uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd" />
+  <xs:import
+    namespace="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+    schemaLocation="./uncefact/data/standard/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd" />
+  <xs:import namespace="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+    schemaLocation="./uncefact/data/standard/CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd" />
+  <xs:import namespace="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+    schemaLocation="./uncefact/data/standard/CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd" />
+</xs:schema>

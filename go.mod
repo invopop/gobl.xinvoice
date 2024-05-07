@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/invopop/gobl v0.67.7
 	github.com/joho/godotenv v1.5.1
+	github.com/lestrrat-go/libxml2 v0.0.0-20240502112718-b65cd5105370
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	gitlab.com/flimzy/testy v0.14.0
