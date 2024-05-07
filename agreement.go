@@ -1,8 +1,6 @@
 package xinvoice
 
 import (
-	"fmt"
-
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/org"
 )
@@ -12,7 +10,7 @@ const SchemeIDEmail = "EM"
 
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
 type Agreement struct {
-	BuyerReference string  `xml:"ram:BuyerReference"`
+	BuyerReference string  `xml:"ram:BuyerReference,omitempty"`
 	Seller         *Seller `xml:"ram:SellerTradeParty"`
 	Buyer          *Buyer  `xml:"ram:BuyerTradeParty"`
 }
@@ -33,13 +31,10 @@ type URIUniversalCommunication struct {
 
 // NewAgreement creates the ApplicableHeaderTradeAgreement part of a EN 16931 compliant invoice
 func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
-	ordering := inv.Ordering
-	if ordering == nil || ordering.Code == "" {
-		return nil, fmt.Errorf("ordering: code: missing")
-	}
+	agreement := new(Agreement)
 
-	agreement := &Agreement{
-		BuyerReference: ordering.Code,
+	if inv.Ordering != nil {
+		agreement.BuyerReference = inv.Ordering.Code
 	}
 
 	if supplier := inv.Supplier; supplier != nil {
