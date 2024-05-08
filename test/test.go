@@ -11,6 +11,8 @@ import (
 	"github.com/invopop/gobl"
 	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/invopop/gobl/bill"
+	"github.com/lestrrat-go/libxml2"
+	"github.com/lestrrat-go/libxml2/xsd"
 )
 
 // NewDocumentFrom creates a xinvoice Document from a GOBL file in the `test/data` folder
@@ -72,16 +74,34 @@ func LoadOutputFile(name string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// LoadSchemaFile returns byte data from a file in the `test/data/schema` folder
-func LoadSchemaFile(name string) ([]byte, error) {
-	src, _ := os.Open(filepath.Join(GetSchemaPath(), name))
+// SaveOutputFile writes byte data to a file in the `test/data/out` folder
+func SaveOutputFile(name string, data []byte) error {
+	return os.WriteFile(filepath.Join(GetOutPath(), name), data, 0644)
+}
 
-	buf := new(bytes.Buffer)
-	if _, err := buf.ReadFrom(src); err != nil {
-		return nil, err
+// LoadSchema returns a XSD Schema from a file in the `test/data/schema` folder
+func LoadSchema(name string) (*xsd.Schema, error) {
+	return xsd.ParseFromFile(filepath.Join(GetSchemaPath(), name))
+}
+
+// ValidateXML validates a XML document against a XSD Schema
+func ValidateXML(schema *xsd.Schema, data []byte) error {
+	xmlDoc, err := libxml2.Parse(data)
+	if err != nil {
+		return err
 	}
 
-	return buf.Bytes(), nil
+	err = schema.Validate(xmlDoc)
+	if err != nil {
+		return err.(xsd.SchemaValidationError).Errors()[0]
+	}
+
+	return nil
+}
+
+// GetDataGlob returns a list of files in the `test/data` folder that match the pattern
+func GetDataGlob(pattern string) ([]string, error) {
+	return filepath.Glob(filepath.Join(GetDataPath(), pattern))
 }
 
 // GetSchemaPath returns the path to the `test/data/schema` folder
