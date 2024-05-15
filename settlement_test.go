@@ -17,7 +17,7 @@ func TestNewSettlement(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, "EUR", doc.Transaction.Settlement.Currency)
 		assert.Equal(t, xinvoice.TypeCodeInstrumentNotDefined, doc.Transaction.Settlement.TypeCode)
-		assert.Equal(t, "lorem ipsum", doc.Transaction.Settlement.Description)
+		assert.Equal(t, "lorem ipsum", doc.Transaction.Settlement.PaymentTerms)
 		assert.Equal(t, "1800.00", doc.Transaction.Settlement.Summary.TotalAmount)
 		assert.Equal(t, "1800.00", doc.Transaction.Settlement.Summary.TaxBasisTotalAmount)
 		assert.Equal(t, "2142.00", doc.Transaction.Settlement.Summary.GrandTotalAmount)

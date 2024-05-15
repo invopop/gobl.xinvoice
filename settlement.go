@@ -10,7 +10,7 @@ type Settlement struct {
 	Currency           string              `xml:"ram:InvoiceCurrencyCode"`
 	TypeCode           string              `xml:"ram:SpecifiedTradeSettlementPaymentMeans>ram:TypeCode"`
 	Tax                []*Tax              `xml:"ram:ApplicableTradeTax"`
-	Description        string              `xml:"ram:SpecifiedTradePaymentTerms>ram:Description,omitempty"`
+	PaymentTerms       string              `xml:"ram:SpecifiedTradePaymentTerms>ram:Description,omitempty"`
 	Summary            *Summary            `xml:"ram:SpecifiedTradeSettlementHeaderMonetarySummation"`
 	ReferencedDocument *ReferencedDocument `xml:"ram:InvoiceReferencedDocument,omitempty"`
 }
@@ -48,9 +48,11 @@ type TaxTotalAmount struct {
 // NewSettlement creates the ApplicableHeaderTradeSettlement part of a EN 16931 compliant invoice
 func NewSettlement(inv *bill.Invoice) *Settlement {
 	settlement := &Settlement{
-		Currency:    string(inv.Currency),
-		TypeCode:    FindTypeCode(inv),
-		Description: inv.Payment.Terms.Detail,
+		Currency: string(inv.Currency),
+		TypeCode: FindTypeCode(inv),
+	}
+	if inv.Payment != nil && inv.Payment.Terms != nil {
+		settlement.PaymentTerms = inv.Payment.Terms.Detail
 	}
 
 	if inv.Totals != nil {
