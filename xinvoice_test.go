@@ -36,7 +36,7 @@ func TestNewDocument(t *testing.T) {
 			require.NoError(t, err)
 
 			output, err := test.LoadOutputFile(outName)
-			require.NoError(t, err)
+			assert.NoError(t, err)
 
 			if *updateOut {
 				err = test.SaveOutputFile(outName, data)
