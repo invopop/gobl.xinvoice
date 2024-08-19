@@ -1,8 +1,6 @@
 package xinvoice
 
 import (
-	"fmt"
-
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/org"
 )
@@ -10,11 +8,15 @@ import (
 // SchemeIDEmail represents the Scheme ID for email addresses
 const SchemeIDEmail = "EM"
 
+const (
+	defaultBuyerReference = "N/A"
+)
+
 // Agreement defines the structure of the ApplicableHeaderTradeAgreement of the CII standard
 type Agreement struct {
-	BuyerReference string  `xml:"ram:BuyerReference"`
-	Seller         *Seller `xml:"ram:SellerTradeParty"`
-	Buyer          *Buyer  `xml:"ram:BuyerTradeParty"`
+	BuyerReference string  `xml:"ram:BuyerReference,omitempty"`
+	Seller         *Seller `xml:"ram:SellerTradeParty,omitempty"`
+	Buyer          *Buyer  `xml:"ram:BuyerTradeParty,omitempty"`
 }
 
 // PostalTradeAddress defines the structure of the PostalTradeAddress of the CII standard
@@ -33,23 +35,18 @@ type URIUniversalCommunication struct {
 
 // NewAgreement creates the ApplicableHeaderTradeAgreement part of a EN 16931 compliant invoice
 func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
-	ordering := inv.Ordering
-	if ordering == nil || ordering.Code == "" {
-		return nil, fmt.Errorf("ordering: code: missing")
+	agreement := new(Agreement)
+	if inv.Ordering != nil && inv.Ordering.Code != "" {
+		agreement.BuyerReference = inv.Ordering.Code
+	} else {
+		agreement.BuyerReference = defaultBuyerReference
 	}
-
-	agreement := &Agreement{
-		BuyerReference: ordering.Code,
-	}
-
 	if supplier := inv.Supplier; supplier != nil {
 		agreement.Seller = NewSeller(supplier)
 	}
-
 	if customer := inv.Customer; customer != nil {
 		agreement.Buyer = NewBuyer(customer)
 	}
-
 	return agreement, nil
 }
 
