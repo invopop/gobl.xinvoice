@@ -63,7 +63,7 @@ func newContact(supplier *org.Party) *Contact {
 	}
 
 	contact := &Contact{
-		PersonName: contactName(&supplier.People[0].Name),
+		PersonName: contactName(supplier.People[0].Name),
 		Phone:      supplier.Telephones[0].Number,
 		Email:      supplier.Emails[0].Address,
 	}
