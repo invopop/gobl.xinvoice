@@ -73,5 +73,5 @@ func invoiceTypeCode(inv *bill.Invoice) string {
 }
 
 func isSelfBilledInvoice(inv *bill.Invoice) bool {
-	return inv.Tax != nil && inv.Type == bill.InvoiceTypeStandard && inv.HasTags(tax.TagSelfBilled)
+	return inv.Type == bill.InvoiceTypeStandard && inv.HasTags(tax.TagSelfBilled)
 }
