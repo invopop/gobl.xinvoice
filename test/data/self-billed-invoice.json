@@ -4,22 +4,22 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "fb3e81ee5d0964fa423dcfb62309a7a5c5150dc62cdd81427a68a2c85e893a66"
-		},
-		"draft": true
+			"val": "45f832f5c6e622ac4e97f600bd98ace5d6e37d0c4af9cd25e2c1754bb817bcd1"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "DE",
+		"$tags": [
+			"self-billed"
+		],
+		"uuid": "019231f1-9184-7eb6-8216-12db835e52a1",
 		"type": "standard",
 		"series": "SAMPLE",
 		"code": "001",
 		"issue_date": "2024-02-13",
 		"currency": "EUR",
-    "tax": {
-      "tags": [
-        "self-billed"
-      ]
-    },
+		"tax": {},
 		"supplier": {
 			"name": "Provide One GmbH",
 			"tax_id": {
@@ -99,9 +99,9 @@
 			"code": "XR-2024-2"
 		},
 		"payment": {
-				"terms": {
-						"detail": "lorem ipsum"
-				}
+			"terms": {
+				"detail": "lorem ipsum"
+			}
 		},
 		"totals": {
 			"sum": "1800.00",

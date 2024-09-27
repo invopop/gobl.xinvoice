@@ -63,7 +63,7 @@ func NewSettlement(inv *bill.Invoice) *Settlement {
 	if inv.Preceding != nil && len(inv.Preceding) > 0 {
 		cor := inv.Preceding[0]
 		settlement.ReferencedDocument = &ReferencedDocument{
-			IssuerAssignedID: cor.Series + "-" + cor.Code,
+			IssuerAssignedID: invoiceNumber(cor.Series, cor.Code),
 			IssueDate: &Date{
 				Date:   formatIssueDate(*cor.IssueDate),
 				Format: "102",
