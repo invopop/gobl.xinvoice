@@ -1,6 +1,8 @@
 package xinvoice
 
 import (
+	"fmt"
+
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -27,7 +29,7 @@ type Note struct {
 // NewHeader creates the ExchangedDocument part of a EN 16931 compliant invoice
 func NewHeader(inv *bill.Invoice) *Header {
 	return &Header{
-		ID:       invoiceNumber(inv),
+		ID:       invoiceNumber(inv.Series, inv.Code),
 		TypeCode: invoiceTypeCode(inv),
 		IssueDate: &Date{
 			Date:   formatIssueDate(inv.IssueDate),
@@ -44,11 +46,11 @@ func formatIssueDate(date cal.Date) string {
 	return t.Format("20060102")
 }
 
-func invoiceNumber(inv *bill.Invoice) string {
-	if inv.Series == "" {
-		return inv.Code
+func invoiceNumber(series cbc.Code, code cbc.Code) string {
+	if series == "" {
+		return series.String()
 	}
-	return inv.Series + "-" + inv.Code
+	return fmt.Sprintf("%s-%s", series, code)
 }
 
 // For German suppliers, the element "Invoice type code" (BT-3) should only contain the
@@ -71,5 +73,5 @@ func invoiceTypeCode(inv *bill.Invoice) string {
 }
 
 func isSelfBilledInvoice(inv *bill.Invoice) bool {
-	return inv.Tax != nil && inv.Type == bill.InvoiceTypeStandard && tax.TagSelfBilled.In(inv.Tax.Tags...)
+	return inv.Tax != nil && inv.Type == bill.InvoiceTypeStandard && inv.HasTags(tax.TagSelfBilled)
 }

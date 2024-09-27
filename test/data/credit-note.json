@@ -4,12 +4,13 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "fb3e81ee5d0964fa423dcfb62309a7a5c5150dc62cdd81427a68a2c85e893a66"
-		},
-		"draft": true
+			"val": "8b78d49564d7375e6b00ced013591437cfdbc8b908909fd48a2d1bcfd5d57a1a"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "DE",
+		"uuid": "019231f1-910c-73d9-9493-a58fdccf14e9",
 		"type": "credit-note",
 		"series": "CN",
 		"code": "002",
@@ -94,9 +95,9 @@
 			"code": "XR-2024-4"
 		},
 		"payment": {
-				"terms": {
-						"detail": "lorem ipsum"
-				}
+			"terms": {
+				"detail": "lorem ipsum"
+			}
 		},
 		"totals": {
 			"sum": "1800.00",

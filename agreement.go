@@ -37,7 +37,7 @@ type URIUniversalCommunication struct {
 func NewAgreement(inv *bill.Invoice) (*Agreement, error) {
 	agreement := new(Agreement)
 	if inv.Ordering != nil && inv.Ordering.Code != "" {
-		agreement.BuyerReference = inv.Ordering.Code
+		agreement.BuyerReference = inv.Ordering.Code.String()
 	} else {
 		agreement.BuyerReference = defaultBuyerReference
 	}
