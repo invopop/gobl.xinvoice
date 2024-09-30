@@ -32,7 +32,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 	// ctx := commandContext(cmd)
 
 	if len(args) == 0 || len(args) > 2 {
-		return fmt.Errorf("expected one or two arguments, the command usage is `gobl.cfdi convert <infile> [outfile]`")
+		return fmt.Errorf("expected one or two arguments, the command usage is `gobl.xinvoice convert <infile> [outfile]`")
 	}
 
 	input, err := openInput(cmd, args)
@@ -51,6 +51,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("reading input: %w", err)
 	}
+
 	env := new(gobl.Envelope)
 	if err := json.Unmarshal(inData, env); err != nil {
 		return fmt.Errorf("parsing input as GOBL Envelope: %w", err)
