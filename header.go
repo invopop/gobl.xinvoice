@@ -48,7 +48,7 @@ func formatIssueDate(date cal.Date) string {
 
 func invoiceNumber(series cbc.Code, code cbc.Code) string {
 	if series == "" {
-		return series.String()
+		return code.String()
 	}
 	return fmt.Sprintf("%s-%s", series, code)
 }
