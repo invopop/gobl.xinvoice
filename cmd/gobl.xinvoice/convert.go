@@ -7,7 +7,8 @@ import (
 	"io"
 
 	"github.com/invopop/gobl"
-	xinvoice "github.com/invopop/gobl.xinvoice"
+	to_gobl "github.com/invopop/gobl.xinvoice/to_gobl"
+	xinvoice "github.com/invopop/gobl.xinvoice/xinvoice"
 	"github.com/spf13/cobra"
 )
 
@@ -72,12 +73,12 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		}
 	} else {
 		// Assume XML if not JSON
-		doc := new(xinvoice.XMLDoc)
+		doc := new(to_gobl.XMLDoc)
 		if err := xml.Unmarshal(inData, doc); err != nil {
 			return fmt.Errorf("parsing input document: %w", err)
 		}
 
-		env, err := xinvoice.NewDocumentGOBL(doc)
+		env, err := to_gobl.NewDocumentGOBL(doc)
 		if err != nil {
 			return fmt.Errorf("building GOBL envelope: %w", err)
 		}

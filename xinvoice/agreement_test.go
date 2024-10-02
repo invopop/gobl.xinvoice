@@ -3,7 +3,7 @@ package xinvoice_test
 import (
 	"testing"
 
-	"github.com/invopop/gobl.xinvoice/test"
+	"github.com/invopop/gobl.xinvoice/xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

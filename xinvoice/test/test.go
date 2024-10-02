@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/invopop/gobl"
-	xinvoice "github.com/invopop/gobl.xinvoice"
+	xinvoice "github.com/invopop/gobl.xinvoice/xinvoice"
 	"github.com/invopop/gobl/bill"
 	"github.com/lestrrat-go/libxml2"
 	"github.com/lestrrat-go/libxml2/xsd"
