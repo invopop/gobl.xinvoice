@@ -127,6 +127,51 @@ func ParsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
 		}
 		payment.Advances = []*pay.Advance{advance}
 	}
+	if len(settlement.SpecifiedTradeSettlementPaymentMeans) > 0 {
+		paymentMeans := settlement.SpecifiedTradeSettlementPaymentMeans[0]
+		instructions := &pay.Instructions{}
+
+		// 10: Bargeld (Cash)
+		// 20: Scheck (Check)
+		// 30: Überweisung (Bank Transfer)
+		// 42: Payment to bank account
+		// 48: Kartenzahlung (Card Payment)
+		// 49: Lastschrift (Direct Debit)
+		// 57: Dauerauftrag (Standing Order)
+		// 58: SEPA Credit Transfer
+		// 59: SEPA Direct Debit
+		// 97: Report (Reporting, potentially for financial reporting or statement purposes)
+
+		if paymentMeans.TypeCode != "" {
+			instructions.Key = cbc.Key(paymentMeans.TypeCode)
+		}
+
+		if paymentMeans.PayeePartyCreditorFinancialAccount != nil {
+			account := paymentMeans.PayeePartyCreditorFinancialAccount
+			if account.IBANID != "" {
+				instructions.CreditTransfer = []*pay.CreditTransfer{
+					{
+						IBAN: account.IBANID,
+					},
+				}
+			}
+		}
+
+		// if paymentMeans.PayerPartyDebtorFinancialAccount != nil {
+		// 	account := paymentMeans.PayerPartyDebtorFinancialAccount
+		// 	if account.IBANID != "" {
+		// 		instructions.DebitTransfer = []*pay.DebitTransfer{
+		// 			{
+		// 				IBAN: account.IBANID,
+		// 			},
+		// 		}
+		// 	}
+		// }
+
+		if instructions.Key != "" || instructions.CreditTransfer != nil {
+			payment.Instructions = instructions
+		}
+	}
 
 	return payment
 }
