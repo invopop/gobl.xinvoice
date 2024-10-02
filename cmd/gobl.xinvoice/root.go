@@ -23,7 +23,6 @@ func (o *rootOpts) cmd() *cobra.Command {
 
 	cmd.AddCommand(versionCmd())
 	cmd.AddCommand(convert(o).cmd())
-	cmd.AddCommand(convertToGobl(o).cmdNew())
 
 	return cmd
 }
