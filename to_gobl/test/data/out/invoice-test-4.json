@@ -1,0 +1,103 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01924e61-64ec-7525-846d-887cb04dad99",
+    "dig": {
+      "alg": "sha256",
+      "val": "931ab464a06cc76eb9958b8114ddd911166589f0deb9bc0bbd86bf20ab7d0eb4"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01924e61-64ec-7526-8ffd-3be460e2456d",
+    "type": "standard",
+    "code": "",
+    "issue_date": "2024-10-01",
+    "currency": "EUR",
+    "supplier": {
+      "name": "EVV GmbH",
+      "tax_id": {
+        "country": "DE",
+        "code": "250166794"
+      },
+      "addresses": [
+        {
+          "street": "Auf der Wacht 1",
+          "locality": "Kaisersesch",
+          "code": "56759",
+          "country": "DE"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Ilona Schidt"
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Haus Waldesruh 1, 17.10.24 - 20.10.24, 2 Erwachsene",
+          "price": "250.00"
+        },
+        "sum": "250.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "250.00"
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "Hind",
+          "price": "10.00"
+        },
+        "sum": "10.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "10.00"
+      }
+    ],
+    "ordering": {
+      "code": "N/A"
+    },
+    "payment": {
+      "terms": {}
+    },
+    "totals": {
+      "sum": "260.00",
+      "total": "260.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "260.00",
+                "percent": "19%",
+                "amount": "49.40"
+              }
+            ],
+            "amount": "49.40"
+          }
+        ],
+        "sum": "49.40"
+      },
+      "tax": "49.40",
+      "total_with_tax": "309.40",
+      "payable": "309.40"
+    }
+  }
+}

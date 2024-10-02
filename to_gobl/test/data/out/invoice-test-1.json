@@ -1,0 +1,111 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01924e60-fefd-7874-9ad8-cdafea5f2b86",
+    "dig": {
+      "alg": "sha256",
+      "val": "57640e2abdd74de57f783307b84b6073a26e4f0d9a8c1f6d64fbbae01c0e2bdb"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01924e60-fefd-7875-abb3-5ebd6fa9255a",
+    "type": "standard",
+    "code": "",
+    "issue_date": "2024-10-01",
+    "currency": "EUR",
+    "supplier": {
+      "name": "TimeOut Immo GmbH",
+      "tax_id": {
+        "country": "DE",
+        "code": "363188747"
+      },
+      "addresses": [
+        {
+          "street": "Am Guten Mann 1",
+          "locality": "Mülheim-Kärlich",
+          "code": "56218",
+          "country": "DE"
+        }
+      ]
+    },
+    "customer": {
+      "name": "mih GmbH",
+      "addresses": [
+        {
+          "street": "An der Wurth 2 – 4",
+          "locality": "Horstmar",
+          "code": "48612",
+          "country": "DE"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "2h Beschaffung + Aufbau des neuen Tisches a 25€/h netto + 7% MwSt.",
+          "price": "5350.00"
+        },
+        "sum": "5350.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "5350.00"
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "1x Couchtisch inklusive 19% MwSt.",
+          "price": "149.00"
+        },
+        "sum": "149.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "149.00"
+      }
+    ],
+    "ordering": {
+      "code": "N/A"
+    },
+    "payment": {
+      "terms": {}
+    },
+    "totals": {
+      "sum": "5499.00",
+      "total": "5499.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "5499.00",
+                "percent": "19%",
+                "amount": "1044.81"
+              }
+            ],
+            "amount": "1044.81"
+          }
+        ],
+        "sum": "1044.81"
+      },
+      "tax": "1044.81",
+      "total_with_tax": "6543.81",
+      "payable": "6543.81"
+    }
+  }
+}

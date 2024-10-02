@@ -12,13 +12,13 @@ func NewDocumentGOBL(doc *XMLDoc) (*gobl.Envelope, error) {
 	inv := &bill.Invoice{
 		Code:      cbc.Code(doc.ExchangedDocument.ID),
 		Type:      TypeCodeParse(doc.ExchangedDocument.TypeCode),
-		IssueDate: parseDate(doc.ExchangedDocument.IssueDateTime.DateTimeString.Value),
+		IssueDate: ParseDate(doc.ExchangedDocument.IssueDateTime.DateTimeString.Value),
 		Currency:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode,
-		Supplier:  parseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty),
-		Customer:  parseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty),
-		Lines:     parseLines(&doc.SupplyChainTradeTransaction),
-		// All 1..1
-		Payment: parsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement),
+		Supplier:  ParseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty),
+		Customer:  ParseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty),
+		Lines:     ParseLines(&doc.SupplyChainTradeTransaction),
+		// All 1..1 -- CHECK
+		Payment: ParsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement),
 	}
 
 	if len(doc.ExchangedDocument.IncludedNote) > 0 {

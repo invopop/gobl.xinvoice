@@ -11,7 +11,7 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
-func parseDate(date string) cal.Date {
+func ParseDate(date string) cal.Date {
 	t, err := time.Parse("20060102", date)
 	if err != nil {
 		return cal.Date{}
@@ -20,7 +20,7 @@ func parseDate(date string) cal.Date {
 	return cal.MakeDate(t.Year(), t.Month(), t.Day())
 }
 
-func findTaxKey(taxType string) cbc.Key {
+func FindTaxKey(taxType string) cbc.Key {
 	switch taxType {
 	case xinvoice.StandardSalesTax:
 		return tax.RateStandard

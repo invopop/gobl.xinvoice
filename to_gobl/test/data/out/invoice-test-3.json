@@ -1,0 +1,110 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01924e61-465d-7309-baf3-92d9be5355b3",
+    "dig": {
+      "alg": "sha256",
+      "val": "cdc4f7e2eb57daf905ed3a6d52764f295fe12a2a25970471b6b16a5cdce5e53b"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01924e61-465d-730a-b9e0-62805ab9de09",
+    "type": "standard",
+    "code": "",
+    "issue_date": "2024-10-01",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Walser Immobilien - Ferdinand Walser",
+      "tax_id": {
+        "country": "DE",
+        "code": "287661662"
+      },
+      "addresses": [
+        {
+          "street": "Gartenstr. 29/b",
+          "locality": "Ravensburg ",
+          "code": "88212",
+          "country": "DE"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Anna Maria Kärcher",
+      "addresses": [
+        {
+          "street": "Janstrasse 102",
+          "locality": "Ravensburg",
+          "code": "88213"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "A09 City Apartment im Zentrum, 07.10.24 - 08.10.24, 1 Erwachsene",
+          "price": "60.00"
+        },
+        "sum": "60.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "60.00"
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "Coupon - ww7nu8rq",
+          "price": "-6.00"
+        },
+        "sum": "-6.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "-6.00"
+      }
+    ],
+    "ordering": {
+      "code": "N/A"
+    },
+    "payment": {
+      "terms": {}
+    },
+    "totals": {
+      "sum": "54.00",
+      "total": "54.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "54.00",
+                "percent": "19%",
+                "amount": "10.26"
+              }
+            ],
+            "amount": "10.26"
+          }
+        ],
+        "sum": "10.26"
+      },
+      "tax": "10.26",
+      "total_with_tax": "64.26",
+      "payable": "64.26"
+    }
+  }
+}

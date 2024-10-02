@@ -1,0 +1,93 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01924e61-25a7-74dc-b1e5-58adb051633c",
+    "dig": {
+      "alg": "sha256",
+      "val": "de7f61b265139298327d6527057ceda973c44a57548475c626743bfc66cf0e4b"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01924e61-25a7-74dd-8ae0-51a90619c271",
+    "type": "standard",
+    "code": "",
+    "issue_date": "2024-09-22",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Point Trading GmbH",
+      "tax_id": {
+        "country": "DE",
+        "code": "310202740"
+      },
+      "addresses": [
+        {
+          "street": "Schragestrasse 11",
+          "locality": "Bremen",
+          "code": "28239",
+          "country": "DE"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Jürgen Berauer",
+      "addresses": [
+        {
+          "street": "Tina-Blau-Str. 4",
+          "locality": "Dachau",
+          "code": "85221"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Apartment 6,Grundstr. 1A,28203 Bremen,3.Etage/3rd floor, 29.10.24 - 01.11.24, 1 Erwachsene",
+          "price": "180.00"
+        },
+        "sum": "180.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "rate": "standard",
+            "percent": "19%"
+          }
+        ],
+        "total": "180.00"
+      }
+    ],
+    "ordering": {
+      "code": "N/A"
+    },
+    "payment": {
+      "terms": {}
+    },
+    "totals": {
+      "sum": "180.00",
+      "total": "180.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "180.00",
+                "percent": "19%",
+                "amount": "34.20"
+              }
+            ],
+            "amount": "34.20"
+          }
+        ],
+        "sum": "34.20"
+      },
+      "tax": "34.20",
+      "total_with_tax": "214.20",
+      "payable": "214.20"
+    }
+  }
+}

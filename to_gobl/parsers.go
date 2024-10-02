@@ -12,7 +12,7 @@ import (
 )
 
 // Parses the XML information for a Party object
-func parseParty(party *TradeParty) *org.Party {
+func ParseParty(party *TradeParty) *org.Party {
 	p := &org.Party{
 		Name: party.Name,
 	}
@@ -77,7 +77,7 @@ func parseParty(party *TradeParty) *org.Party {
 }
 
 // Parses the XML information for a Payment object
-func parsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
+func ParsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
 	payment := &bill.Payment{}
 
 	if settlement.PayeeTradeParty != nil {
@@ -104,7 +104,7 @@ func parsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
 			}
 
 			if paymentTerm.DueDateDateTime.DateTimeString != "" {
-				paymentTermsDueDateDateTime := parseDate(paymentTerm.DueDateDateTime.DateTimeString)
+				paymentTermsDueDateDateTime := ParseDate(paymentTerm.DueDateDateTime.DateTimeString)
 				dueDate := &pay.DueDate{
 					Date: &paymentTermsDueDateDateTime,
 				}
@@ -120,7 +120,7 @@ func parsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
 	}
 
 	if settlement.SpecifiedAdvancePayment.FormattedReceivedDateTime.DateTimeString != "" {
-		advancePaymentReceivedDateTime := parseDate(settlement.SpecifiedAdvancePayment.FormattedReceivedDateTime.DateTimeString)
+		advancePaymentReceivedDateTime := ParseDate(settlement.SpecifiedAdvancePayment.FormattedReceivedDateTime.DateTimeString)
 		advance := &pay.Advance{
 			Amount: num.AmountFromFloat64(settlement.SpecifiedAdvancePayment.PaidAmount, 0),
 			Date:   &advancePaymentReceivedDateTime,
@@ -132,7 +132,7 @@ func parsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
 }
 
 // Parses the XML information for a Lines object
-func parseLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
+func ParseLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
 	items := transaction.IncludedSupplyChainTradeLineItem
 	lines := make([]*bill.Line, 0, len(transaction.IncludedSupplyChainTradeLineItem))
 
@@ -148,7 +148,7 @@ func parseLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
 			},
 			Taxes: tax.Set{
 				{
-					Rate:     findTaxKey(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.CategoryCode),
+					Rate:     FindTaxKey(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.CategoryCode),
 					Category: cbc.Code(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.TypeCode),
 				},
 			},
