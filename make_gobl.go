@@ -37,6 +37,7 @@ type ExchangedDocument struct {
 			Format string `xml:"format,attr"`
 		} `xml:"DateTimeString"`
 	} `xml:"IssueDateTime"`
+	IncludedNote []IncludedNote `xml:"IncludedNote"`
 }
 
 type SupplyChainTradeTransaction struct {
@@ -48,7 +49,8 @@ type SupplyChainTradeTransaction struct {
 
 type IncludedSupplyChainTradeLineItem struct {
 	AssociatedDocumentLineDocument struct {
-		LineID int `xml:"LineID"`
+		LineID       int            `xml:"LineID"`
+		IncludedNote []IncludedNote `xml:"IncludedNote"`
 	} `xml:"AssociatedDocumentLineDocument"`
 	SpecifiedTradeProduct struct {
 		Name string `xml:"Name"`
@@ -58,7 +60,7 @@ type IncludedSupplyChainTradeLineItem struct {
 			ChargeAmount float64 `xml:"ChargeAmount"`
 		} `xml:"NetPriceProductTradePrice"`
 	} `xml:"SpecifiedLineTradeAgreement"`
-	SpecifiedLineTradeDelivery struct {
+	SpecifiedLineTradeDelivery *struct {
 		BilledQuantity struct {
 			Value    int64  `xml:",chardata"`
 			UnitCode string `xml:"unitCode,attr"`
@@ -77,7 +79,7 @@ type IncludedSupplyChainTradeLineItem struct {
 }
 
 type ApplicableHeaderTradeAgreement struct {
-	BuyerReference   string     `xml:"BuyerReference"`
+	BuyerReference   *string    `xml:"BuyerReference"`
 	SellerTradeParty TradeParty `xml:"SellerTradeParty"`
 	BuyerTradeParty  TradeParty `xml:"BuyerTradeParty"`
 }
@@ -85,16 +87,16 @@ type ApplicableHeaderTradeAgreement struct {
 type TradeParty struct {
 	ID                  string `xml:"ID,omitempty"`
 	Name                string `xml:"Name"`
-	DefinedTradeContact struct {
+	DefinedTradeContact *struct {
 		PersonName                      string `xml:"PersonName"`
-		TelephoneUniversalCommunication struct {
+		TelephoneUniversalCommunication *struct {
 			CompleteNumber string `xml:"CompleteNumber"`
 		} `xml:"TelephoneUniversalCommunication"`
-		EmailURIUniversalCommunication struct {
+		EmailURIUniversalCommunication *struct {
 			URIID string `xml:"URIID"`
 		} `xml:"EmailURIUniversalCommunication"`
 	} `xml:"DefinedTradeContact,omitempty"`
-	PostalTradeAddress struct {
+	PostalTradeAddress *struct {
 		PostcodeCode string              `xml:"PostcodeCode"`
 		LineOne      string              `xml:"LineOne"`
 		CityName     string              `xml:"CityName"`
@@ -106,10 +108,10 @@ type TradeParty struct {
 			SchemeID string `xml:"schemeID,attr"`
 		} `xml:"URIID"`
 	} `xml:"URIUniversalCommunication"`
-	SpecifiedTaxRegistration struct {
-		ID struct {
+	SpecifiedTaxRegistration *struct {
+		ID *struct {
 			Value string `xml:",chardata"`
-			//VA used for VAT-ID used in B2B, FC for tax number.
+			//VA used for VAT-ID used in B2B, FC for tax number (Steuernummer).
 			SchemeID string `xml:"schemeID,attr"`
 		} `xml:"ID"`
 	} `xml:"SpecifiedTaxRegistration,omitempty"`
@@ -137,13 +139,14 @@ type ApplicableHeaderTradeSettlement struct {
 		GrandTotalAmount string `xml:"GrandTotalAmount"`
 		DuePayableAmount string `xml:"DuePayableAmount"`
 	} `xml:"SpecifiedTradeSettlementHeaderMonetarySummation"`
-	PayeeTradeParty            TradeParty `xml:"PayeeTradeParty"`
-	SpecifiedTradePaymentTerms struct {
+	PayeeTradeParty            *TradeParty `xml:"PayeeTradeParty"`
+	SpecifiedTradePaymentTerms []struct {
 		Description     string `xml:"Description"`
 		DueDateDateTime struct {
 			DateTimeString string `xml:"DateTimeString"`
 			Format         string `xml:"format,attr"`
 		} `xml:"DueDateDateTime"`
+		PartialPaymentAmount               *string `xml:"PartialPaymentAmount"`
 		ApplicableTradePaymentPenaltyTerms struct {
 			BasisAmount string `xml:"BasisAmount"`
 		} `xml:"ApplicableTradePaymentPenaltyTerms"`
@@ -171,78 +174,51 @@ type IncludedTradeTax struct {
 	RateApplicablePercent string `xml:"RateApplicablePercent"`
 }
 
+type IncludedNote struct {
+	ContentCode string `xml:"ContentCode"`
+	Content     string `xml:"Content"`
+	SubjectCode string `xml:"SubjectCode"`
+}
+
 // NewDocument converts a XRechnung document into a GOBL envelope
 func NewDocumentGOBL(doc *XMLDoc) (*gobl.Envelope, error) {
 
-	PaymentTermsDueDateDateTime := parseDate(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradePaymentTerms.DueDateDateTime.DateTimeString)
-	AdvancePaymentReceivedDateTime := parseDate(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedAdvancePayment.FormattedReceivedDateTime.DateTimeString)
 	inv := &bill.Invoice{
 		Code:      cbc.Code(doc.ExchangedDocument.ID),
-		Type:      "standard",
+		Type:      TypeCodeParse(doc.ExchangedDocument.TypeCode),
 		IssueDate: parseDate(doc.ExchangedDocument.IssueDateTime.DateTimeString.Value),
 		Currency:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode,
-		Supplier: &org.Party{
-			Name: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.Name,
-			Addresses: []*org.Address{
-				{
-					Street:   doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.LineOne,
-					Locality: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CityName,
-					Code:     doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.PostcodeCode,
-					Country:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryID,
-				},
-			},
-			TaxID: &tax.Identity{
-				Country: l10n.TaxCountryCode(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryID),
-				Code:    cbc.Code(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration.ID.Value),
-			},
-		},
-		Customer: &org.Party{
-			Name: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.Name,
-			Addresses: []*org.Address{
-				{
-					Street:   doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.LineOne,
-					Locality: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.CityName,
-					Code:     doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.PostcodeCode,
-					Country:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.CountryID,
-				},
-			},
-		},
-		Lines: parseLines(&doc.SupplyChainTradeTransaction),
-		Payment: &bill.Payment{
-			Payee: &org.Party{
-				Name: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.Name,
-				Addresses: []*org.Address{
-					{
-						Street:   doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.LineOne,
-						Locality: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.CityName,
-						Code:     doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.PostcodeCode,
-						Country:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.PostalTradeAddress.CountryID,
-					},
-				},
-			},
-			Terms: &pay.Terms{
-				Detail: doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradePaymentTerms.Description,
-				DueDates: []*pay.DueDate{
-					{
-						Date: &PaymentTermsDueDateDateTime,
-					},
-				},
-			},
-			Advances: []*pay.Advance{
-				{
-					Amount: num.AmountFromFloat64(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedAdvancePayment.PaidAmount, 0),
-					Date:   &AdvancePaymentReceivedDateTime,
-				},
-			},
-			Instructions: nil,
-		},
+		Supplier:  parseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty),
+		Customer:  parseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty),
+		Lines:     parseLines(&doc.SupplyChainTradeTransaction),
+		// All 1..1
+		Payment: parsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement),
+	}
+
+	if len(doc.ExchangedDocument.IncludedNote) > 0 {
+		inv.Notes = make([]*cbc.Note, 0, len(doc.ExchangedDocument.IncludedNote))
+		for _, note := range doc.ExchangedDocument.IncludedNote {
+			n := &cbc.Note{}
+			if note.Content != "" {
+				n.Text = note.Content
+			}
+			if note.ContentCode != "" {
+				n.Code = note.ContentCode
+			}
+			inv.Notes = append(inv.Notes, n)
+		}
+	}
+
+	if doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerReference != nil {
+		inv.Ordering = &bill.Ordering{
+			Code: cbc.Code(*doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerReference),
+		}
 	}
 
 	env, err := gobl.Envelop(inv)
 	if err != nil {
 		return nil, err
 	}
-
 	return env, nil
 }
 
@@ -256,12 +232,119 @@ func (d *Document) BytesGOBL() ([]byte, error) {
 	return append([]byte(xml.Header), bytes...), nil
 }
 
+func parseParty(party *TradeParty) *org.Party {
+	p := &org.Party{
+		Name: party.Name,
+	}
+
+	if party.DefinedTradeContact != nil && party.DefinedTradeContact.PersonName != "" {
+		p.People = []*org.Person{
+			{
+				Name: &org.Name{
+					Given: party.DefinedTradeContact.PersonName,
+				},
+			},
+		}
+	}
+
+	if party.PostalTradeAddress != nil {
+		p.Addresses = []*org.Address{
+			{
+				Street:   party.PostalTradeAddress.LineOne,
+				Locality: party.PostalTradeAddress.CityName,
+				Code:     party.PostalTradeAddress.PostcodeCode,
+				Country:  party.PostalTradeAddress.CountryID,
+			},
+		}
+	}
+
+	if party.DefinedTradeContact != nil && party.DefinedTradeContact.TelephoneUniversalCommunication != nil {
+		p.Telephones = []*org.Telephone{
+			{
+				Number: party.DefinedTradeContact.TelephoneUniversalCommunication.CompleteNumber,
+			},
+		}
+	}
+
+	if party.DefinedTradeContact != nil && party.DefinedTradeContact.EmailURIUniversalCommunication != nil {
+		p.Emails = []*org.Email{
+			{
+				Address: party.DefinedTradeContact.EmailURIUniversalCommunication.URIID,
+			},
+		}
+	}
+
+	if party.SpecifiedTaxRegistration != nil && party.SpecifiedTaxRegistration.ID != nil {
+		p.TaxID = &tax.Identity{
+			Country: l10n.TaxCountryCode(party.PostalTradeAddress.CountryID),
+			Code:    cbc.Code(party.SpecifiedTaxRegistration.ID.Value),
+		}
+	}
+
+	return p
+}
+
 func parseDate(date string) cal.Date {
 	t, err := time.Parse("20060102", date)
 	if err != nil {
 		return cal.Date{}
 	}
-	return cal.MakeDate(t.Day(), t.Month(), t.Year())
+
+	return cal.MakeDate(t.Year(), t.Month(), t.Day())
+}
+
+func parsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
+	payment := &bill.Payment{}
+
+	if settlement.PayeeTradeParty != nil {
+		payee := &org.Party{Name: settlement.PayeeTradeParty.Name}
+		if settlement.PayeeTradeParty.PostalTradeAddress.LineOne != "" {
+			payee.Addresses = []*org.Address{
+				{
+					Street:   settlement.PayeeTradeParty.PostalTradeAddress.LineOne,
+					Locality: settlement.PayeeTradeParty.PostalTradeAddress.CityName,
+					Code:     settlement.PayeeTradeParty.PostalTradeAddress.PostcodeCode,
+					Country:  settlement.PayeeTradeParty.PostalTradeAddress.CountryID,
+				},
+			}
+		}
+		payment.Payee = payee
+	}
+	if len(settlement.SpecifiedTradePaymentTerms) > 0 {
+		terms := &pay.Terms{}
+		var dueDates []*pay.DueDate
+
+		for _, paymentTerm := range settlement.SpecifiedTradePaymentTerms {
+			if terms.Detail == "" {
+				terms.Detail = paymentTerm.Description
+			}
+
+			if paymentTerm.DueDateDateTime.DateTimeString != "" {
+				paymentTermsDueDateDateTime := parseDate(paymentTerm.DueDateDateTime.DateTimeString)
+				dueDate := &pay.DueDate{
+					Date: &paymentTermsDueDateDateTime,
+				}
+				if paymentTerm.PartialPaymentAmount != nil {
+					dueDate.Amount, _ = num.AmountFromString(*paymentTerm.PartialPaymentAmount)
+				}
+				dueDates = append(dueDates, dueDate)
+			}
+		}
+
+		terms.DueDates = dueDates
+		payment.Terms = terms
+	}
+
+	if settlement.SpecifiedAdvancePayment.FormattedReceivedDateTime.DateTimeString != "" {
+		advancePaymentReceivedDateTime := parseDate(settlement.SpecifiedAdvancePayment.FormattedReceivedDateTime.DateTimeString)
+		advance := &pay.Advance{
+			Amount: num.AmountFromFloat64(settlement.SpecifiedAdvancePayment.PaidAmount, 0),
+			Date:   &advancePaymentReceivedDateTime,
+		}
+		payment.Advances = []*pay.Advance{advance}
+	}
+
+	return payment
 }
 
 func parseLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
@@ -269,38 +352,51 @@ func parseLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
 	lines := make([]*bill.Line, 0, len(transaction.IncludedSupplyChainTradeLineItem))
 
 	for _, item := range items {
-		quantity := num.MakeAmount(item.SpecifiedLineTradeDelivery.BilledQuantity.Value, 0)
 		price := num.AmountFromFloat64(item.SpecifiedLineTradeAgreement.NetPriceProductTradePrice.ChargeAmount, 0)
-		percent, _ := num.PercentageFromString(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.RateApplicablePercent)
-		// total := num.MakeAmount(item.SpecifiedLineTradeSettlement.SpecifiedTradeSettlementLineMonetarySummation.LineTotalAmount, 0)
-		//discount := num.MakePercent(0, 0)
 
 		line := &bill.Line{
-			Index:    item.AssociatedDocumentLineDocument.LineID,
-			Quantity: quantity,
+			// Index:    item.AssociatedDocumentLineDocument.LineID,
+			Quantity: num.MakeAmount(1, 0),
 			Item: &org.Item{
 				Name:  item.SpecifiedTradeProduct.Name,
 				Price: price,
+				// Unit:  org.Unit(org.Unit(item.SpecifiedLineTradeDelivery.BilledQuantity.UnitCode).UNECE()),
 			},
-			// Sum: total,
-			// Total: total,
 			Taxes: tax.Set{
 				{
-					Category: cbc.Code(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.CategoryCode),
-					Rate:     findTaxKey(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.TypeCode),
-					Percent:  &percent,
+					Rate:     findTaxKey(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.CategoryCode),
+					Category: cbc.Code(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.TypeCode),
+					// Percent:  &percent,
 				},
 			},
-			// Notes: []*cbc.Note{
-			// 	{
-			// 		Content: cbc.Code(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.TypeCode),
-			// 	},
-			// },
+		}
+
+		if item.SpecifiedLineTradeDelivery != nil {
+			line.Quantity = num.MakeAmount(item.SpecifiedLineTradeDelivery.BilledQuantity.Value, 0)
+		}
+
+		if len(item.AssociatedDocumentLineDocument.IncludedNote) > 0 {
+			line.Notes = make([]*cbc.Note, 0, len(item.AssociatedDocumentLineDocument.IncludedNote))
+			for _, note := range item.AssociatedDocumentLineDocument.IncludedNote {
+				n := &cbc.Note{}
+				if note.Content != "" {
+					n.Text = note.Content
+				}
+				if note.ContentCode != "" {
+					n.Code = note.ContentCode
+				}
+				line.Notes = append(line.Notes, n)
+			}
+		}
+
+		if item.SpecifiedLineTradeSettlement.ApplicableTradeTax.RateApplicablePercent != "" {
+			percent, _ := num.PercentageFromString(item.SpecifiedLineTradeSettlement.ApplicableTradeTax.RateApplicablePercent)
+			line.Taxes[0].Percent = &percent
 		}
 
 		// Set the unit if available
 		if item.SpecifiedLineTradeDelivery.BilledQuantity.UnitCode != "" {
-			line.Item.Unit = org.Unit(item.SpecifiedLineTradeDelivery.BilledQuantity.UnitCode)
+			line.Item.Unit = UnitFromUNECE(cbc.Code(item.SpecifiedLineTradeDelivery.BilledQuantity.UnitCode))
 		}
 
 		lines = append(lines, line)
@@ -319,4 +415,30 @@ func findTaxKey(taxType string) cbc.Key {
 		return tax.RateExempt
 	}
 	return tax.RateStandard
+}
+
+func TypeCodeParse(typeCode string) cbc.Key {
+	switch typeCode {
+	case "380":
+		return bill.InvoiceTypeStandard
+	case "381":
+		return bill.InvoiceTypeCreditNote
+	case "384":
+		return bill.InvoiceTypeCorrective
+	case "325":
+		return bill.InvoiceTypeProforma
+	case "383":
+		return bill.InvoiceTypeDebitNote
+	}
+	return bill.InvoiceTypeOther
+}
+
+func UnitFromUNECE(unece cbc.Code) org.Unit {
+	for _, def := range org.UnitDefinitions {
+		if def.UNECE == unece {
+			return def.Unit
+		}
+	}
+	// If no match is found, return the original UN/ECE code as a Unit
+	return org.Unit(unece)
 }

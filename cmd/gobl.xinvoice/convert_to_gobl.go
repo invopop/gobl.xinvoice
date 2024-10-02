@@ -58,13 +58,6 @@ func (c *convertOpts) runENew(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("parsing input document: %w", err)
 	}
 
-	// Print the content of the doc object
-	// docBytes, err := xml.MarshalIndent(doc, "", "  ")
-	// if err != nil {
-	// 	return fmt.Errorf("marshaling document content: %w", err)
-	// }
-	// fmt.Println(string(docBytes))
-
 	env, err := xinvoice.NewDocumentGOBL(doc)
 	if err != nil {
 		return fmt.Errorf("building GOBL envelope: %w", err)
