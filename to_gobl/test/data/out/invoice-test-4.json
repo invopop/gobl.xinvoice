@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01924e61-64ec-7525-846d-887cb04dad99",
+    "uuid": "019252c6-038a-7171-af56-e8bc5444efb7",
     "dig": {
       "alg": "sha256",
-      "val": "931ab464a06cc76eb9958b8114ddd911166589f0deb9bc0bbd86bf20ab7d0eb4"
+      "val": "21a34017dc9a57a66970de9489c04c60b2afd1792ba4dba21d2fa7d51891d1c3"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01924e61-64ec-7526-8ffd-3be460e2456d",
+    "uuid": "019252c6-038a-7172-8db2-a109805a0513",
     "type": "standard",
     "code": "",
     "issue_date": "2024-10-01",
@@ -69,12 +69,6 @@
         "total": "10.00"
       }
     ],
-    "ordering": {
-      "code": "N/A"
-    },
-    "payment": {
-      "terms": {}
-    },
     "totals": {
       "sum": "260.00",
       "total": "260.00",

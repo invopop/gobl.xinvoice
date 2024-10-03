@@ -5,14 +5,16 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"flag"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.xinvoice/to_gobl"
+	"github.com/invopop/gobl/bill"
+
 	//"github.com/invopop/gobl.xinvoice/xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,25 +31,53 @@ func TestNewDocumentGOBL(t *testing.T) {
 		outName := strings.Replace(inName, ".xml", ".json", 1)
 
 		t.Run(inName, func(t *testing.T) {
-			doc := new(to_gobl.XMLDoc)
-			doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode = "EUR"
-			fmt.Println(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode)
-			fmt.Println(doc.ExchangedDocument.IssueDateTime.DateTimeString.Value)
+			// Load XML data into doc
+			xmlData, err := os.ReadFile(example)
+			require.NoError(t, err)
 
+			doc := new(to_gobl.XMLDoc)
+			err = xml.Unmarshal(xmlData, doc)
+			require.NoError(t, err)
+
+			// Now doc should be populated with data from the XML file
 			goblEnv, err := to_gobl.NewDocumentGOBL(doc)
 			require.NoError(t, err)
 
-			data, err := json.MarshalIndent(goblEnv, "", "  ")
+			// Extract the invoice from the envelope
+			invoice, ok := goblEnv.Extract().(*bill.Invoice)
+			require.True(t, ok, "Document should be an invoice")
+
+			// Remove UUID from the invoice
+			invoice.UUID = ""
+
+			// Marshal only the invoice
+			data, err := json.MarshalIndent(invoice, "", "  ")
 			require.NoError(t, err)
 
+			// Load the expected output
 			output, err := LoadOutputFile(outName)
 			assert.NoError(t, err)
+
+			// Parse the expected output to extract the invoice
+			var expectedEnv gobl.Envelope
+			err = json.Unmarshal(output, &expectedEnv)
+			require.NoError(t, err)
+
+			expectedInvoice, ok := expectedEnv.Extract().(*bill.Invoice)
+			require.True(t, ok, "Expected document should be an invoice")
+
+			// Remove UUID from the expected invoice
+			expectedInvoice.UUID = ""
+
+			// Marshal the expected invoice
+			expectedData, err := json.MarshalIndent(expectedInvoice, "", "  ")
+			require.NoError(t, err)
 
 			if *updateOut {
 				err = SaveOutputFile(outName, data)
 				require.NoError(t, err)
 			} else {
-				assert.JSONEq(t, string(output), string(data), "Output should match the expected JSON. Update with --update flag.")
+				assert.JSONEq(t, string(expectedData), string(data), "Invoice should match the expected JSON. Update with --update flag.")
 			}
 		})
 	}
@@ -56,7 +86,6 @@ func TestNewDocumentGOBL(t *testing.T) {
 // LoadTestXMLDoc returns a to_gobl.XMLDoc from a file in the test data folder
 func LoadTestXMLDoc(name string) (*to_gobl.XMLDoc, error) {
 	src, err := os.Open(filepath.Join(GetDataPath(), name))
-	// src, err := os.Open(name)
 	if err != nil {
 		return nil, err
 	}
