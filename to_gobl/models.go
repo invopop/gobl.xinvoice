@@ -109,9 +109,15 @@ type TradeParty struct {
 type ApplicableHeaderTradeSettlement struct {
 	InvoiceCurrencyCode                  currency.Code `xml:"InvoiceCurrencyCode"`
 	SpecifiedTradeSettlementPaymentMeans []struct {
-		TypeCode                           string `xml:"TypeCode"`
+		TypeCode                               string  `xml:"TypeCode"`
+		Information                            *string `xml:"Information"`
+		ApplicableTradeSettlementFinancialCard *struct {
+			ID             string `xml:"ID"`
+			CardholderName string `xml:"CardholderName"`
+		} `xml:"ApplicableTradeSettlementFinancialCard"`
 		PayeePartyCreditorFinancialAccount *struct {
-			IBANID string `xml:"IBANID"`
+			IBANID      string `xml:"IBANID"`
+			AccountName string `xml:"AccountName"`
 		} `xml:"PayeePartyCreditorFinancialAccount"`
 		PayerPartyDebtorFinancialAccount *struct {
 			IBANID string `xml:"IBANID"`

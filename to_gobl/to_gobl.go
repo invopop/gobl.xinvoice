@@ -16,7 +16,7 @@ func NewDocumentGOBL(doc *XMLDoc) (*gobl.Envelope, error) {
 		Currency:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode,
 		Supplier:  ParseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty),
 		Customer:  ParseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty),
-		Lines:     ParseLines(&doc.SupplyChainTradeTransaction),
+		Lines:     ParseXMLLines(&doc.SupplyChainTradeTransaction),
 		// All 1..1 -- CHECK
 		Payment: ParsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement),
 	}
