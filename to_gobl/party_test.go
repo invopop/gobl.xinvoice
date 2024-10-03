@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// Define tests for the ParseParty function
 func TestParseParty(t *testing.T) {
 	doc, err := LoadTestXMLDoc("invoice-test-1.xml")
 	require.NoError(t, err)

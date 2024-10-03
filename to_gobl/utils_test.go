@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Define tests for the ParseDate function
 func TestParseDate(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -27,6 +28,7 @@ func TestParseDate(t *testing.T) {
 	}
 }
 
+// Define tests for the FindTaxKey function
 func TestFindTaxKey(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -47,6 +49,7 @@ func TestFindTaxKey(t *testing.T) {
 	}
 }
 
+// Define tests for the TypeCodeParse function
 func TestTypeCodeParse(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -69,6 +72,7 @@ func TestTypeCodeParse(t *testing.T) {
 	}
 }
 
+// Define tests for the UnitFromUNECE function
 func TestUnitFromUNECE(t *testing.T) {
 	tests := []struct {
 		name     string

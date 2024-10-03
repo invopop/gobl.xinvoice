@@ -56,10 +56,10 @@ func parsePaymentTerms(settlement *ApplicableHeaderTradeSettlement) *pay.Terms {
 			terms.Detail = paymentTerm.Description
 		}
 
-		if paymentTerm.DueDateDateTime.DateTimeString != "" {
-			paymentTermsDueDateDateTime := ParseDate(paymentTerm.DueDateDateTime.DateTimeString)
+		if paymentTerm.DueDateDateTime != nil {
+			dueDateTime := ParseDate(paymentTerm.DueDateDateTime.DateTimeString)
 			dueDate := &pay.DueDate{
-				Date: &paymentTermsDueDateDateTime,
+				Date: &dueDateTime,
 			}
 			if paymentTerm.PartialPaymentAmount != nil {
 				dueDate.Amount, _ = num.AmountFromString(*paymentTerm.PartialPaymentAmount)

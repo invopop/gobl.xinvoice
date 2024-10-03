@@ -82,16 +82,6 @@ func UnitFromUNECE(unece cbc.Code) org.Unit {
 }
 
 // Map X-Rechnung payment means to GOBL equivalent
-// 10: Bargeld (Cash)
-// 20: Scheck (Check)
-// 30: Überweisung (Bank Transfer)
-// 42: Payment to bank account
-// 48: Kartenzahlung (Card Payment)
-// 49: Lastschrift (Direct Debit)
-// 57: Dauerauftrag (Standing Order)
-// 58: SEPA Credit Transfer
-// 59: SEPA Direct Debit
-// 97: Report (Reporting, potentially for financial reporting or statement purposes)
 func PaymentMeansTypeCodeParse(typeCode string) cbc.Key {
 	switch typeCode {
 	case PaymentMeansCash:

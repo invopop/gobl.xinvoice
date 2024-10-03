@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// Define tests for the ParseXMLLines function
 func TestParseLines(t *testing.T) {
 	doc, err := LoadTestXMLDoc("invoice-test-1.xml")
 	require.NoError(t, err)

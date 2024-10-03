@@ -84,13 +84,46 @@
       </ram:SellerTradeParty>
       <ram:BuyerTradeParty>
         <ram:Name>Ilona Schidt</ram:Name>
+        <ram:PostalTradeAddress>
+          <ram:PostcodeCode>88213</ram:PostcodeCode>
+          <ram:LineOne>Janstrasse 102</ram:LineOne>
+          <ram:CityName>Ravensburg</ram:CityName>
+          <ram:CountryID>DE</ram:CountryID>
+        </ram:PostalTradeAddress>
       </ram:BuyerTradeParty>
     </ram:ApplicableHeaderTradeAgreement>
     <ram:ApplicableHeaderTradeDelivery></ram:ApplicableHeaderTradeDelivery>
     <ram:ApplicableHeaderTradeSettlement>
       <ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
+      <ram:PayeeTradeParty>
+        <ram:Name>Ilona Schidt</ram:Name>
+        <ram:PostalTradeAddress>
+          <ram:PostcodeCode>56799</ram:PostcodeCode>
+          <ram:LineOne>Auf der Wacht 45</ram:LineOne>
+          <ram:CityName>Kaisersesch</ram:CityName>
+          <ram:CountryID>DE</ram:CountryID>
+        </ram:PostalTradeAddress>
+      </ram:PayeeTradeParty>
+      <ram:SpecifiedTradePaymentTerms>
+        <ram:DueDateDateTime>
+          <udt:DateTimeString format="102">20241001</udt:DateTimeString>
+        </ram:DueDateDateTime>
+        <ram:PartialPaymentAmount>20.00</ram:PartialPaymentAmount>
+        <ram:Description>Partial Payment</ram:Description>
+      </ram:SpecifiedTradePaymentTerms>
       <ram:SpecifiedTradeSettlementPaymentMeans>
-        <ram:TypeCode>1</ram:TypeCode>
+        <ram:TypeCode>42</ram:TypeCode>
+        <ram:Information>Barzahlung</ram:Information>
+        <ram:PayeePartyCreditorFinancialAccount>
+          <ram:IBANID>123456789012345678</ram:IBANID>
+        </ram:PayeePartyCreditorFinancialAccount>
+        <ram:PayerPartyDebtorFinancialAccount>
+          <ram:IBANID>098765432109876543</ram:IBANID>
+        </ram:PayerPartyDebtorFinancialAccount>
+        <ram:ApplicableTradeSettlementFinancialCard>
+          <ram:ID>1234567890123456</ram:ID>
+          <ram:CardholderName>Ilona Schidt</ram:CardholderName>
+        </ram:ApplicableTradeSettlementFinancialCard>
       </ram:SpecifiedTradeSettlementPaymentMeans>
       <ram:ApplicableTradeTax>
         <ram:CalculatedAmount>17.01</ram:CalculatedAmount>

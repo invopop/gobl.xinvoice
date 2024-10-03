@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "019252c6-038a-7171-af56-e8bc5444efb7",
+    "uuid": "01925330-92de-761e-ac3b-bc966d3d3d90",
     "dig": {
       "alg": "sha256",
-      "val": "21a34017dc9a57a66970de9489c04c60b2afd1792ba4dba21d2fa7d51891d1c3"
+      "val": "f333ce269dda4c9718705e57a6c3c7ef4f716ea9c19200520eca66c3718ab737"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "019252c6-038a-7172-8db2-a109805a0513",
+    "uuid": "01925330-92de-761f-8838-d5e5738a10a4",
     "type": "standard",
     "code": "",
     "issue_date": "2024-10-01",
@@ -31,7 +31,15 @@
       ]
     },
     "customer": {
-      "name": "Ilona Schidt"
+      "name": "Ilona Schidt",
+      "addresses": [
+        {
+          "street": "Janstrasse 102",
+          "locality": "Ravensburg",
+          "code": "88213",
+          "country": "DE"
+        }
+      ]
     },
     "lines": [
       {
@@ -69,6 +77,41 @@
         "total": "10.00"
       }
     ],
+    "payment": {
+      "payee": {
+        "name": "Ilona Schidt",
+        "addresses": [
+          {
+            "street": "Auf der Wacht 45",
+            "locality": "Kaisersesch",
+            "code": "56799",
+            "country": "DE"
+          }
+        ]
+      },
+      "terms": {
+        "detail": "Partial Payment",
+        "due_dates": [
+          {
+            "date": "2024-10-01",
+            "amount": "20.00"
+          }
+        ]
+      },
+      "instructions": {
+        "key": "debit-transfer",
+        "detail": "Barzahlung",
+        "credit_transfer": [
+          {
+            "iban": "123456789012345678"
+          }
+        ],
+        "card": {
+          "last4": "3456",
+          "holder": "Ilona Schidt"
+        }
+      }
+    },
     "totals": {
       "sum": "260.00",
       "total": "260.00",
