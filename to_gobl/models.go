@@ -3,7 +3,6 @@ package to_gobl
 import (
 	"encoding/xml"
 
-	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/l10n"
 )
 
@@ -107,7 +106,7 @@ type TradeParty struct {
 }
 
 type ApplicableHeaderTradeSettlement struct {
-	InvoiceCurrencyCode                  currency.Code `xml:"InvoiceCurrencyCode"`
+	InvoiceCurrencyCode                  string `xml:"InvoiceCurrencyCode"`
 	SpecifiedTradeSettlementPaymentMeans []struct {
 		TypeCode                               string  `xml:"TypeCode"`
 		Information                            *string `xml:"Information"`
@@ -143,7 +142,7 @@ type ApplicableHeaderTradeSettlement struct {
 	PayeeTradeParty            *TradeParty `xml:"PayeeTradeParty"`
 	SpecifiedTradePaymentTerms []struct {
 		Description     string `xml:"Description"`
-		DueDateDateTime struct {
+		DueDateDateTime *struct {
 			DateTimeString string `xml:"DateTimeString"`
 			Format         string `xml:"format,attr"`
 		} `xml:"DueDateDateTime"`

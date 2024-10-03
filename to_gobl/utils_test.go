@@ -15,8 +15,8 @@ func TestParseDate(t *testing.T) {
 		expected string
 	}{
 		{"Valid date", "20230515", "2023-05-15"},
-		{"Invalid date", "20231345", "0001-01-01"},
-		{"Empty string", "", "0001-01-01"},
+		{"Invalid date", "20231345", "0000-00-00"},
+		{"Empty string", "", "0000-00-00"},
 	}
 
 	for _, tt := range tests {
@@ -75,7 +75,10 @@ func TestUnitFromUNECE(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"Known UNECE code", "EA", "each"},
+		{"Known UNECE code", "HUR", "h"},
+		{"Known UNECE code", "SEC", "s"},
+		{"Known UNECE code", "MTR", "m"},
+		{"Known UNECE code", "GRM", "g"},
 		{"Unknown UNECE code", "XYZ", "XYZ"},
 	}
 

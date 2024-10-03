@@ -4,6 +4,7 @@ import (
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/currency"
 )
 
 // NewDocument converts a XRechnung document into a GOBL envelope
@@ -13,12 +14,19 @@ func NewDocumentGOBL(doc *XMLDoc) (*gobl.Envelope, error) {
 		Code:      cbc.Code(doc.ExchangedDocument.ID),
 		Type:      TypeCodeParse(doc.ExchangedDocument.TypeCode),
 		IssueDate: ParseDate(doc.ExchangedDocument.IssueDateTime.DateTimeString.Value),
-		Currency:  doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode,
+		Currency:  currency.Code(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode),
 		Supplier:  ParseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty),
 		Customer:  ParseParty(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty),
 		Lines:     ParseXMLLines(&doc.SupplyChainTradeTransaction),
-		// All 1..1 -- CHECK
-		Payment: ParsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement),
+	}
+
+	// Payment comprised of terms, means and payee. Check tehre is relevant info in at least one of them to create a payment
+	if doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.PayeeTradeParty != nil ||
+		(len(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradePaymentTerms) > 0 &&
+			doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradePaymentTerms[0].DueDateDateTime != nil) ||
+		(len(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementPaymentMeans) > 0 &&
+			doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementPaymentMeans[0].TypeCode != "1") {
+		inv.Payment = ParsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)
 	}
 
 	if len(doc.ExchangedDocument.IncludedNote) > 0 {
@@ -36,8 +44,10 @@ func NewDocumentGOBL(doc *XMLDoc) (*gobl.Envelope, error) {
 	}
 
 	if doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerReference != nil {
-		inv.Ordering = &bill.Ordering{
-			Code: cbc.Code(*doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerReference),
+		if *doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerReference != "N/A" {
+			inv.Ordering = &bill.Ordering{
+				Code: cbc.Code(*doc.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerReference),
+			}
 		}
 	}
 

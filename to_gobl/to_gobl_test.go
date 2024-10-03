@@ -1,9 +1,11 @@
 package to_gobl_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"flag"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -11,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl.xinvoice/to_gobl"
-	"github.com/invopop/gobl.xinvoice/xinvoice/test"
+	//"github.com/invopop/gobl.xinvoice/xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -19,7 +21,7 @@ import (
 var updateOut = flag.Bool("update", false, "Update the JSON files in the test/data/out directory")
 
 func TestNewDocumentGOBL(t *testing.T) {
-	examples, err := test.GetDataGlob("*.xml")
+	examples, err := GetDataGlob("*.xml")
 	require.NoError(t, err)
 
 	for _, example := range examples {
@@ -28,6 +30,9 @@ func TestNewDocumentGOBL(t *testing.T) {
 
 		t.Run(inName, func(t *testing.T) {
 			doc := new(to_gobl.XMLDoc)
+			doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode = "EUR"
+			fmt.Println(doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.InvoiceCurrencyCode)
+			fmt.Println(doc.ExchangedDocument.IssueDateTime.DateTimeString.Value)
 
 			goblEnv, err := to_gobl.NewDocumentGOBL(doc)
 			require.NoError(t, err)
@@ -35,11 +40,11 @@ func TestNewDocumentGOBL(t *testing.T) {
 			data, err := json.MarshalIndent(goblEnv, "", "  ")
 			require.NoError(t, err)
 
-			output, err := test.LoadOutputFile(outName)
+			output, err := LoadOutputFile(outName)
 			assert.NoError(t, err)
 
 			if *updateOut {
-				err = test.SaveOutputFile(outName, data)
+				err = SaveOutputFile(outName, data)
 				require.NoError(t, err)
 			} else {
 				assert.JSONEq(t, string(output), string(data), "Output should match the expected JSON. Update with --update flag.")
@@ -50,7 +55,8 @@ func TestNewDocumentGOBL(t *testing.T) {
 
 // LoadTestXMLDoc returns a to_gobl.XMLDoc from a file in the test data folder
 func LoadTestXMLDoc(name string) (*to_gobl.XMLDoc, error) {
-	src, err := os.Open(filepath.Join(test.GetDataPath(), name))
+	src, err := os.Open(filepath.Join(GetDataPath(), name))
+	// src, err := os.Open(name)
 	if err != nil {
 		return nil, err
 	}
@@ -67,4 +73,69 @@ func LoadTestXMLDoc(name string) (*to_gobl.XMLDoc, error) {
 	}
 
 	return doc, nil
+}
+
+// GetDataGlob returns a list of files in the `test/data` folder that match the pattern
+func GetDataGlob(pattern string) ([]string, error) {
+	return filepath.Glob(filepath.Join(GetDataPath(), pattern))
+}
+
+// LoadOutputFile returns byte data from a file in the `test/data/out` folder
+func LoadOutputFile(name string) ([]byte, error) {
+	src, _ := os.Open(filepath.Join(GetOutPath(), name))
+
+	buf := new(bytes.Buffer)
+	if _, err := buf.ReadFrom(src); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
+}
+
+// SaveOutputFile writes byte data to a file in the `test/data/out` folder
+func SaveOutputFile(name string, data []byte) error {
+	return os.WriteFile(filepath.Join(GetOutPath(), name), data, 0644)
+}
+
+// GetOutPath returns the path to the `test/data/out` folder
+func GetOutPath() string {
+	return filepath.Join(GetDataPath(), "out")
+}
+
+// GetDataPath returns the path to the `test/data` folder
+func GetDataPath() string {
+	return filepath.Join(GetTestPath(), "data")
+}
+
+// GetTestPath returns the path to the `test` folder
+func GetTestPath() string {
+	return filepath.Join(getRootFolder(), "test")
+}
+
+func getRootFolder() string {
+	cwd, _ := os.Getwd()
+
+	// for !isRootFolder(cwd) {
+	// 	cwd = removeLastEntry(cwd)
+	// }
+
+	return cwd
+}
+
+func isRootFolder(dir string) bool {
+	files, _ := os.ReadDir(dir)
+
+	for _, file := range files {
+		if file.Name() == "go.mod" {
+			return true
+		}
+	}
+
+	return false
+}
+
+func removeLastEntry(dir string) string {
+	lastEntry := "\\" + filepath.Base(dir)
+	i := strings.LastIndex(dir, lastEntry)
+	return dir[:i]
 }

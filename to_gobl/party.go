@@ -1,6 +1,8 @@
 package to_gobl
 
 import (
+	"regexp"
+
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/org"
@@ -57,7 +59,7 @@ func ParseParty(party *TradeParty) *org.Party {
 				case "VA":
 					p.TaxID = &tax.Identity{
 						Country: l10n.TaxCountryCode(party.PostalTradeAddress.CountryID),
-						Code:    cbc.Code(taxReg.ID.Value),
+						Code:    cbc.Code(regexp.MustCompile(`\D`).ReplaceAllString(taxReg.ID.Value, "")),
 					}
 				case "FC":
 					identity := &org.Identity{

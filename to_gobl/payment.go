@@ -26,7 +26,9 @@ func ParsePayment(settlement *ApplicableHeaderTradeSettlement) *bill.Payment {
 		payment.Payee = payee
 	}
 	if len(settlement.SpecifiedTradePaymentTerms) > 0 {
-		payment.Terms = parsePaymentTerms(settlement)
+		if settlement.SpecifiedTradePaymentTerms[0].DueDateDateTime != nil {
+			payment.Terms = parsePaymentTerms(settlement)
+		}
 	}
 
 	if len(settlement.SpecifiedTradeSettlementPaymentMeans) > 0 && settlement.SpecifiedTradeSettlementPaymentMeans[0].TypeCode != "1" {
