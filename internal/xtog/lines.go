@@ -3,6 +3,7 @@ package xinvoice
 import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
@@ -18,6 +19,7 @@ func ParseXMLLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
 
 		line := &bill.Line{
 			// Index:    item.AssociatedDocumentLineDocument.LineID, //generated field
+			//If Quantity is not present, assume 1
 			Quantity: num.MakeAmount(1, 0),
 			Item: &org.Item{
 				Name:  item.SpecifiedTradeProduct.Name,
@@ -33,6 +35,14 @@ func ParseXMLLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
 
 		if item.SpecifiedLineTradeDelivery != nil {
 			line.Quantity = num.MakeAmount(item.SpecifiedLineTradeDelivery.BilledQuantity.Value, 0)
+		}
+
+		if item.SpecifiedTradeProduct.Description != nil {
+			line.Item.Description = *item.SpecifiedTradeProduct.Description
+		}
+
+		if item.SpecifiedTradeProduct.OriginTradeCountry != nil {
+			line.Item.Origin = l10n.ISOCountryCode(item.SpecifiedTradeProduct.OriginTradeCountry.ID)
 		}
 
 		if len(item.AssociatedDocumentLineDocument.IncludedNote) > 0 {
@@ -56,6 +66,43 @@ func ParseXMLLines(transaction *SupplyChainTradeTransaction) []*bill.Line {
 
 		if item.SpecifiedLineTradeDelivery.BilledQuantity.UnitCode != "" {
 			line.Item.Unit = UnitFromUNECE(cbc.Code(item.SpecifiedLineTradeDelivery.BilledQuantity.UnitCode))
+		}
+
+		if item.SpecifiedLineTradeSettlement.SpecifiedTradeAllowanceCharge != nil {
+			for _, allowanceCharge := range item.SpecifiedLineTradeSettlement.SpecifiedTradeAllowanceCharge {
+				amount, _ := num.AmountFromString(allowanceCharge.ActualAmount)
+				if allowanceCharge.ChargeIndicator.Indicator {
+					charge := &bill.LineCharge{
+						Amount: amount,
+					}
+					if allowanceCharge.ReasonCode != nil {
+						charge.Code = *allowanceCharge.ReasonCode
+					}
+					if allowanceCharge.Reason != nil {
+						charge.Reason = *allowanceCharge.Reason
+					}
+					if allowanceCharge.CalculationPercent != nil {
+						percent, _ := num.PercentageFromString(*allowanceCharge.CalculationPercent)
+						charge.Percent = &percent
+					}
+					line.Charges = append(line.Charges, charge)
+				} else {
+					discount := &bill.LineDiscount{
+						Amount: amount,
+					}
+					if allowanceCharge.ReasonCode != nil {
+						discount.Code = *allowanceCharge.ReasonCode
+					}
+					if allowanceCharge.Reason != nil {
+						discount.Reason = *allowanceCharge.Reason
+					}
+					if allowanceCharge.CalculationPercent != nil {
+						percent, _ := num.PercentageFromString(*allowanceCharge.CalculationPercent)
+						discount.Percent = &percent
+					}
+					line.Discounts = append(line.Discounts, discount)
+				}
+			}
 		}
 
 		lines = append(lines, line)

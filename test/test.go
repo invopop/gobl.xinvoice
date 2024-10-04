@@ -147,6 +147,7 @@ func GetTestPath() string {
 	return filepath.Join(getRootFolder(), "test")
 }
 
+// TODO: adapt to new folder structure
 func getRootFolder() string {
 	cwd, _ := os.Getwd()
 

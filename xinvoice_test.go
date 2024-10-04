@@ -13,14 +13,11 @@ import (
 	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/invopop/gobl.xinvoice/test"
 	"github.com/invopop/gobl/bill"
-
-	//"github.com/invopop/gobl.xinvoice/xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var updateOutXtoG = flag.Bool("update", false, "Update the JSON files in the test/data/out directory")
-
 var updateOutGtoX = flag.Bool("update", false, "Update the XML files in the test/data/out directory")
 
 func TestNewDocument(t *testing.T) {

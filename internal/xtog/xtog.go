@@ -30,7 +30,11 @@ type IncludedSupplyChainTradeLineItem struct {
 		IncludedNote []IncludedNote `xml:"IncludedNote"`
 	} `xml:"AssociatedDocumentLineDocument"`
 	SpecifiedTradeProduct struct {
-		Name string `xml:"Name"`
+		Name               string  `xml:"Name"`
+		Description        *string `xml:"Description"`
+		OriginTradeCountry *struct {
+			ID string `xml:"ID"`
+		} `xml:"OriginTradeCountry"`
 	} `xml:"SpecifiedTradeProduct"`
 	SpecifiedLineTradeAgreement struct {
 		NetPriceProductTradePrice struct {
@@ -49,6 +53,15 @@ type IncludedSupplyChainTradeLineItem struct {
 			CategoryCode          string `xml:"CategoryCode"`
 			RateApplicablePercent string `xml:"RateApplicablePercent"`
 		} `xml:"ApplicableTradeTax"`
+		SpecifiedTradeAllowanceCharge []*struct {
+			ChargeIndicator struct {
+				Indicator bool `xml:",chardata"`
+			} `xml:"ChargeIndicator"`
+			CalculationPercent *string `xml:"CalculationPercent"`
+			ActualAmount       string  `xml:"ActualAmount"`
+			ReasonCode         *string `xml:"ReasonCode"`
+			Reason             *string `xml:"Reason"`
+		} `xml:"SpecifiedTradeAllowanceCharge,omitempty"`
 		SpecifiedTradeSettlementLineMonetarySummation struct {
 			LineTotalAmount float64 `xml:"LineTotalAmount"`
 		} `xml:"SpecifiedTradeSettlementLineMonetarySummation"`

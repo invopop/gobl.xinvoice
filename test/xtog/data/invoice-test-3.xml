@@ -58,6 +58,13 @@
         <ram:BilledQuantity unitCode="">1</ram:BilledQuantity>
       </ram:SpecifiedLineTradeDelivery>
       <ram:SpecifiedLineTradeSettlement>
+        <ram:SpecifiedTradeAllowanceCharge>
+          <ram:ChargeIndicator>
+            <udt:Indicator>false</udt:Indicator>
+          </ram:ChargeIndicator>
+          <ram:ActualAmount>6.00</ram:ActualAmount>
+          <ram:Reason>Discount</ram:Reason>
+        </ram:SpecifiedTradeAllowanceCharge>
         <ram:ApplicableTradeTax>
           <ram:TypeCode>VAT</ram:TypeCode>
           <ram:CategoryCode>S</ram:CategoryCode>
