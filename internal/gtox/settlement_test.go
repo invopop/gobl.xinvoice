@@ -3,8 +3,8 @@ package xinvoice_test
 import (
 	"testing"
 
-	xinvoice "github.com/invopop/gobl.xinvoice/xinvoice"
-	"github.com/invopop/gobl.xinvoice/xinvoice/test"
+	gtox "github.com/invopop/gobl.xinvoice/internal/gtox"
+	"github.com/invopop/gobl.xinvoice/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -16,7 +16,7 @@ func TestNewSettlement(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Equal(t, "EUR", doc.Transaction.Settlement.Currency)
-		assert.Equal(t, xinvoice.TypeCodeInstrumentNotDefined, doc.Transaction.Settlement.TypeCode)
+		assert.Equal(t, gtox.TypeCodeInstrumentNotDefined, doc.Transaction.Settlement.TypeCode)
 		assert.Equal(t, "lorem ipsum", doc.Transaction.Settlement.PaymentTerms)
 		assert.Equal(t, "1800.00", doc.Transaction.Settlement.Summary.TotalAmount)
 		assert.Equal(t, "1800.00", doc.Transaction.Settlement.Summary.TaxBasisTotalAmount)
@@ -31,6 +31,6 @@ func TestNewSettlement(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Equal(t, "SAMPLE-001", doc.Transaction.Settlement.ReferencedDocument.IssuerAssignedID)
-		assert.Equal(t, &xinvoice.Date{Date: "20240213", Format: "102"}, doc.Transaction.Settlement.ReferencedDocument.IssueDate)
+		assert.Equal(t, &gtox.Date{Date: "20240213", Format: "102"}, doc.Transaction.Settlement.ReferencedDocument.IssueDate)
 	})
 }

@@ -1,4 +1,4 @@
-package to_gobl
+package xinvoice
 
 import (
 	"regexp"

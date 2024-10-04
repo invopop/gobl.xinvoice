@@ -1,4 +1,4 @@
-package to_gobl
+package xinvoice
 
 import (
 	"github.com/invopop/gobl/bill"

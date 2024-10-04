@@ -3,27 +3,27 @@ package xinvoice_test
 import (
 	"testing"
 
-	xinvoice "github.com/invopop/gobl.xinvoice/xinvoice"
+	gtox "github.com/invopop/gobl.xinvoice/internal/gtox"
 	"github.com/invopop/gobl/tax"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFindTaxCode(t *testing.T) {
 	t.Run("should return correct tax category", func(t *testing.T) {
-		taxCode := xinvoice.FindTaxCode(tax.RateStandard)
+		taxCode := gtox.FindTaxCode(tax.RateStandard)
 
-		assert.Equal(t, xinvoice.StandardSalesTax, taxCode)
+		assert.Equal(t, gtox.StandardSalesTax, taxCode)
 	})
 
 	t.Run("should return zero tax category", func(t *testing.T) {
-		taxCode := xinvoice.FindTaxCode(tax.RateZero)
+		taxCode := gtox.FindTaxCode(tax.RateZero)
 
-		assert.Equal(t, xinvoice.ZeroRatedGoodsTax, taxCode)
+		assert.Equal(t, gtox.ZeroRatedGoodsTax, taxCode)
 	})
 
 	t.Run("should return zero tax category", func(t *testing.T) {
-		taxCode := xinvoice.FindTaxCode(tax.RateExempt)
+		taxCode := gtox.FindTaxCode(tax.RateExempt)
 
-		assert.Equal(t, xinvoice.TaxExempt, taxCode)
+		assert.Equal(t, gtox.TaxExempt, taxCode)
 	})
 }

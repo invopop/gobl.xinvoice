@@ -1,9 +1,9 @@
-package to_gobl_test
+package xinvoice_test
 
 import (
 	"testing"
 
-	"github.com/invopop/gobl.xinvoice/to_gobl"
+	xtog "github.com/invopop/gobl.xinvoice/internal/xtog"
 	"github.com/invopop/gobl/cbc"
 	"github.com/stretchr/testify/assert"
 )
@@ -22,7 +22,7 @@ func TestParseDate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := to_gobl.ParseDate(tt.input)
+			result := xtog.ParseDate(tt.input)
 			assert.Equal(t, tt.expected, result.String())
 		})
 	}
@@ -43,7 +43,7 @@ func TestFindTaxKey(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := to_gobl.FindTaxKey(tt.input)
+			result := xtog.FindTaxKey(tt.input)
 			assert.Equal(t, tt.expected, string(result))
 		})
 	}
@@ -66,7 +66,7 @@ func TestTypeCodeParse(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := to_gobl.TypeCodeParse(tt.input)
+			result := xtog.TypeCodeParse(tt.input)
 			assert.Equal(t, tt.expected, string(result))
 		})
 	}
@@ -88,7 +88,7 @@ func TestUnitFromUNECE(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := to_gobl.UnitFromUNECE(cbc.Code(tt.input))
+			result := xtog.UnitFromUNECE(cbc.Code(tt.input))
 			assert.Equal(t, tt.expected, string(result))
 		})
 	}

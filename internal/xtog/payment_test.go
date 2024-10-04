@@ -1,9 +1,10 @@
-package to_gobl_test
+package xinvoice_test
 
 import (
 	"testing"
 
-	"github.com/invopop/gobl.xinvoice/to_gobl"
+	xtog "github.com/invopop/gobl.xinvoice/internal/xtog"
+	"github.com/invopop/gobl.xinvoice/test"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
@@ -13,10 +14,10 @@ import (
 
 func TestParsePayment(t *testing.T) {
 	// Read the XML file
-	doc, err := LoadTestXMLDoc("invoice-test-4.xml")
+	doc, err := test.LoadTestXMLDoc("invoice-test-4.xml")
 	require.NoError(t, err)
 
-	payment := to_gobl.ParsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)
+	payment := xtog.ParsePayment(&doc.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)
 
 	assert.NotNil(t, payment)
 

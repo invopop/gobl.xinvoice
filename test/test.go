@@ -4,12 +4,14 @@ package test
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/invopop/gobl"
-	xinvoice "github.com/invopop/gobl.xinvoice/xinvoice"
+	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/invopop/gobl/bill"
 	"github.com/lestrrat-go/libxml2"
 	"github.com/lestrrat-go/libxml2/xsd"
@@ -23,6 +25,27 @@ func NewDocumentFrom(name string) (*xinvoice.Document, error) {
 	}
 
 	return xinvoice.NewDocument(env)
+}
+
+// LoadTestXMLDoc returns a to_gobl.XMLDoc from a file in the test data folder
+func LoadTestXMLDoc(name string) (*xinvoice.XMLDoc, error) {
+	src, err := os.Open(filepath.Join(GetDataPath(), name))
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+
+	inData, err := io.ReadAll(src)
+	if err != nil {
+		return nil, err
+	}
+
+	doc := new(xinvoice.XMLDoc)
+	if err := xml.Unmarshal(inData, doc); err != nil {
+		return nil, err
+	}
+
+	return doc, nil
 }
 
 // LoadTestInvoice returns a GOBL Invoice from a file in the `test/data` folder

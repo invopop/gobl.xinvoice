@@ -1,19 +1,8 @@
-package to_gobl
+package xinvoice
 
 import (
-	"encoding/xml"
-
 	"github.com/invopop/gobl/l10n"
 )
-
-// Model for XML excluding namespaces
-type XMLDoc struct {
-	XMLName                     xml.Name                    `xml:"CrossIndustryInvoice"`
-	BusinessProcessContext      string                      `xml:"ExchangedDocumentContext>BusinessProcessSpecifiedDocumentContextParameter>ID"`
-	GuidelineContext            string                      `xml:"ExchangedDocumentContext>GuidelineSpecifiedDocumentContextParameter>ID"`
-	ExchangedDocument           ExchangedDocument           `xml:"ExchangedDocument"`
-	SupplyChainTradeTransaction SupplyChainTradeTransaction `xml:"SupplyChainTradeTransaction"`
-}
 
 type ExchangedDocument struct {
 	ID            string `xml:"ID"`

@@ -1,9 +1,10 @@
-package to_gobl_test
+package xinvoice_test
 
 import (
 	"testing"
 
-	"github.com/invopop/gobl.xinvoice/to_gobl"
+	xtog "github.com/invopop/gobl.xinvoice/internal/xtog"
+	"github.com/invopop/gobl.xinvoice/test"
 	"github.com/invopop/gobl/num"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -11,10 +12,10 @@ import (
 
 // Define tests for the ParseXMLLines function
 func TestParseLines(t *testing.T) {
-	doc, err := LoadTestXMLDoc("invoice-test-1.xml")
+	doc, err := test.LoadTestXMLDoc("invoice-test-1.xml")
 	require.NoError(t, err)
 
-	lines := to_gobl.ParseXMLLines(&doc.SupplyChainTradeTransaction)
+	lines := xtog.ParseXMLLines(&doc.SupplyChainTradeTransaction)
 	require.Len(t, lines, 2)
 
 	assert.Equal(t, "2h Beschaffung + Aufbau des neuen Tisches a 25€/h netto + 7% MwSt.", lines[0].Item.Name)
