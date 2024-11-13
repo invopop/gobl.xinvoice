@@ -1,0 +1,164 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01932652-ed6f-7512-a23a-41e30c3a6376",
+    "dig": {
+      "alg": "sha256",
+      "val": "03965dbd9f57a508cad47075063f795ed8d7fdcb397df039d2e75aca7e945183"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01932652-ed6f-758b-944c-853ea7c32cf0",
+    "type": "standard",
+    "code": "123456",
+    "issue_date": "2016-06-21",
+    "currency": "EUR",
+    "supplier": {
+      "name": "[Seller name]",
+      "alias": "[Seller trading name]",
+      "tax_id": {
+        "country": "DE",
+        "code": "123456789"
+      },
+      "identities": [
+        {
+          "label": "CompanyID",
+          "code": "[HRB-Eintrag]"
+        }
+      ],
+      "people": [
+        {
+          "name": {
+            "given": "-"
+          }
+        }
+      ],
+      "addresses": [
+        {
+          "street": "[Seller address line 1]",
+          "locality": "[Seller city]",
+          "code": "12345",
+          "country": "DE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "Seller@email.de"
+        }
+      ],
+      "telephones": [
+        {
+          "num": "[012-3456789]"
+        }
+      ]
+    },
+    "customer": {
+      "name": "[Buyer name]",
+      "identities": [
+        {
+          "code": "BI12345678"
+        }
+      ],
+      "people": [
+        {
+          "name": {
+            "given": "[Buyer contact person]"
+          }
+        }
+      ],
+      "addresses": [
+        {
+          "street": "[Buyer address line 1]",
+          "locality": "[Buyer city]",
+          "code": "12345",
+          "country": "DE"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "ref": "SZ300540",
+          "name": "Denk doch, wie du willst",
+          "description": "Einblicke v. Deutschlands wicht. Ökonomen",
+          "price": "11.78",
+          "unit": "XPP"
+        },
+        "sum": "11.78",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "percent": "7%"
+          }
+        ],
+        "total": "11.78"
+      }
+    ],
+    "ordering": {
+      "code": "Dummywert"
+    },
+    "payment": {
+      "payee": {
+        "name": "VSB - Verlagsservice Braunschweig GmbH"
+      },
+      "terms": {
+        "notes": "Bitte überweisen Sie den Betrag innerhalb von 14 Tagen auf unten stehendes Konto. Das Rechnungsdatum entspricht dem Versanddatum."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "DE75512108001245126199"
+          }
+        ],
+        "ext": {
+          "untdid-payment-means": "58"
+        }
+      }
+    },
+    "delivery": {
+      "date": "2016-06-21"
+    },
+    "totals": {
+      "sum": "11.78",
+      "total": "11.78",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "base": "11.78",
+                "percent": "7%",
+                "amount": "0.82"
+              }
+            ],
+            "amount": "0.82"
+          }
+        ],
+        "sum": "0.82"
+      },
+      "tax": "0.82",
+      "total_with_tax": "12.60",
+      "payable": "12.60"
+    },
+    "notes": [
+      {
+        "text": "#ADU#Bei Fragen zu Ihrer Rechnung wenden Sie sich bitte an unseren Kundenserivce. Sie erreichen uns per Email: […], Tel.: […] oder Fax: […]"
+      },
+      {
+        "text": "#ADU#Die Lieferung erfolgt aufgrund der AGB […] erhältlich unter […]. Auf Wunsch senden wir sie auch zu."
+      },
+      {
+        "text": "#ADU#Hinweis gemäß § 33 BDSG: Kundendaten werden gespeichert."
+      },
+      {
+        "text": "#ADU#Beschädigt eingehende Sendungen bitte sofort beim Spediteur bzw. Paketdienstleister reklamieren. Genehmigte Rücksendungen schicken Sie bitte mit den Unterlagen an: […]"
+      }
+    ]
+  }
+}

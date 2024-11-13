@@ -16,19 +16,22 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNewDocument(t *testing.T) {
-	examples, err := getDataGlob("*.json")
+const (
+	xmlPattern  = "*.xml"
+	jsonPattern = "*.json"
+)
+
+func TestGtoX(t *testing.T) {
+	examples, err := getDataGlob(jsonPattern)
 	require.NoError(t, err)
 
 	for _, example := range examples {
 		inName := filepath.Base(example)
-
-		for _, format := range []string{"xml", "json"} {
-			outName := strings.Replace(inName, ".json", "."+format+".xml", 1)
+		for _, format := range []string{"xrechnung", "facturx", "zugferd"} {
+			outName := strings.Replace(inName, ".json", "-"+format+".xml", 1)
 
 			t.Run(inName, func(t *testing.T) {
-				src, _ := os.Open(filepath.Join(getDataPath(), inName))
-
+				src, _ := os.Open(filepath.Join(getConversionTypePath(jsonPattern), inName))
 				buf := new(bytes.Buffer)
 				_, err := buf.ReadFrom(src)
 				require.NoError(t, err)
@@ -38,7 +41,6 @@ func TestNewDocument(t *testing.T) {
 
 				output, err := LoadOutputFile(outName)
 				assert.NoError(t, err)
-
 				assert.Equal(t, output, doc, "Output should match the expected XML. Update with --update flag.")
 
 			})
@@ -70,7 +72,6 @@ func TestXtoG(t *testing.T) {
 			// Extract the invoice from the envelope
 			invoice, ok := env.Extract().(*bill.Invoice)
 			require.True(t, ok, "Document should be an invoice")
-
 			// Remove UUID from the invoice
 			invoice.UUID = ""
 
@@ -102,10 +103,14 @@ func TestXtoG(t *testing.T) {
 	}
 }
 
-// LoadOutputFile returns byte data from a file in the `test/data/out` folder
 func LoadOutputFile(name string) ([]byte, error) {
-	src, _ := os.Open(filepath.Join(getOutPath(), name))
-
+	var pattern string
+	if strings.HasSuffix(name, ".json") {
+		pattern = xmlPattern
+	} else {
+		pattern = jsonPattern
+	}
+	src, _ := os.Open(filepath.Join(getOutPath(pattern), name))
 	buf := new(bytes.Buffer)
 	if _, err := buf.ReadFrom(src); err != nil {
 		return nil, err
@@ -114,22 +119,25 @@ func LoadOutputFile(name string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// getDataGlob returns a list of files in the `test/data` folder that match the pattern
 func getDataGlob(pattern string) ([]string, error) {
-	return filepath.Glob(filepath.Join(getDataPath(), pattern))
+	return filepath.Glob(filepath.Join(getConversionTypePath(pattern), pattern))
 }
 
-// getOutPath returns the path to the `test/data/out` folder
-func getOutPath() string {
-	return filepath.Join(getDataPath(), "out")
+func getOutPath(pattern string) string {
+	return filepath.Join(getConversionTypePath(pattern), "out")
 }
 
-// getDataPath returns the path to the `test/data` folder
 func getDataPath() string {
 	return filepath.Join(getTestPath(), "data")
 }
 
-// getTestPath returns the path to the `test` folder
+func getConversionTypePath(pattern string) string {
+	if pattern == xmlPattern {
+		return filepath.Join(getDataPath(), "xtog")
+	}
+	return filepath.Join(getDataPath(), "gtox")
+}
+
 func getTestPath() string {
 	return filepath.Join(getRootFolder(), "test")
 }

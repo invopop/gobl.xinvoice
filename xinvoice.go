@@ -14,25 +14,26 @@ import (
 )
 
 const (
-	CIIHeader = "CrossIndustryInvoice"
-	UBLHeader = "Invoice"
+	ciiHeader = "CrossIndustryInvoice"
+	ublHeader = "Invoice"
 )
 
-var formatContexts = map[string]string{
+// Currently Factur-X and Zugferd have the same context header.
+// Keeping them separate to avoid confusion.
+var mapFormatGuideline = map[string]string{
 	"xrechnung": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
 	"facturx":   "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
 	"zugferd":   "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
 }
 
 // Convert converts a GOBL envelope into an XRechnung or Factur-X document.
-func Convert(data []byte, format string) ([]byte, error) {
-	j := json.Valid(data)
-
+func Convert(d []byte, f string) ([]byte, error) {
+	j := json.Valid(d)
 	var o []byte
 
 	if j {
 		env := new(gobl.Envelope)
-		if err := json.Unmarshal(data, env); err != nil {
+		if err := json.Unmarshal(d, env); err != nil {
 			return nil, fmt.Errorf("parsing input as GOBL Envelope: %w", err)
 		}
 
@@ -41,11 +42,18 @@ func Convert(data []byte, format string) ([]byte, error) {
 			return nil, fmt.Errorf("building XRechnung and Factur-X document: %w", err)
 		}
 
-		g, ok := formatContexts[format]
+		g, ok := mapFormatGuideline[f]
 		if !ok {
-			return nil, fmt.Errorf("invalid format %q - must be one of: xrechnung, facturx, zugferd", format)
+			return nil, fmt.Errorf("invalid format %q - must be one of: xrechnung, facturx, zugferd", f)
 		}
+
+		// Add the guideline context
 		doc.ExchangedContext.GuidelineContext.ID = g
+
+		switch f {
+		case "xrechnung":
+			doc.ExchangedContext.BusinessContext.ID = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"
+		}
 
 		o, err = doc.Bytes()
 		if err != nil {
@@ -53,19 +61,19 @@ func Convert(data []byte, format string) ([]byte, error) {
 		}
 	} else {
 		// Assume XML if not JSON
-		r, err := extractRootName(data)
+		r, err := extractRootName(d)
 		if err != nil {
 			return nil, fmt.Errorf("extracting root name: %w", err)
 		}
 
 		var env *gobl.Envelope
-		if r == CIIHeader {
-			env, err = cii.ToGOBL(data)
+		if r == ciiHeader {
+			env, err = cii.ToGOBL(d)
 			if err != nil {
 				return nil, fmt.Errorf("converting CII to GOBL: %w", err)
 			}
-		} else if r == UBLHeader {
-			env, err = ubl.ToGOBL(data)
+		} else if r == ublHeader {
+			env, err = ubl.ToGOBL(d)
 			if err != nil {
 				return nil, fmt.Errorf("converting UBL to GOBL: %w", err)
 			}
@@ -83,17 +91,17 @@ func Convert(data []byte, format string) ([]byte, error) {
 }
 
 // Helper function to extract the root element name or specific header
-func extractRootName(data []byte) (string, error) {
-	decoder := xml.NewDecoder(bytes.NewReader(data))
+func extractRootName(d []byte) (string, error) {
+	dc := xml.NewDecoder(bytes.NewReader(d))
 	for {
-		token, err := decoder.Token()
+		tk, err := dc.Token()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
 			return "", fmt.Errorf("error parsing XML: %w", err)
 		}
-		switch t := token.(type) {
+		switch t := tk.(type) {
 		case xml.StartElement:
 			return t.Name.Local, nil
 		}

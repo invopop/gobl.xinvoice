@@ -1,0 +1,29 @@
+run:
+  timeout: "120s"
+
+output:
+  formats:
+    - format: "colored-line-number"
+
+linters:
+  enable:
+    - "gocyclo"
+    - "unconvert"
+    - "goimports"
+    - "govet"
+    - "nakedret"
+    - "revive"
+    - "goconst"
+    - "unparam"
+    - "gofmt"
+    - "errname"
+    - "zerologlint"
+
+linters-settings:
+  staticcheck:
+    # SAxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
+    # Default: ["*"]
+    checks: ["all"]
+
+issues:
+  exclude-use-default: false
