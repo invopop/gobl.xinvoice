@@ -1,17 +1,16 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
-	"github.com/invopop/gobl"
 	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/spf13/cobra"
 )
 
 type convertOpts struct {
 	*rootOpts
+	format string
 }
 
 func convert(o *rootOpts) *convertOpts {
@@ -24,6 +23,9 @@ func (c *convertOpts) cmd() *cobra.Command {
 		Short: "Convert a GOBL JSON into a XRechnung & Factur-X XML document",
 		RunE:  c.runE,
 	}
+
+	f := cmd.Flags()
+	f.StringVar(&c.format, "format", "", "The format to convert to, either 'xrechnung', 'zugferd' or 'facturx'")
 
 	return cmd
 }
@@ -51,23 +53,14 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("reading input: %w", err)
 	}
-	env := new(gobl.Envelope)
-	if err := json.Unmarshal(inData, env); err != nil {
-		return fmt.Errorf("parsing input as GOBL Envelope: %w", err)
-	}
 
-	doc, err := xinvoice.NewDocument(env)
+	doc, err := xinvoice.Convert(inData, c.format)
 	if err != nil {
-		return fmt.Errorf("building XRechnung and Factur-X document: %w", err)
+		return fmt.Errorf("building document: %w", err)
 	}
 
-	data, err := doc.Bytes()
-	if err != nil {
-		return fmt.Errorf("generating XRechnung and Factur-X xml: %w", err)
-	}
-
-	if _, err = out.Write(data); err != nil {
-		return fmt.Errorf("writing xml output: %w", err)
+	if _, err = out.Write(doc); err != nil {
+		return fmt.Errorf("writing output: %w", err)
 	}
 
 	return nil
