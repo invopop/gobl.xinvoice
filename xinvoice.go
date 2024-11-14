@@ -9,7 +9,8 @@ import (
 	"io"
 
 	"github.com/invopop/gobl"
-	cii "github.com/invopop/gobl.cii"
+	"github.com/invopop/gobl.cii"
+	"github.com/invopop/gobl.cii/document"
 	"github.com/invopop/gobl.ubl"
 )
 
@@ -18,8 +19,8 @@ const (
 	ublHeader = "Invoice"
 )
 
-// Currently Factur-X and Zugferd have the same context header.
-// Keeping them separate to avoid confusion.
+// Currently Factur-X and Zugferd have the same context header, but
+// keeping them separate to avoid confusion.
 var mapFormatGuideline = map[string]string{
 	"xrechnung": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
 	"facturx":   "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
@@ -50,9 +51,12 @@ func Convert(d []byte, f string) ([]byte, error) {
 		// Add the guideline context
 		doc.ExchangedContext.GuidelineContext.ID = g
 
+		// Add particular fields required by the format
 		switch f {
 		case "xrechnung":
-			doc.ExchangedContext.BusinessContext.ID = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"
+			doc.ExchangedContext.BusinessContext = &document.ExchangedContextParameter{
+				ID: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
+			}
 		}
 
 		o, err = doc.Bytes()

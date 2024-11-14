@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl"
-	"github.com/invopop/gobl.xinvoice"
+	xinvoice "github.com/invopop/gobl.xinvoice"
 	"github.com/invopop/gobl/bill"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,6 +22,7 @@ const (
 )
 
 func TestGtoX(t *testing.T) {
+
 	examples, err := getDataGlob(jsonPattern)
 	require.NoError(t, err)
 
@@ -39,7 +40,7 @@ func TestGtoX(t *testing.T) {
 				doc, err := xinvoice.Convert(buf.Bytes(), format)
 				require.NoError(t, err)
 
-				output, err := LoadOutputFile(outName)
+				output, err := loadOutputFile(outName)
 				assert.NoError(t, err)
 				assert.Equal(t, output, doc, "Output should match the expected XML. Update with --update flag.")
 
@@ -80,7 +81,7 @@ func TestXtoG(t *testing.T) {
 			require.NoError(t, err)
 
 			// Load the expected output
-			output, err := LoadOutputFile(outName)
+			output, err := loadOutputFile(outName)
 			assert.NoError(t, err)
 
 			// Parse the expected output to extract the invoice
@@ -103,7 +104,7 @@ func TestXtoG(t *testing.T) {
 	}
 }
 
-func LoadOutputFile(name string) ([]byte, error) {
+func loadOutputFile(name string) ([]byte, error) {
 	var pattern string
 	if strings.HasSuffix(name, ".json") {
 		pattern = xmlPattern
