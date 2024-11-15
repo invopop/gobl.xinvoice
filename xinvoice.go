@@ -3,92 +3,121 @@ package xinvoice
 
 import (
 	"bytes"
-	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io"
 
 	"github.com/invopop/gobl"
-	"github.com/invopop/gobl.cii"
+	cii "github.com/invopop/gobl.cii"
 	"github.com/invopop/gobl.cii/document"
-	"github.com/invopop/gobl.ubl"
+	ubl "github.com/invopop/gobl.ubl"
 )
 
 const (
 	ciiHeader = "CrossIndustryInvoice"
 	ublHeader = "Invoice"
+
+	xRechnungGuideline = "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"
+	xRechnungProfile   = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"
+
+	// Currently Factur-X and Zugferd have the same context header, but
+	// keeping them separate to avoid confusion.
+	facturXGuideline = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
+	zugferdGuideline = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
 )
 
-// Currently Factur-X and Zugferd have the same context header, but
-// keeping them separate to avoid confusion.
-var mapFormatGuideline = map[string]string{
-	"xrechnung": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
-	"facturx":   "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
-	"zugferd":   "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
-}
+// ConvertToGOBL converts an XRechnung, Factur-X or UBL document into a GOBL envelope
+func ConvertToGOBL(d []byte) (*gobl.Envelope, error) {
+	r, err := extractRootName(d)
+	if err != nil {
+		return nil, fmt.Errorf("extracting root name: %w", err)
+	}
 
-// Convert converts a GOBL envelope into an XRechnung or Factur-X document.
-func Convert(d []byte, f string) ([]byte, error) {
-	j := json.Valid(d)
-	var o []byte
-
-	if j {
-		env := new(gobl.Envelope)
-		if err := json.Unmarshal(d, env); err != nil {
-			return nil, fmt.Errorf("parsing input as GOBL Envelope: %w", err)
-		}
-
-		doc, err := cii.ToCII(env)
+	var env *gobl.Envelope
+	if r == ciiHeader {
+		env, err = cii.ToGOBL(d)
 		if err != nil {
-			return nil, fmt.Errorf("building XRechnung and Factur-X document: %w", err)
+			return nil, fmt.Errorf("converting CII to GOBL: %w", err)
 		}
-
-		g, ok := mapFormatGuideline[f]
-		if !ok {
-			return nil, fmt.Errorf("invalid format %q - must be one of: xrechnung, facturx, zugferd", f)
-		}
-
-		// Add the guideline context
-		doc.ExchangedContext.GuidelineContext.ID = g
-
-		// Add particular fields required by the format
-		switch f {
-		case "xrechnung":
-			doc.ExchangedContext.BusinessContext = &document.ExchangedContextParameter{
-				ID: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
-			}
-		}
-
-		o, err = doc.Bytes()
+	} else if r == ublHeader {
+		env, err = ubl.ToGOBL(d)
 		if err != nil {
-			return nil, fmt.Errorf("generating XRechnung and Factur-X xml: %w", err)
+			return nil, fmt.Errorf("converting UBL to GOBL: %w", err)
 		}
 	} else {
-		// Assume XML if not JSON
-		r, err := extractRootName(d)
-		if err != nil {
-			return nil, fmt.Errorf("extracting root name: %w", err)
-		}
+		return nil, fmt.Errorf("unknown XML format: %s", r)
+	}
 
-		var env *gobl.Envelope
-		if r == ciiHeader {
-			env, err = cii.ToGOBL(d)
-			if err != nil {
-				return nil, fmt.Errorf("converting CII to GOBL: %w", err)
-			}
-		} else if r == ublHeader {
-			env, err = ubl.ToGOBL(d)
-			if err != nil {
-				return nil, fmt.Errorf("converting UBL to GOBL: %w", err)
-			}
-		} else {
-			return nil, fmt.Errorf("unknown XML format: %s", r)
-		}
+	return env, nil
+}
 
-		o, err = json.MarshalIndent(env, "", "  ")
-		if err != nil {
-			return nil, fmt.Errorf("generating JSON output: %w", err)
-		}
+// ConvertToXRechnungCII converts a GOBL envelope into an XRechnung document
+func ConvertToXRechnungCII(env *gobl.Envelope) ([]byte, error) {
+	doc, err := cii.ToCII(env)
+	if err != nil {
+		return nil, fmt.Errorf("building XRechnung document: %w", err)
+	}
+
+	doc.ExchangedContext.GuidelineContext.ID = xRechnungGuideline
+	doc.ExchangedContext.BusinessContext = &document.ExchangedContextParameter{
+		ID: xRechnungProfile,
+	}
+
+	o, err := doc.Bytes()
+	if err != nil {
+		return nil, fmt.Errorf("generating XRechnung xml: %w", err)
+	}
+
+	return o, nil
+}
+
+// ConvertToXRechnungUBL converts a GOBL envelope into an XRechnung document
+func ConvertToXRechnungUBL(env *gobl.Envelope) ([]byte, error) {
+	doc, err := ubl.ToUBL(env)
+	if err != nil {
+		return nil, fmt.Errorf("building XRechnung document: %w", err)
+	}
+
+	doc.CustomizationID = xRechnungGuideline
+	doc.ProfileID = xRechnungProfile
+
+	o, err := doc.Bytes()
+	if err != nil {
+		return nil, fmt.Errorf("generating XRechnung xml: %w", err)
+	}
+
+	return o, nil
+}
+
+// ConvertToZUGFeRD converts a GOBL envelope into a ZUGFeRD document
+func ConvertToZUGFeRD(env *gobl.Envelope) ([]byte, error) {
+	doc, err := cii.ToCII(env)
+	if err != nil {
+		return nil, fmt.Errorf("building ZUGFeRD document: %w", err)
+	}
+
+	doc.ExchangedContext.GuidelineContext.ID = zugferdGuideline
+
+	o, err := doc.Bytes()
+	if err != nil {
+		return nil, fmt.Errorf("generating ZUGFeRD xml: %w", err)
+	}
+
+	return o, nil
+}
+
+// ConvertToFacturX converts a GOBL envelope into a Factur-X document
+func ConvertToFacturX(env *gobl.Envelope) ([]byte, error) {
+	doc, err := cii.ToCII(env)
+	if err != nil {
+		return nil, fmt.Errorf("building Factur-X document: %w", err)
+	}
+
+	doc.ExchangedContext.GuidelineContext.ID = facturXGuideline
+
+	o, err := doc.Bytes()
+	if err != nil {
+		return nil, fmt.Errorf("generating Factur-X xml: %w", err)
 	}
 
 	return o, nil

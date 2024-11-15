@@ -5,9 +5,9 @@ go 1.22
 toolchain go1.22.1
 
 require (
-	github.com/invopop/gobl v0.204.1
-	github.com/invopop/gobl.cii v0.0.0-20241113110224-ea176da860c5
-	github.com/invopop/gobl.ubl v0.0.0
+	github.com/invopop/gobl v0.205.0
+	github.com/invopop/gobl.cii v0.0.0-20241114223258-6c81aeced980
+	github.com/invopop/gobl.ubl v0.0.0-20241114221205-b8e258001982
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
@@ -34,8 +34,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
-	golang.org/x/crypto v0.28.0 // indirect
+	golang.org/x/crypto v0.29.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/invopop/gobl.ubl => ../gobl.ubl

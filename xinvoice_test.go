@@ -28,16 +28,25 @@ func TestGtoX(t *testing.T) {
 
 	for _, example := range examples {
 		inName := filepath.Base(example)
-		for _, format := range []string{"xrechnung", "facturx", "zugferd"} {
+		for _, format := range []string{"xrechnung-cii", "xrechnung-ubl", "facturx", "zugferd"} {
 			outName := strings.Replace(inName, ".json", "-"+format+".xml", 1)
 
-			t.Run(inName, func(t *testing.T) {
-				src, _ := os.Open(filepath.Join(getConversionTypePath(jsonPattern), inName))
-				buf := new(bytes.Buffer)
-				_, err := buf.ReadFrom(src)
+			t.Run(inName+"-"+format, func(t *testing.T) {
+				env, err := loadTestEnvelope(inName)
 				require.NoError(t, err)
 
-				doc, err := xinvoice.Convert(buf.Bytes(), format)
+				var doc []byte
+				switch format {
+				case "xrechnung-cii":
+					doc, err = xinvoice.ConvertToXRechnungCII(env)
+				case "xrechnung-ubl":
+					doc, err = xinvoice.ConvertToXRechnungUBL(env)
+				case "facturx":
+					doc, err = xinvoice.ConvertToFacturX(env)
+				case "zugferd":
+					doc, err = xinvoice.ConvertToZUGFeRD(env)
+				}
+
 				require.NoError(t, err)
 
 				output, err := loadOutputFile(outName)
@@ -63,11 +72,7 @@ func TestXtoG(t *testing.T) {
 			require.NoError(t, err)
 
 			// Convert XML to GOBL
-			goblEnv, err := xinvoice.Convert(xmlData, "")
-			require.NoError(t, err)
-
-			env := new(gobl.Envelope)
-			err = json.Unmarshal(goblEnv, env)
+			env, err := xinvoice.ConvertToGOBL(xmlData)
 			require.NoError(t, err)
 
 			// Extract the invoice from the envelope
@@ -102,6 +107,21 @@ func TestXtoG(t *testing.T) {
 			assert.JSONEq(t, string(expectedData), string(data), "Invoice should match the expected JSON. Update with --update flag.")
 		})
 	}
+}
+
+// loadTestEnvelope returns a GOBL Envelope from a file in the `test/data` folder
+func loadTestEnvelope(name string) (*gobl.Envelope, error) {
+	src, _ := os.Open(filepath.Join(getConversionTypePath(jsonPattern), name))
+	buf := new(bytes.Buffer)
+	if _, err := buf.ReadFrom(src); err != nil {
+		return nil, err
+	}
+	env := new(gobl.Envelope)
+	if err := json.Unmarshal(buf.Bytes(), env); err != nil {
+		return nil, err
+	}
+
+	return env, nil
 }
 
 func loadOutputFile(name string) ([]byte, error) {

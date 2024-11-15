@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932652-d01e-7972-86ff-027d1d6026ff",
+    "uuid": "01932b40-5b97-7ad6-af74-d0fd4f4c48f7",
     "dig": {
       "alg": "sha256",
-      "val": "3e37f7baabffc303705d3ab5d4cd6399f79fc55caa3653ae169941357d0c2355"
+      "val": "4e05e4a9f1c6fc86bb8d58dc955d87934f75664cea4a2a6d0f6887f751bfeb27"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932652-d01e-79be-8d62-75aa666a7f96",
+    "uuid": "01932b40-5b97-7b54-aa82-3c6647fde7cf",
     "type": "standard",
     "code": "RR123456",
     "issue_date": "2016-06-24",

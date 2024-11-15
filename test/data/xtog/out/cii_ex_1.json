@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932652-573e-7a26-a3eb-f83f8bf5cbf6",
+    "uuid": "01932b40-5ac7-716f-af1a-a2332f1daa1b",
     "dig": {
       "alg": "sha256",
-      "val": "45a0b3c3e393bb139fbf13fa33a9d1eae5f3270773f070d1b737d3f57cd1ee70"
+      "val": "1b62ac68e6c499265d13a283f1cde35d507f438aaf51028c9d678ddd0636bf04"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932652-573e-7a60-ac21-681a2ce7c61d",
+    "uuid": "01932b40-5ac7-71d0-9265-20c73d11301c",
     "type": "standard",
     "code": "123456XX",
     "issue_date": "2016-04-04",
