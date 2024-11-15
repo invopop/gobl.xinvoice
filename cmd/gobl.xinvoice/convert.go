@@ -12,6 +12,7 @@ import (
 
 type convertOpts struct {
 	*rootOpts
+	format string
 }
 
 func convert(o *rootOpts) *convertOpts {
@@ -25,14 +26,15 @@ func (c *convertOpts) cmd() *cobra.Command {
 		RunE:  c.runE,
 	}
 
+	f := cmd.Flags()
+	f.StringVar(&c.format, "format", "", "The format to convert to, either 'xrechnung-cii', 'xrechnung-ubl', 'zugferd' or 'facturx'")
+
 	return cmd
 }
 
 func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
-	// ctx := commandContext(cmd)
-
 	if len(args) == 0 || len(args) > 2 {
-		return fmt.Errorf("expected one or two arguments, the command usage is `gobl.cfdi convert <infile> [outfile]`")
+		return fmt.Errorf("expected one or two arguments, the command usage is `gobl.xinvoice convert <infile> [outfile]`")
 	}
 
 	input, err := openInput(cmd, args)
@@ -47,27 +49,47 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 	}
 	defer out.Close() // nolint:errcheck
 
-	inData, err := io.ReadAll(input)
+	in, err := io.ReadAll(input)
 	if err != nil {
 		return fmt.Errorf("reading input: %w", err)
 	}
-	env := new(gobl.Envelope)
-	if err := json.Unmarshal(inData, env); err != nil {
-		return fmt.Errorf("parsing input as GOBL Envelope: %w", err)
+	j := json.Valid(in)
+	var o []byte
+	if j {
+		env := new(gobl.Envelope)
+		if err := json.Unmarshal(in, env); err != nil {
+			return fmt.Errorf("parsing input as GOBL Envelope: %w", err)
+		}
+		switch c.format {
+		case "xrechnung-cii":
+			o, err = xinvoice.ConvertToXRechnungCII(env)
+		case "xrechnung-ubl":
+			o, err = xinvoice.ConvertToXRechnungUBL(env)
+		case "facturx":
+			o, err = xinvoice.ConvertToFacturX(env)
+		case "zugferd":
+			o, err = xinvoice.ConvertToZUGFeRD(env)
+		default:
+			return fmt.Errorf("unknown or missing format: %s", c.format)
+		}
+		if err != nil {
+			return fmt.Errorf("generating XML: %w", err)
+		}
+	} else {
+		// Assume XML if not JSON
+		env, err := xinvoice.ConvertToGOBL(in)
+		if err != nil {
+			return fmt.Errorf("converting CII to GOBL: %w", err)
+		}
+
+		o, err = json.MarshalIndent(env, "", "  ")
+		if err != nil {
+			return fmt.Errorf("generating JSON output: %w", err)
+		}
 	}
 
-	doc, err := xinvoice.NewDocument(env)
-	if err != nil {
-		return fmt.Errorf("building XRechnung and Factur-X document: %w", err)
-	}
-
-	data, err := doc.Bytes()
-	if err != nil {
-		return fmt.Errorf("generating XRechnung and Factur-X xml: %w", err)
-	}
-
-	if _, err = out.Write(data); err != nil {
-		return fmt.Errorf("writing xml output: %w", err)
+	if _, err = out.Write(o); err != nil {
+		return fmt.Errorf("writing output: %w", err)
 	}
 
 	return nil

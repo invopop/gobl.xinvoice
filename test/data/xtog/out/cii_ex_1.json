@@ -1,0 +1,158 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01932b40-5ac7-716f-af1a-a2332f1daa1b",
+    "dig": {
+      "alg": "sha256",
+      "val": "1b62ac68e6c499265d13a283f1cde35d507f438aaf51028c9d678ddd0636bf04"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01932b40-5ac7-71d0-9265-20c73d11301c",
+    "type": "standard",
+    "code": "123456XX",
+    "issue_date": "2016-04-04",
+    "currency": "EUR",
+    "tax": {
+      "ext": {
+        "untdid-document-type": "380"
+      }
+    },
+    "supplier": {
+      "name": "[Seller name]",
+      "tax_id": {
+        "country": "DE",
+        "code": "123456789"
+      },
+      "people": [
+        {
+          "name": {
+            "given": "nicht vorhanden"
+          }
+        }
+      ],
+      "addresses": [
+        {
+          "street": "[Seller address line 1]",
+          "locality": "[Seller city]",
+          "code": "12345",
+          "country": "DE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "seller@email.de"
+        }
+      ],
+      "telephones": [
+        {
+          "num": "+49 1234-5678"
+        }
+      ]
+    },
+    "customer": {
+      "name": "[Buyer name]",
+      "addresses": [
+        {
+          "street": "[Buyer address line 1]",
+          "locality": "[Buyer city]",
+          "code": "12345",
+          "country": "DE"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "ref": "246",
+          "name": "Zeitschrift [...]",
+          "description": "Zeitschrift Inland",
+          "price": "288.79",
+          "unit": "XPP"
+        },
+        "sum": "288.79",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "percent": "7%"
+          }
+        ],
+        "total": "288.79",
+        "notes": [
+          {
+            "text": "Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag"
+          }
+        ]
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "Porto + Versandkosten",
+          "price": "26.07",
+          "unit": "XPP"
+        },
+        "sum": "26.07",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "percent": "7%"
+          }
+        ],
+        "total": "26.07"
+      }
+    ],
+    "ordering": {
+      "code": "04011000-12345-03"
+    },
+    "payment": {
+      "terms": {
+        "detail": "Zahlbar sofort ohne Abzug."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "DE75512108001245126199"
+          }
+        ],
+        "ext": {
+          "untdid-payment-means": "58"
+        }
+      }
+    },
+    "totals": {
+      "sum": "314.86",
+      "total": "314.86",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "base": "314.86",
+                "percent": "7%",
+                "amount": "22.04"
+              }
+            ],
+            "amount": "22.04"
+          }
+        ],
+        "sum": "22.04"
+      },
+      "tax": "22.04",
+      "total_with_tax": "336.90",
+      "payable": "336.90"
+    },
+    "notes": [
+      {
+        "code": "ADU",
+        "text": "Es gelten unsere Allgem. Geschäftsbedingungen, die Sie unter […] finden."
+      }
+    ]
+  }
+}

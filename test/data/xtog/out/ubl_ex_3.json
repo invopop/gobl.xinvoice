@@ -1,0 +1,175 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "01932b40-5b97-7ad6-af74-d0fd4f4c48f7",
+    "dig": {
+      "alg": "sha256",
+      "val": "4e05e4a9f1c6fc86bb8d58dc955d87934f75664cea4a2a6d0f6887f751bfeb27"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "01932b40-5b97-7b54-aa82-3c6647fde7cf",
+    "type": "standard",
+    "code": "RR123456",
+    "issue_date": "2016-06-24",
+    "currency": "EUR",
+    "supplier": {
+      "name": "[Seller name]",
+      "alias": "[Seller trading name]",
+      "tax_id": {
+        "country": "DE",
+        "code": "123456789"
+      },
+      "identities": [
+        {
+          "label": "CompanyID",
+          "code": "HRB 12345"
+        },
+        {
+          "country": "DE",
+          "code": "123/4567/8901"
+        }
+      ],
+      "people": [
+        {
+          "name": {
+            "given": "Kundenservice"
+          }
+        }
+      ],
+      "addresses": [
+        {
+          "street": "[Seller address line 1]",
+          "locality": "[Seller city]",
+          "code": "12345",
+          "country": "DE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "info@service.de"
+        }
+      ],
+      "telephones": [
+        {
+          "num": "012-3456789"
+        }
+      ]
+    },
+    "customer": {
+      "name": "[Buyer name]",
+      "identities": [
+        {
+          "code": "BI123456"
+        }
+      ],
+      "people": [
+        {
+          "name": {
+            "given": "Pressestelle"
+          }
+        }
+      ],
+      "addresses": [
+        {
+          "street": "[Buyer address line 1]",
+          "street_extra": "[Buyer address line 2]",
+          "locality": "[Buyer city]",
+          "code": "12345",
+          "country": "DE"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "ref": "55849000",
+          "name": "Deutsches Verwaltungsblatt",
+          "description": "Heft 13 2016 bis 24 2016",
+          "price": "152.34",
+          "unit": "XPP"
+        },
+        "sum": "152.34",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "percent": "7%"
+          }
+        ],
+        "total": "152.34"
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "Versandkosten",
+          "description": "Abonnement-Nummer […]",
+          "price": "17.94",
+          "unit": "XPP"
+        },
+        "sum": "17.94",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "percent": "7%"
+          }
+        ],
+        "total": "17.94"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "notes": "Fällig sofort, ohne Abzug"
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "DE75512108001245126199"
+          }
+        ],
+        "ext": {
+          "untdid-payment-means": "58"
+        }
+      }
+    },
+    "totals": {
+      "sum": "170.28",
+      "total": "170.28",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "base": "170.28",
+                "percent": "7%",
+                "amount": "11.92"
+              }
+            ],
+            "amount": "11.92"
+          }
+        ],
+        "sum": "11.92"
+      },
+      "tax": "11.92",
+      "total_with_tax": "182.20",
+      "payable": "182.20"
+    },
+    "notes": [
+      {
+        "text": "#ADU#Bei Zahlung bitte unbedingt angeben: […]"
+      },
+      {
+        "text": "#ADU#Die Lieferung erfolgte im Monat 06/2016. Die nächsten Ausgaben werden zum jeweiligen Erscheinungstermin ausgeliefert."
+      },
+      {
+        "text": "#ADU#Informationen zum Bankeinzug, einer Adressänderung und vieles mehr finden Sie auch in unseren FAQ."
+      }
+    ]
+  }
+}

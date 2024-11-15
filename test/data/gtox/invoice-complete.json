@@ -1,0 +1,251 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"dig": {
+			"alg": "sha256",
+			"val": "583130bdfd84c31d23f7bcdf778363ffdbc7eb132faf1180efb1be1fc438e069"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "DE",
+		"$addons": [
+			"eu-en16931-v2017"
+		],
+		"uuid": "019231f1-9128-71fc-b0e2-820af3036d1b",
+		"type": "standard",
+		"series": "SAMPLE",
+		"code": "001",
+		"issue_date": "2024-02-13",
+		"currency": "EUR",
+		"supplier": {
+			"name": "Provide One GmbH",
+			"tax_id": {
+				"country": "DE",
+				"code": "111111125"
+			},
+			"people": [
+				{
+					"name": {
+						"given": "John",
+						"surname": "Doe"
+					}
+				}
+			],
+			"addresses": [
+				{
+					"num": "16",
+					"street": "Dietmar-Hopp-Allee",
+					"locality": "Walldorf",
+					"code": "69190",
+					"country": "DE"
+				}
+			],
+			"emails": [
+				{
+					"addr": "billing@example.com"
+				}
+			],
+			"telephones": [
+				{
+					"num": "+49100200300"
+				}
+			]
+		},
+		"customer": {
+			"name": "Sample Consumer",
+			"tax_id": {
+				"country": "DE",
+				"code": "282741168"
+			},
+			"addresses": [
+				{
+					"num": "25",
+					"street": "Werner-Heisenberg-Allee",
+					"locality": "München",
+					"code": "80939",
+					"country": "DE"
+				}
+			],
+			"emails": [
+				{
+					"addr": "email@sample.com"
+				}
+			]
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "20",
+				"item": {
+					"name": "Development services",
+					"price": "90.00",
+					"unit": "h"
+				},
+				"sum": "1800.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "standard",
+						"percent": "19%"
+					}
+				],
+				"total": "1800.00"
+			}
+		],
+		"discounts": [
+			{
+			  "i": 1,
+			  "amount": "10.00",
+			  "taxes": [
+				{
+				  "cat": "VAT",
+				  "rate": "standard",
+				  "percent": "25%"
+				}
+			  ],
+			  "reason": "Promotion discount",
+			  "ext": {
+				"untdid-allowance": "88"
+			  }
+			}
+		],
+		"charges": [
+			{
+				"i": 1,
+				"amount": "11.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "standard",
+						"percent": "25%"
+					}
+				],
+				"reason": "Freight",
+				"ext": {
+				  "untdid-charge": "88"
+				}
+			}
+		  ],
+		"ordering": {
+			"code": "PO4711",
+			"period": {
+				"start": "2013-03-10",
+				"end": "2013-04-10"
+			},
+			"contracts": [
+				{
+				"code": "2013-05"
+				}
+			],
+			"receiving": [
+				{
+				"code": "3544"
+				}
+			],
+			"despatch": [
+				{
+				"code": "5433"
+				}
+			]
+		},
+		"payment": {
+			"payee": {
+			  "name": "Ebeneser Scrooge AS",
+			  "identities": [
+				{
+				  "label": "CompanyID",
+				  "code": "989823401"
+				},
+				{
+				  "label": "0088",
+				  "code": "2298740918237"
+				}
+			  ]
+			},
+			"terms": {
+			  "due_dates": [
+				{
+				  "date": "2013-07-20",
+				  "amount": "2142.00",
+				  "percent": "100%"
+				}
+			  ],
+			  "notes": "2 % discount if paid within 2 days\n            Penalty percentage 10% from due date"
+			},
+			"instructions": {
+			  "key": "credit-transfer",
+			  "ref": "0003434323213231",
+			  "ext": {
+				"untdid-payment-means": "30"
+			  },
+			  "credit_transfer": [
+				{
+				  "iban": "NO9386011117947",
+				  "bic": "DNBANOKK"
+				}
+			  ],
+			  "direct_debit": {
+				"creditor": "987654321",
+				"account": "DE89370400440532013000",
+				"ref": "1234567890"
+			  },
+			  "card": {
+				"last4": "1234",
+				"holder": "John Doe"
+			  }
+			}
+		},
+		"delivery": {
+			"receiver": {
+			  "addresses": [
+				{
+				  "street": "Deliverystreet 2",
+				  "street_extra": "Side door",
+				  "locality": "DeliveryCity",
+				  "region": "RegionD",
+				  "code": "523427",
+				  "country": "NO"
+				}
+			  ]
+			},
+			"identities": [
+			  {
+				"label": "0088",
+				"code": "6754238987643"
+			  }
+			],
+			"date": "2024-02-10"
+		},
+		"tax": {
+			"ext": {
+				"untdid-document-type": "380"
+			}
+		},
+		"totals": {
+			"sum": "1800.00",
+			"total": "1800.00",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"base": "1800.00",
+								"percent": "19%",
+								"amount": "342.00"
+							}
+						],
+						"amount": "342.00"
+					}
+				],
+				"sum": "342.00"
+			},
+			"tax": "342.00",
+			"total_with_tax": "2142.00",
+			"payable": "2142.00"
+		}
+	}
+}
