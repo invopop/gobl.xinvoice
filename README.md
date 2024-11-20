@@ -46,6 +46,11 @@ func main {
     if err != nil {
         panic(err)
     }
+
+    err = os.WriteFile("invoice-de-de-xrechnung.xml", doc, 0644)
+    if err != nil {
+        panic(err)
+    }
 }
 ```
 Example of converting a X-Invoice file (any format) to GOBL:
@@ -122,9 +127,7 @@ There are some limitations in the current conversion process to GOBL.
 1. GOBL does not currently support additional embedded documents, so the AdditionalReferencedDocument field (BG-24 in EN 16931) is not supported and lost in the conversion.
 2. Payment advances do not include their own tax rate, they use the global tax rate of the invoice.
 3. The field TotalPrepaidAmount (BT-113) in CII is not directly mapped to GOBL, so payment advances must be included in the SpecifiedAdvancePayment field in CII, or they will be lost in conversion.
-4. Fields BusinessProcessSpecifiedDocumentContextParameter (BT-23) and GuidelineSpecifiedDocumentContextParameter (BT-24) in CII are not supported and lost in the conversion.
-5. The fields ReceivableSpecifiedTradeAccountingAccount (BT-133) and DesignatedProductClassification (BT-158) are added as a note to the line, with the type code as the key.
-6. The GlobalID (BT-29, BT-46, BT-60,BT-157) fields are currently not directly mapped to their [codelist](https://docs.peppol.eu/poacc/billing/3.0/codelist/ICD/) ISO 6523 ICD, with their reference code being mapped to the Label.
+4. The fields ReceivableSpecifiedTradeAccountingAccount (BT-133) and DesignatedProductClassification (BT-158) are added as a note to the line, with the type code as the key.
 
 #### UBL
 
@@ -133,7 +136,6 @@ There are some limitations in the current conversion process to GOBL.
 3. Fields ProfileID (BT-23) and CustomizationID (BT-24) in UBL are not supported and lost in the conversion.
 4. The AccountingCost (BT-19, BT-133) fields are added as notes.
 5. Payment advances do not include their own tax rate, they use the global tax rate of the invoice.
-6. Identification fields that use ISO/IEC 6523 codes are currently not directly mapped to their [codelist](https://docs.peppol.eu/poacc/billing/3.0/codelist/ICD/), with their reference code being mapped to the Label.
 
 ### EN 16931 Compliance
 

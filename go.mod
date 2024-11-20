@@ -5,9 +5,9 @@ go 1.22
 toolchain go1.22.1
 
 require (
-	github.com/invopop/gobl v0.205.0
-	github.com/invopop/gobl.cii v0.0.0-20241114223258-6c81aeced980
-	github.com/invopop/gobl.ubl v0.0.0-20241114221205-b8e258001982
+	github.com/invopop/gobl v0.205.1
+	github.com/invopop/gobl.cii v0.1.0
+	github.com/invopop/gobl.ubl v0.1.0
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
@@ -16,7 +16,7 @@ require (
 
 require (
 	cloud.google.com/go v0.116.0 // indirect
-	github.com/Masterminds/semver/v3 v3.3.0 // indirect
+	github.com/Masterminds/semver/v3 v3.3.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
