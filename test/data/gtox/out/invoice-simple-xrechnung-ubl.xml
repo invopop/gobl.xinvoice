@@ -40,12 +40,9 @@
   <cac:AccountingCustomerParty>
     <cac:Party>
       <cac:PostalAddress>
-        <cbc:StreetName>Werner-Heisenberg-Allee</cbc:StreetName>
+        <cbc:StreetName>Werner-Heisenberg-Allee 25</cbc:StreetName>
         <cbc:CityName>München</cbc:CityName>
         <cbc:PostalZone>80939</cbc:PostalZone>
-        <cac:AddressLine>
-          <cbc:Line>25</cbc:Line>
-        </cac:AddressLine>
         <cac:Country>
           <cbc:IdentificationCode>DE</cbc:IdentificationCode>
         </cac:Country>
@@ -66,12 +63,9 @@
   </cac:AccountingCustomerParty>
   <cac:TaxRepresentativeParty>
     <cac:PostalAddress>
-      <cbc:StreetName>Dietmar-Hopp-Allee</cbc:StreetName>
+      <cbc:StreetName>Dietmar-Hopp-Allee 16</cbc:StreetName>
       <cbc:CityName>Walldorf</cbc:CityName>
       <cbc:PostalZone>69190</cbc:PostalZone>
-      <cac:AddressLine>
-        <cbc:Line>16</cbc:Line>
-      </cac:AddressLine>
       <cac:Country>
         <cbc:IdentificationCode>DE</cbc:IdentificationCode>
       </cac:Country>

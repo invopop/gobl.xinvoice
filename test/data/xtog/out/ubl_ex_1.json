@@ -56,11 +56,6 @@
     },
     "customer": {
       "name": "[Buyer name]",
-      "identities": [
-        {
-          "code": "[Buyer identifier]"
-        }
-      ],
       "addresses": [
         {
           "street": "[Buyer address line 1]",
