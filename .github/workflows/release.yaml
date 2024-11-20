@@ -33,10 +33,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: "go.mod"
-        id: go
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser
           version: latest
