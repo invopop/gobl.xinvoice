@@ -60,11 +60,6 @@
     },
     "customer": {
       "name": "[Buyer name]",
-      "identities": [
-        {
-          "code": "BI123456"
-        }
-      ],
       "people": [
         {
           "name": {

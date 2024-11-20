@@ -53,8 +53,7 @@
         </ram:DefinedTradeContact>
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>69190</ram:PostcodeCode>
-          <ram:LineOne>Dietmar-Hopp-Allee</ram:LineOne>
-          <ram:LineTwo>16</ram:LineTwo>
+          <ram:LineOne>Dietmar-Hopp-Allee 16</ram:LineOne>
           <ram:CityName>Walldorf</ram:CityName>
           <ram:CountryID>DE</ram:CountryID>
         </ram:PostalTradeAddress>
@@ -69,8 +68,7 @@
         <ram:Name>Sample Consumer</ram:Name>
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>80939</ram:PostcodeCode>
-          <ram:LineOne>Werner-Heisenberg-Allee</ram:LineOne>
-          <ram:LineTwo>25</ram:LineTwo>
+          <ram:LineOne>Werner-Heisenberg-Allee 25</ram:LineOne>
           <ram:CityName>München</ram:CityName>
           <ram:CountryID>DE</ram:CountryID>
         </ram:PostalTradeAddress>
@@ -90,6 +88,7 @@
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>523427</ram:PostcodeCode>
           <ram:LineOne>Deliverystreet 2</ram:LineOne>
+          <ram:LineTwo>Side door</ram:LineTwo>
           <ram:CityName>DeliveryCity</ram:CityName>
           <ram:CountryID>NO</ram:CountryID>
           <ram:CountrySubDivisionName>RegionD</ram:CountrySubDivisionName>

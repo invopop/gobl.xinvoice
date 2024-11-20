@@ -56,11 +56,6 @@
     },
     "customer": {
       "name": "[Buyer name]",
-      "identities": [
-        {
-          "code": "BI12345678"
-        }
-      ],
       "people": [
         {
           "name": {
