@@ -1,0 +1,37 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - id: gobl.xinvoice
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    main: ./cmd/gobl.xinvoice
+    binary: gobl.xinvoice
+
+archives:
+  - id: gobl.xinvoice
+    builds:
+      - gobl.xinvoice
+    format: tar.gz
+    name_template: "gobl.xinvoice_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: true
+
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+release:
+  github:
+    owner: invopop
+    name: gobl.xinvoice
+  prerelease: auto

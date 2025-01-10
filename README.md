@@ -2,6 +2,8 @@
 
 GOBL conversion into and from Factur-X (FR) and XRechnung/ZUGFeRD (DE) formats.
 
+[![codecov](https://codecov.io/gh/invopop/gobl.xinvoice/graph/badge.svg?token=TMW8MWSZ9P)](https://codecov.io/gh/invopop/gobl.xinvoice)
+
 Copyright [Invopop Ltd.](https://invopop.com) 2024. Released publicly under the [Apache License Version 2.0](LICENSE). For commercial licenses please contact the [dev team at invopop](mailto:dev@invopop.com). In order to accept contributions to this library we will require transferring copyrights to Invopop Ltd.
 
 ## Usage
