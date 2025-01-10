@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932b40-5b41-763a-bbc6-1b66c9e7205e",
+    "uuid": "01945024-62b5-7f36-ad94-b7c0c5777be3",
     "dig": {
       "alg": "sha256",
-      "val": "9feeb47624fad9381216527be773c9873b1d0bf7fbca5d2d0463b422855150df"
+      "val": "643dea88e8814ab83c1ca8a83895d86de960198f11bd17d415276c95827f582d"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932b40-5b41-76b0-8214-b6113774dc9b",
+    "uuid": "01945024-62b6-7031-869c-36911972b61a",
     "type": "standard",
     "code": "123456XX",
     "issue_date": "2016-04-04",
@@ -35,6 +35,11 @@
           }
         }
       ],
+      "inboxes": [
+        {
+          "email": "seller@email.de"
+        }
+      ],
       "addresses": [
         {
           "street": "[Seller address line 1]",
@@ -56,6 +61,11 @@
     },
     "customer": {
       "name": "[Buyer name]",
+      "inboxes": [
+        {
+          "email": "buyer@info.de"
+        }
+      ],
       "addresses": [
         {
           "street": "[Buyer address line 1]",
@@ -114,6 +124,9 @@
         "total": "26.07"
       }
     ],
+    "ordering": {
+      "code": "04011000-12345-03"
+    },
     "payment": {
       "terms": {
         "notes": "Zahlbar sofort ohne Abzug."

@@ -47,6 +47,9 @@
           <ram:TelephoneUniversalCommunication>
             <ram:CompleteNumber>46211230</ram:CompleteNumber>
           </ram:TelephoneUniversalCommunication>
+          <ram:EmailURIUniversalCommunication>
+            <ram:URIID>antonio@salescompany.no</ram:URIID>
+          </ram:EmailURIUniversalCommunication>
         </ram:DefinedTradeContact>
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>303</ram:PostcodeCode>
@@ -65,6 +68,11 @@
       </ram:SellerTradeParty>
       <ram:BuyerTradeParty>
         <ram:Name>Sample Consumer</ram:Name>
+        <ram:DefinedTradeContact>
+          <ram:EmailURIUniversalCommunication>
+            <ram:URIID>email@sample.com</ram:URIID>
+          </ram:EmailURIUniversalCommunication>
+        </ram:DefinedTradeContact>
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>80939</ram:PostcodeCode>
           <ram:LineOne>Werner-Heisenberg-Allee 25</ram:LineOne>
@@ -85,6 +93,9 @@
           <ram:TelephoneUniversalCommunication>
             <ram:CompleteNumber>+49100200300</ram:CompleteNumber>
           </ram:TelephoneUniversalCommunication>
+          <ram:EmailURIUniversalCommunication>
+            <ram:URIID>billing@example.com</ram:URIID>
+          </ram:EmailURIUniversalCommunication>
         </ram:DefinedTradeContact>
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>69190</ram:PostcodeCode>

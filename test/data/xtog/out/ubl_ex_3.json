@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932b40-5b97-7ad6-af74-d0fd4f4c48f7",
+    "uuid": "01945024-62fb-7e19-b464-8fb7b8119c42",
     "dig": {
       "alg": "sha256",
-      "val": "4e05e4a9f1c6fc86bb8d58dc955d87934f75664cea4a2a6d0f6887f751bfeb27"
+      "val": "867f03370415970350b92a0bc5d5a17da3595514924fa178c10589fe3b56c192"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932b40-5b97-7b54-aa82-3c6647fde7cf",
+    "uuid": "01945024-62fb-7e76-beb4-5a2c2f41cbec",
     "type": "standard",
     "code": "RR123456",
     "issue_date": "2016-06-24",
@@ -39,6 +39,11 @@
           }
         }
       ],
+      "inboxes": [
+        {
+          "email": "seller@email.de"
+        }
+      ],
       "addresses": [
         {
           "street": "[Seller address line 1]",
@@ -65,6 +70,11 @@
           "name": {
             "given": "Pressestelle"
           }
+        }
+      ],
+      "inboxes": [
+        {
+          "email": "buyer@info.de"
         }
       ],
       "addresses": [
@@ -116,6 +126,14 @@
         "total": "17.94"
       }
     ],
+    "ordering": {
+      "code": "04011000-12347-94",
+      "contracts": [
+        {
+          "code": "CR987654"
+        }
+      ]
+    },
     "payment": {
       "terms": {
         "notes": "Fällig sofort, ohne Abzug"

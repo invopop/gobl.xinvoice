@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932b40-5b13-7c52-9290-f8fd3eb06983",
+    "uuid": "01945024-6295-7942-a8de-44a33c511d30",
     "dig": {
       "alg": "sha256",
-      "val": "d82643632f40bfcd50288086cf7b5a40ec3d567fd1418feb9feb59c9ee13378b"
+      "val": "013a95f82be02dc27d65bb390bc2b147a418b5353fadaf2b277ad7f508af1d7a"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932b40-5b13-7cab-b606-a789e528f63e",
+    "uuid": "01945024-6295-797b-9d6b-4ac16ab91f8f",
     "type": "standard",
     "code": "RR123456",
     "issue_date": "2016-06-24",
@@ -39,6 +39,11 @@
           }
         }
       ],
+      "inboxes": [
+        {
+          "email": "seller@email.de"
+        }
+      ],
       "addresses": [
         {
           "street": "[Seller address line 1]",
@@ -65,6 +70,11 @@
           "name": {
             "given": "Pressestelle"
           }
+        }
+      ],
+      "inboxes": [
+        {
+          "email": "buyer@info.de"
         }
       ],
       "addresses": [
