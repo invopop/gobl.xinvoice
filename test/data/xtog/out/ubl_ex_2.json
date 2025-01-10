@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932b40-5b6c-747f-8718-ec75bc1c0fe2",
+    "uuid": "01945024-62d6-710e-94f2-291d453af0e5",
     "dig": {
       "alg": "sha256",
-      "val": "7213b45e3e379fa95c8b12ddc1ef81770c547f9442fccd333fb5df24d600a4d4"
+      "val": "b21a33247d19c9f7bfd7dfe90044a7b6a7f12087243b02bc8b851906c7439b2d"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932b40-5b6c-74be-8aa0-33046a77087e",
+    "uuid": "01945024-62d6-714b-9d20-4d85c9751f6d",
     "type": "standard",
     "code": "123456",
     "issue_date": "2016-06-21",
@@ -33,6 +33,11 @@
           "name": {
             "given": "-"
           }
+        }
+      ],
+      "inboxes": [
+        {
+          "email": "seller@email.de"
         }
       ],
       "addresses": [
@@ -61,6 +66,11 @@
           "name": {
             "given": "[Buyer contact person]"
           }
+        }
+      ],
+      "inboxes": [
+        {
+          "email": "buyer@info.de"
         }
       ],
       "addresses": [
@@ -94,7 +104,12 @@
       }
     ],
     "ordering": {
-      "code": "Dummywert"
+      "code": "04011000-12346-97",
+      "purchases": [
+        {
+          "code": "Dummywert"
+        }
+      ]
     },
     "payment": {
       "payee": {

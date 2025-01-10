@@ -1,16 +1,16 @@
 {
   "$schema": "https://gobl.org/draft-0/envelope",
   "head": {
-    "uuid": "01932b40-5ae9-7395-8294-415de6ecb53d",
+    "uuid": "01945024-6274-7d34-afdf-9b54da23dd2f",
     "dig": {
       "alg": "sha256",
-      "val": "e04eacab89239732786bb041b5f93e41b65248a56be878807479cb32e8ef79f4"
+      "val": "a1240e3e5f2f70879d26a487da1885dd72584ac6f20a9e73265880fa70aabe1b"
     }
   },
   "doc": {
     "$schema": "https://gobl.org/draft-0/bill/invoice",
     "$regime": "DE",
-    "uuid": "01932b40-5ae9-73f5-aa41-74acacfbac7a",
+    "uuid": "01945024-6274-7d71-bb3f-602baa7fdb06",
     "type": "standard",
     "code": "123456",
     "issue_date": "2016-06-21",
@@ -31,6 +31,11 @@
           "name": {
             "given": "-"
           }
+        }
+      ],
+      "inboxes": [
+        {
+          "email": "seller@email.de"
         }
       ],
       "addresses": [
@@ -59,6 +64,11 @@
           "name": {
             "given": "[Buyer contact person]"
           }
+        }
+      ],
+      "inboxes": [
+        {
+          "email": "buyer@info.de"
         }
       ],
       "addresses": [

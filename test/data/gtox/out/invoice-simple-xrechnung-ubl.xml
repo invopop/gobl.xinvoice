@@ -6,9 +6,7 @@
   <cbc:IssueDate>2024-02-13</cbc:IssueDate>
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
-  <cac:OrderReference>
-    <cbc:ID>XR-2024-2</cbc:ID>
-  </cac:OrderReference>
+  <cbc:BuyerReference>XR-2024-2</cbc:BuyerReference>
   <cac:AccountingSupplierParty>
     <cac:Party>
       <cac:PostalAddress>
@@ -22,7 +20,7 @@
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>123456789MVA</cbc:CompanyID>
+        <cbc:CompanyID>NO123456789MVA</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -48,7 +46,7 @@
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>282741168</cbc:CompanyID>
+        <cbc:CompanyID>DE282741168</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -71,7 +69,7 @@
       </cac:Country>
     </cac:PostalAddress>
     <cac:PartyTaxScheme>
-      <cbc:CompanyID>111111125</cbc:CompanyID>
+      <cbc:CompanyID>DE111111125</cbc:CompanyID>
       <cac:TaxScheme>
         <cbc:ID>VAT</cbc:ID>
       </cac:TaxScheme>
