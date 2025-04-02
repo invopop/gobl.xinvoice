@@ -40,7 +40,7 @@ func ConvertToGOBL(d []byte) (*gobl.Envelope, error) {
 			return nil, fmt.Errorf("converting CII to GOBL: %w", err)
 		}
 	} else if r == ublHeader {
-		env, err = ubl.ToGOBL(d)
+		env, err = ubl.ParseInvoice(d)
 		if err != nil {
 			return nil, fmt.Errorf("converting UBL to GOBL: %w", err)
 		}
@@ -73,7 +73,7 @@ func ConvertToXRechnungCII(env *gobl.Envelope) ([]byte, error) {
 
 // ConvertToXRechnungUBL converts a GOBL envelope into an XRechnung document
 func ConvertToXRechnungUBL(env *gobl.Envelope) ([]byte, error) {
-	doc, err := ubl.ToUBL(env)
+	doc, err := ubl.ConvertInvoice(env)
 	if err != nil {
 		return nil, fmt.Errorf("building XRechnung document: %w", err)
 	}
