@@ -29,6 +29,10 @@ github.com/invopop/gobl.cii v0.3.0 h1:JEvapxcRicUTOMof67QGaH8HAICDGWSuqs8OUHrfix
 github.com/invopop/gobl.cii v0.3.0/go.mod h1:6QnCuRLozF3jiWdxzFUpV2NtsL0+62RZ5V9v6Pbvz6M=
 github.com/invopop/gobl.cii v0.6.0 h1:kQk+981+dqqLR0hOmZtlUMi+4G5w6yVSs8eLV/berMw=
 github.com/invopop/gobl.cii v0.6.0/go.mod h1:E8k53Lg/4Tbv7XbR7uSzI/Hfqoxbx0dX/kGYMRT/WBE=
+github.com/invopop/gobl.cii v0.8.0 h1:lqga+Eoy5zKacOmPqVC29GBpBRKZ6WTo4VweD8sxqH8=
+github.com/invopop/gobl.cii v0.8.0/go.mod h1:E8k53Lg/4Tbv7XbR7uSzI/Hfqoxbx0dX/kGYMRT/WBE=
+github.com/invopop/gobl.cii v0.9.0 h1:Rw3QtpY5oMepDY+krHKlDANi4XkXLRH/EqdB9HekeCM=
+github.com/invopop/gobl.cii v0.9.0/go.mod h1:Sty9ZyD4XfkbSp1yMoIY5y3VB3fIikkqIj1UiXmrUh4=
 github.com/invopop/gobl.ubl v0.3.0 h1:yHPXoh4cMBTHg9sAuZ0grJZ2lgAkmlJfUiHmhC4jJNg=
 github.com/invopop/gobl.ubl v0.3.0/go.mod h1:zJgfQ+AfMhMkuBPpZq4EuC2UU/nFpUTEfLyRmuMXLrY=
 github.com/invopop/gobl.ubl v0.5.1 h1:XrJeAebssE9Moyo9Lvzu/XcCr8lIwLZimRw7+bIBOLw=

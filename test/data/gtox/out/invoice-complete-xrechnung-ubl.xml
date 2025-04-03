@@ -114,11 +114,12 @@
   </cac:PaymentMeans>
   <cac:AllowanceCharge>
     <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-    <cbc:AllowanceChargeReasonCode>88</cbc:AllowanceChargeReasonCode>
+    <cbc:AllowanceChargeReasonCode>ABK</cbc:AllowanceChargeReasonCode>
     <cbc:AllowanceChargeReason>Freight</cbc:AllowanceChargeReason>
     <cbc:Amount currencyID="EUR">11.00</cbc:Amount>
     <cac:TaxCategory>
-      <cbc:Percent>25</cbc:Percent>
+      <cbc:ID>S</cbc:ID>
+      <cbc:Percent>19</cbc:Percent>
       <cac:TaxScheme>
         <cbc:ID>VAT</cbc:ID>
       </cac:TaxScheme>
@@ -130,18 +131,20 @@
     <cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason>
     <cbc:Amount currencyID="EUR">10.00</cbc:Amount>
     <cac:TaxCategory>
-      <cbc:Percent>25</cbc:Percent>
+      <cbc:ID>S</cbc:ID>
+      <cbc:Percent>19</cbc:Percent>
       <cac:TaxScheme>
         <cbc:ID>VAT</cbc:ID>
       </cac:TaxScheme>
     </cac:TaxCategory>
   </cac:AllowanceCharge>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="EUR">342.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="EUR">342.19</cbc:TaxAmount>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="EUR">1800.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="EUR">342.00</cbc:TaxAmount>
+      <cbc:TaxableAmount currencyID="EUR">1801.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">342.19</cbc:TaxAmount>
       <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
         <cbc:Percent>19</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
@@ -151,9 +154,11 @@
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="EUR">1800.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="EUR">1800.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="EUR">2142.00</cbc:TaxInclusiveAmount>
-    <cbc:PayableAmount currencyID="EUR">2142.00</cbc:PayableAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">1801.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">2143.19</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="EUR">10.00</cbc:AllowanceTotalAmount>
+    <cbc:ChargeTotalAmount currencyID="EUR">11.00</cbc:ChargeTotalAmount>
+    <cbc:PayableAmount currencyID="EUR">2143.19</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
@@ -162,6 +167,7 @@
     <cac:Item>
       <cbc:Name>Development services</cbc:Name>
       <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
         <cbc:Percent>19</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>

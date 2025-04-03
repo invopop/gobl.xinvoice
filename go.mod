@@ -6,7 +6,7 @@ toolchain go1.24.2
 
 require (
 	github.com/invopop/gobl v0.213.2
-	github.com/invopop/gobl.cii v0.6.0
+	github.com/invopop/gobl.cii v0.9.0
 	github.com/invopop/gobl.ubl v0.5.1
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.1
