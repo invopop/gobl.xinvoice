@@ -31,6 +31,7 @@
       <ram:SpecifiedLineTradeSettlement>
         <ram:ApplicableTradeTax>
           <ram:TypeCode>VAT</ram:TypeCode>
+          <ram:CategoryCode>S</ram:CategoryCode>
           <ram:RateApplicablePercent>19</ram:RateApplicablePercent>
         </ram:ApplicableTradeTax>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
@@ -63,7 +64,7 @@
           <ram:URIID schemeID="EM">antonio@salescompany.no</ram:URIID>
         </ram:URIUniversalCommunication>
         <ram:SpecifiedTaxRegistration>
-          <ram:ID schemeID="VA">NO123456789MVA</ram:ID>
+          <ram:ID>NO123456789MVA</ram:ID>
         </ram:SpecifiedTaxRegistration>
       </ram:SellerTradeParty>
       <ram:BuyerTradeParty>
@@ -118,6 +119,7 @@
         <ram:CalculatedAmount>342.00</ram:CalculatedAmount>
         <ram:TypeCode>VAT</ram:TypeCode>
         <ram:BasisAmount>1800.00</ram:BasisAmount>
+        <ram:CategoryCode>S</ram:CategoryCode>
         <ram:RateApplicablePercent>19</ram:RateApplicablePercent>
       </ram:ApplicableTradeTax>
       <ram:SpecifiedTradePaymentTerms>

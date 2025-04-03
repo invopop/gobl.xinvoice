@@ -1,10 +1,10 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
 		"dig": {
 			"alg": "sha256",
-			"val": "583130bdfd84c31d23f7bcdf778363ffdbc7eb132faf1180efb1be1fc438e069"
+			"val": "a377b5e93080145ce7714618cf7b4ba2c21ab37a0ee3ef40cab3537cae2c015c"
 		}
 	},
 	"doc": {
@@ -13,12 +13,17 @@
 		"$addons": [
 			"eu-en16931-v2017"
 		],
-		"uuid": "019231f1-9128-71fc-b0e2-820af3036d1b",
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
 		"type": "standard",
 		"series": "SAMPLE",
 		"code": "001",
 		"issue_date": "2024-02-13",
 		"currency": "EUR",
+		"tax": {
+			"ext": {
+				"untdid-document-type": "380"
+			}
+		},
 		"supplier": {
 			"name": "Provide One GmbH",
 			"tax_id": {
@@ -88,7 +93,10 @@
 					{
 						"cat": "VAT",
 						"rate": "standard",
-						"percent": "19%"
+						"percent": "19%",
+						"ext": {
+							"untdid-tax-category": "S"
+						}
 					}
 				],
 				"total": "1800.00"
@@ -98,43 +106,43 @@
 			"code": "XR-2024-2",
 			"seller": {
 				"name": "Salescompany ltd.",
-			"tax_id": {
-			  "country": "NO",
-			  "code": "123456789MVA"
-			},
-			"identities": [
-			  {
-				"label": "CompanyID",
-				"code": "123456789"
-			  },
-			  {
-				"label": "0088",
-				"code": "1238764941386"
-			  }
-			],
-			"people": [
-			  {
-				"name": {
-				  "given": "Antonio Salesmacher"
-				}
-			  }
-			],
-			"addresses": [
-			  {
-				"street": "Main street 34",
-				"street_extra": "Suite 123",
-				"locality": "Big city",
-				"region": "RegionA",
-				"code": "303",
-				"country": "NO"
-			  }
-			],
-			"emails": [
-			  {
-					"addr": "antonio@salescompany.no"
-				}
-			],
-			"telephones": [
+				"tax_id": {
+					"country": "NO",
+					"code": "123456789MVA"
+				},
+				"identities": [
+					{
+						"label": "CompanyID",
+						"code": "123456789"
+					},
+					{
+						"label": "0088",
+						"code": "1238764941386"
+					}
+				],
+				"people": [
+					{
+						"name": {
+							"given": "Antonio Salesmacher"
+						}
+					}
+				],
+				"addresses": [
+					{
+						"street": "Main street 34",
+						"street_extra": "Suite 123",
+						"locality": "Big city",
+						"region": "RegionA",
+						"code": "303",
+						"country": "NO"
+					}
+				],
+				"emails": [
+					{
+						"addr": "antonio@salescompany.no"
+					}
+				],
+				"telephones": [
 					{
 						"num": "46211230"
 					}
@@ -144,11 +152,6 @@
 		"payment": {
 			"terms": {
 				"detail": "lorem ipsum"
-			}
-		},
-		"tax": {
-			"ext": {
-				"untdid-document-type": "380"
 			}
 		},
 		"totals": {
@@ -161,6 +164,9 @@
 						"rates": [
 							{
 								"key": "standard",
+								"ext": {
+									"untdid-tax-category": "S"
+								},
 								"base": "1800.00",
 								"percent": "19%",
 								"amount": "342.00"
