@@ -2,8 +2,6 @@ module github.com/invopop/gobl.xinvoice
 
 go 1.23.0
 
-toolchain go1.24.2
-
 require (
 	github.com/invopop/gobl v0.213.2
 	github.com/invopop/gobl.cii v0.9.0

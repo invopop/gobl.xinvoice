@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -111,16 +110,16 @@ func TestConvertInvoice(t *testing.T) {
 					var err error
 					switch format {
 					case "xrechnung-cii":
-						addInvoiceAddon(env, xrechnung.V3)
+						addInvoiceAddon(t, env, xrechnung.V3)
 						data, err = xinvoice.ConvertToXRechnungCII(env)
 					case "xrechnung-ubl":
-						addInvoiceAddon(env, xrechnung.V3)
+						addInvoiceAddon(t, env, xrechnung.V3)
 						data, err = xinvoice.ConvertToXRechnungUBL(env)
 					case "facturx":
-						addInvoiceAddon(env, facturx.V1)
+						addInvoiceAddon(t, env, facturx.V1)
 						data, err = xinvoice.ConvertToFacturX(env)
 					case "zugferd":
-						addInvoiceAddon(env, zugferd.V2)
+						addInvoiceAddon(t, env, zugferd.V2)
 						data, err = xinvoice.ConvertToZUGFeRD(env)
 					}
 					require.NoError(t, err)
@@ -138,10 +137,10 @@ func TestConvertInvoice(t *testing.T) {
 	}
 }
 
-func addInvoiceAddon(env *gobl.Envelope, addon cbc.Key) {
+func addInvoiceAddon(t *testing.T, env *gobl.Envelope, addon cbc.Key) {
 	inv := env.Extract().(*bill.Invoice)
 	inv.Addons.List = append(inv.Addons.List, addon)
-	env.Calculate()
+	require.NoError(t, env.Calculate())
 }
 
 func TestParseInvoice(t *testing.T) {
@@ -195,24 +194,6 @@ func TestParseInvoice(t *testing.T) {
 			assert.JSONEq(t, string(expectedData), string(data), "Invoice should match the expected JSON. Update with --update flag.")
 		})
 	}
-}
-
-func parseInvoiceFrom(t *testing.T, name string) (*gobl.Envelope, error) {
-	t.Helper()
-	path := dataPath(pathParse, name)
-	src, err := os.Open(path)
-	require.NoError(t, err)
-	defer func() {
-		if cerr := src.Close(); cerr != nil && err == nil {
-			err = cerr
-		}
-	}()
-
-	data, err := io.ReadAll(src)
-	if err != nil {
-		require.NoError(t, err)
-	}
-	return xinvoice.ConvertToGOBL(data)
 }
 
 // loadEnvelopeWithUpdate returns a GOBL Envelope from a file in the `test/data/convert` folder
@@ -272,10 +253,6 @@ func findSourceFiles(t *testing.T, path, pattern string) []string {
 	files, err := filepath.Glob(path)
 	require.NoError(t, err)
 	return files
-}
-
-func schemaPath() string {
-	return filepath.Join(dataPath(), "schema")
 }
 
 func dataPath(files ...string) string {
