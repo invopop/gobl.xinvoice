@@ -113,11 +113,9 @@ func parseUBL(data []byte, o *parseOptions) (*Parsed, error) {
 	}, nil
 }
 
-// parseCII covers XRechnung CII and the XML inside ZUGFeRD PDFs. The
-// data is processed twice: gobl.cii's Parse offers no wire document to
-// extract attachments from, so Unmarshal provides that separately.
+// parseCII covers XRechnung CII and the XML inside ZUGFeRD PDFs.
 func parseCII(data []byte, o *parseOptions) (*Parsed, error) {
-	wire, err := cii.Unmarshal(data)
+	wire, err := cii.Decode(data)
 	if err != nil {
 		return nil, fmt.Errorf("parsing CII document: %w", err)
 	}
@@ -125,11 +123,11 @@ func parseCII(data []byte, o *parseOptions) (*Parsed, error) {
 	if !ok {
 		return nil, fmt.Errorf("unsupported CII document type %T", wire)
 	}
-	var opts []cii.ParseOption
+	var opts []cii.Option
 	if o.from != "" && o.to != "" {
 		opts = append(opts, cii.WithRouting(o.from, o.to))
 	}
-	env, err := ciiParse(data, opts)
+	env, err := ciiImport(in, opts)
 	if err != nil {
 		return nil, fmt.Errorf("converting CII document to GOBL: %w", err)
 	}
@@ -227,15 +225,15 @@ func stampAddons(env *gobl.Envelope, required []cbc.Key) error {
 	return env.Calculate()
 }
 
-// ciiParse wraps gobl.cii's Parse, turning its panics on structurally
+// ciiImport wraps gobl.cii's Import, turning its panics on structurally
 // incomplete documents into errors.
-func ciiParse(data []byte, opts []cii.ParseOption) (env *gobl.Envelope, err error) {
+func ciiImport(in *cii.Invoice, opts []cii.Option) (env *gobl.Envelope, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = fmt.Errorf("incomplete document: %v", r)
 		}
 	}()
-	return cii.Parse(data, opts...)
+	return cii.Import(in, opts...)
 }
 
 // rootNamespace returns the namespace of the document's root element.

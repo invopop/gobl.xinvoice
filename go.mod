@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/invopop/gobl v0.507.1-0.20261006132023-671e20bf8e92
-	github.com/invopop/gobl.cii v0.65.0
+	github.com/invopop/gobl.cii v0.66.1-0.20261007080942-f85bdaa3a801
 	github.com/invopop/gobl.ubl v0.82.1-0.20261006132711-90cbf324fc44
 	github.com/invopop/phorm v0.1.5
 	github.com/stretchr/testify v1.11.1
@@ -21,7 +21,6 @@ require (
 	github.com/expr-lang/expr v1.17.8 // indirect
 	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/invopop/gobl.fr.ctc v0.0.7 // indirect
 	github.com/invopop/jsonschema v0.14.0 // indirect
 	github.com/invopop/validation v0.8.0 // indirect
 	github.com/invopop/xmlctx v0.13.0 // indirect

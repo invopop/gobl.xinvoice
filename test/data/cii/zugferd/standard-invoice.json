@@ -1,0 +1,160 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"dig": {
+			"alg": "sha256",
+			"val": "a9bb1274ce9e082598dfeb4e0d03b123cb458b19868a509e36efb0dd85b9bd83"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "DE",
+		"$addons": [
+			"eu-en16931-v2017",
+			"de-zugferd-v2"
+		],
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"type": "standard",
+		"series": "SAMPLE",
+		"code": "001",
+		"issue_date": "2024-02-13",
+		"op_date": "2024-02-13",
+		"currency": "EUR",
+		"tax": {
+			"ext": {
+				"untdid-document-type": "380"
+			}
+		},
+		"supplier": {
+			"name": "Provide One GmbH",
+			"tax_id": {
+				"country": "DE",
+				"code": "111111125"
+			},
+			"addresses": [
+				{
+					"num": "16",
+					"street": "Dietmar-Hopp-Allee",
+					"locality": "Walldorf",
+					"code": "69190",
+					"country": "DE"
+				}
+			],
+			"emails": [
+				{
+					"addr": "billing@example.com"
+				}
+			]
+		},
+		"customer": {
+			"name": "Sample Consumer",
+			"tax_id": {
+				"country": "DE"
+			},
+			"people": [
+				{
+					"name": {
+						"given": "Hans",
+						"surname": "Müller"
+					}
+				}
+			],
+			"addresses": [
+				{
+					"num": "25",
+					"street": "Werner-Heisenberg-Allee",
+					"locality": "München",
+					"code": "80939",
+					"country": "DE"
+				}
+			],
+			"emails": [
+				{
+					"addr": "email@sample.com"
+				}
+			]
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "1",
+				"period": {
+					"start": "2024-02-01",
+					"end": "2024-02-29"
+				},
+				"item": {
+					"name": "Monthly platform  license  fee",
+					"price": "4500.00",
+					"unit": "one"
+				},
+				"sum": "4500.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "19%",
+						"ext": {
+							"untdid-tax-category": "S"
+						}
+					}
+				],
+				"total": "4500.00"
+			}
+		],
+		"ordering": {
+			"purchases": [
+				{
+					"code": "PO-2024-12345"
+				}
+			]
+		},
+		"payment": {
+			"terms": {
+				"due_dates": [
+					{
+						"date": "2024-03-15",
+						"amount": "5355.00",
+						"percent": "100%"
+					}
+				]
+			}
+		},
+		"totals": {
+			"sum": "4500.00",
+			"total": "4500.00",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"ext": {
+									"untdid-tax-category": "S"
+								},
+								"base": "4500.00",
+								"percent": "19%",
+								"amount": "855.00"
+							}
+						],
+						"amount": "855.00"
+					}
+				],
+				"sum": "855.00"
+			},
+			"tax": "855.00",
+			"total_with_tax": "5355.00",
+			"payable": "5355.00"
+		},
+		"notes": [
+			{
+				"text": "Order PO-2024-12345, Department 906300"
+			},
+			{
+				"text": "For questions please contact billing@example.com.\nInvoice period corresponds to service period."
+			}
+		]
+	}
+}

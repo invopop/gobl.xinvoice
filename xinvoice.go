@@ -104,8 +104,8 @@ var formats = []*Format{
 		addons:          []cbc.Key{xrechnung.V3},
 		customizationID: CustomizationIDXRechnung,
 		profileID:       ProfileIDPeppolBilling,
-		vesIDInvoice:    "de.xrechnung:cii:3.0.2",
-		vesIDCreditNote: "de.xrechnung:cii:3.0.2",
+		vesIDInvoice:    vesIDXRechnungCII,
+		vesIDCreditNote: vesIDXRechnungCII,
 	},
 	{
 		Key:             FormatZUGFeRD,
@@ -114,8 +114,8 @@ var formats = []*Format{
 		syntax:          SyntaxCII,
 		addons:          []cbc.Key{zugferd.V2},
 		customizationID: GuidelineIDEN16931,
-		vesIDInvoice:    "de.zugferd:en16931:2.5.2",
-		vesIDCreditNote: "de.zugferd:en16931:2.5.2",
+		vesIDInvoice:    vesIDZUGFeRD,
+		vesIDCreditNote: vesIDZUGFeRD,
 	},
 	{
 		Key:             FormatZUGFeRDBasic,
@@ -124,8 +124,8 @@ var formats = []*Format{
 		syntax:          SyntaxCII,
 		addons:          []cbc.Key{zugferd.V2},
 		customizationID: GuidelineIDZUGFeRDBasic,
-		vesIDInvoice:    "de.zugferd:basic:2.5.2",
-		vesIDCreditNote: "de.zugferd:basic:2.5.2",
+		vesIDInvoice:    vesIDZUGFeRDBasic,
+		vesIDCreditNote: vesIDZUGFeRDBasic,
 	},
 	{
 		Key:             FormatZUGFeRDExtended,
@@ -134,8 +134,8 @@ var formats = []*Format{
 		syntax:          SyntaxCII,
 		addons:          []cbc.Key{zugferd.V2},
 		customizationID: GuidelineIDZUGFeRDExtended,
-		vesIDInvoice:    "de.zugferd:extended:2.5.2",
-		vesIDCreditNote: "de.zugferd:extended:2.5.2",
+		vesIDInvoice:    vesIDZUGFeRDExtended,
+		vesIDCreditNote: vesIDZUGFeRDExtended,
 	},
 }
 
@@ -266,9 +266,12 @@ func (f *Format) applyUBL(out *ubl.Invoice) {
 // buildCII builds the plain EN 16931 CII document and reworks it into
 // the German format.
 func buildCII(env *gobl.Envelope, f *Format) (*cii.Invoice, error) {
-	out, err := cii.ConvertInvoice(env, cii.WithContext(cii.ContextEN16931V2017))
+	out, err := cii.ExportInvoice(env, cii.WithFormat(cii.FormatEN16931))
 	if err != nil {
 		return nil, fmt.Errorf("converting to CII: %w", err)
+	}
+	if inv, ok := env.Extract().(*bill.Invoice); ok && zugferd.V2.In(inv.GetAddons()...) {
+		zugferdShipTo(inv, out)
 	}
 	f.applyCII(out)
 	return out, nil
@@ -335,7 +338,7 @@ func convertCII(env *gobl.Envelope, inv *bill.Invoice, f *Format, o *options) (*
 		})
 	}
 
-	data, err := out.Bytes()
+	data, err := cii.Encode(out)
 	if err != nil {
 		return nil, fmt.Errorf("serializing CII document: %w", err)
 	}

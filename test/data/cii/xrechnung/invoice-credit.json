@@ -1,0 +1,224 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"dig": {
+			"alg": "sha256",
+			"val": "0ead68a3f74bbcfad8b223823540a53458b3d86eeb496ba32f8387728d2d32f8"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "DE",
+		"$addons": [
+			"eu-en16931-v2017",
+			"de-xrechnung-v3"
+		],
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"type": "standard",
+		"code": "DI-20250326-7178",
+		"issue_date": "2025-03-26",
+		"op_date": "2025-03-26",
+		"currency": "EUR",
+		"tax": {
+			"prices_include": "VAT",
+			"ext": {
+				"untdid-document-type": "380"
+			}
+		},
+		"supplier": {
+			"uuid": "0195b30a-97df-7000-827c-057ca60342a9",
+			"name": "Random Company",
+			"tax_id": {
+				"country": "DE",
+				"code": "111111125"
+			},
+			"people": [
+				{
+					"name": {
+						"given": "Gianluca Primavera"
+					},
+					"emails": [
+						{
+							"addr": "random@random.com"
+						}
+					],
+					"telephones": [
+						{
+							"num": "+4915159934591"
+						}
+					]
+				}
+			],
+			"inboxes": [
+				{
+					"scheme": "9920",
+					"code": "ESB85905495"
+				}
+			],
+			"addresses": [
+				{
+					"street": "Maarweg 167",
+					"locality": "Köln",
+					"region": "NRW",
+					"code": "50825",
+					"country": "DE"
+				}
+			],
+			"emails": [
+				{
+					"addr": "billing@random.com"
+				}
+			]
+		},
+		"customer": {
+			"name": "Ministerium für Wissenschaft, Forschung und Kunst Baden-Württemberg",
+			"tax_id": {
+				"country": "DE",
+				"code": "269642919"
+			},
+			"people": [
+				{
+					"name": {
+						"given": "IT",
+						"surname": "Team"
+					}
+				}
+			],
+			"inboxes": [
+				{
+					"scheme": "9920",
+					"code": "ESB85905495"
+				}
+			],
+			"addresses": [
+				{
+					"street": "Königstr. 46",
+					"locality": "Stuttgart",
+					"code": "70173",
+					"country": "DE"
+				}
+			],
+			"emails": [
+				{
+					"addr": "rechnung@random.com"
+				}
+			]
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "7",
+				"item": {
+					"name": "Random Product",
+					"description": "Random Description",
+					"price": "234.00",
+					"unit": "one"
+				},
+				"sum": "1638.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"percent": "19.0%",
+						"ext": {
+							"untdid-tax-category": "S"
+						}
+					}
+				],
+				"total": "1638.00"
+			}
+		],
+		"ordering": {
+			"code": "1234567890",
+			"period": {
+				"start": "2025-03-04",
+				"end": "2026-03-04"
+			},
+			"purchases": [
+				{
+					"code": "1234567890"
+				}
+			]
+		},
+		"payment": {
+			"terms": {
+				"due_dates": [
+					{
+						"date": "2025-04-30",
+						"amount": "1638.00",
+						"percent": "100%"
+					}
+				]
+			},
+			"instructions": {
+				"key": "credit-transfer",
+				"credit_transfer": [
+					{
+						"iban": "DE12345678901234567890",
+						"bic": "DE12345678901234567890",
+						"number": "12345678901234567890",
+						"name": "Random Bank"
+					}
+				],
+				"ext": {
+					"untdid-payment-means": "30"
+				}
+			}
+		},
+		"delivery": {
+			"receiver": {
+				"name": "Ministerium für Wissenschaft, Forschung und Kunst Baden-Württemberg",
+				"people": [
+					{
+						"name": {
+							"given": "IT",
+							"surname": "Team"
+						}
+					}
+				],
+				"addresses": [
+					{
+						"street": "Königstr. 46",
+						"locality": "Stuttgart",
+						"code": "70173",
+						"country": "DE"
+					}
+				],
+				"emails": [
+					{
+						"addr": "rechnung@random.com"
+					}
+				]
+			}
+		},
+		"totals": {
+			"sum": "1638.00",
+			"tax_included": "261.53",
+			"total": "1376.47",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"ext": {
+									"untdid-tax-category": "S"
+								},
+								"base": "1376.47",
+								"percent": "19.0%",
+								"amount": "261.53"
+							}
+						],
+						"amount": "261.53"
+					}
+				],
+				"sum": "261.53"
+			},
+			"tax": "261.53",
+			"total_with_tax": "1638.00",
+			"payable": "1638.00"
+		}
+	}
+}

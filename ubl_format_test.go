@@ -23,7 +23,13 @@ const staticUUID uuid.UUID = "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2"
 // test/data/ubl, with fixed IDs so the output is stable.
 func loadUBLEnvelope(t *testing.T, name string) *gobl.Envelope {
 	t.Helper()
-	path := filepath.Join("test", "data", "ubl", name)
+	return loadTestEnvelope(t, filepath.Join("test", "data", "ubl", name))
+}
+
+// loadTestEnvelope loads, calculates, and validates the GOBL envelope at
+// path, with fixed IDs so the output is stable.
+func loadTestEnvelope(t *testing.T, path string) *gobl.Envelope {
+	t.Helper()
 	data, err := os.ReadFile(path)
 	require.NoError(t, err)
 	env := new(gobl.Envelope)

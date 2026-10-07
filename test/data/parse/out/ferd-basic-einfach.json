@@ -1,7 +1,6 @@
 {
 	"$addons": [
 		"eu-en16931-v2017",
-		"fr-facturx-v1",
 		"de-zugferd-v2"
 	],
 	"$regime": "DE",

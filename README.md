@@ -169,9 +169,13 @@ that package rather than `./...`.
 - The addon definitions still live in GOBL core (`gobl/addons/de`). Moving
   them into this module's `addon/` packages with the external addon
   registration in GOBL's `addons/external.go` is a planned follow-up.
-- `gobl.ubl` and `gobl.cii` still carry their own German context values,
-  but this module no longer uses them. They are removed together with the
-  deprecation of the German document types in the ubl and cii apps.
+- The German formats are also registered with gobl.ubl and gobl.cii, and
+  through them with GOBL's `convert` register, so `ubl.Import`, `cii.Import`
+  and `convert.Import` recognise German documents once this module is
+  imported: `ubl+de-xrechnung-v3` (`UBLFormatXRechnung`),
+  `cii+de-xrechnung-v3` (`CIIFormatXRechnung`), and `cii+de-zugferd-v2`,
+  `cii+de-zugferd-v2+basic` and `cii+de-zugferd-v2+extended`
+  (`CIIFormatZUGFeRD`, `CIIFormatZUGFeRDBasic`, `CIIFormatZUGFeRDExtended`).
 - Schematron validation is not part of the conversion. The opt-in
   `TestSchematron` (run with `-validate` and a phorm service; CI runs it
   with a service container) checks every converted fixture against the
