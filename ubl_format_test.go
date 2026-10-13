@@ -96,7 +96,7 @@ func TestUBLFormatXRechnung(t *testing.T) {
 		env := loadUBLEnvelope(t, "xrechnung/invoice-xr-minimal.json")
 		inv, ok := env.Extract().(*bill.Invoice)
 		require.True(t, ok)
-		assert.Equal(t, "de.xrechnung:ubl-invoice:3.0.2", xinvoice.UBLFormatXRechnung.GetVESID(inv))
+		assert.Equal(t, "de.xrechnung:ubl-invoice:3.0.2", xinvoice.UBLFormatXRechnung.VESID(inv))
 	})
 }
 
